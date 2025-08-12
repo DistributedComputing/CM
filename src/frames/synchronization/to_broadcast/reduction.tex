@@ -1,0 +1,117 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Du consensus à \Broadcast{to}}
+
+  \on[top=-5mm]{\small
+    \begin{algorithm}[H]
+      \SetKwFunction{Propose}{propose}
+      \lSVariables{}{$\textsc{cons}[1, 2, ...]$: sequence of consensus objects}
+      \lLVariables{}{$\mathit{broadcast}_i, \mathit{delivered}_i \leftarrow \varepsilon$: lists of pairs $\langle \mathit{message}, \mathit{pid} \rangle$}
+      \Operation{\Broadcast{to} $(m)$}{
+        \alt<6->{
+          \Structureb{\Broadcast{rb} $\textsc{msg}(m)$}\;
+        }{
+          \Structureb<2>{$\mathit{broadcast}_i \leftarrow \mathit{broadcast}_i \cdot \langle m, i \rangle$}\;
+        }
+        \Exampleb<2,5>{\Wait $\langle m, i \rangle \in \mathit{delivered}_i$}\;
+      }
+      \Task{}{
+        \For{\Alertb<-3>{$k = 1, 2, 3, ...$}}{
+          \Structureb<2,4>{\Wait $\mathit{broadcast}_i \setminus \mathit{delivered}_i \neq \varepsilon$}\;
+          \Structureb<2>{\Let $\mathit{proposed} \leftarrow \left(\mathit{broadcast}_i \setminus \mathit{delivered}_i\right)[1]$}\;
+          \Alertb<-3>{\Let $\langle m, j \rangle \leftarrow \textsc{cons}[k].\Propose(\mathit{proposed})$}\;
+          \Alertb<-3>{\Deliver{to} $m$ \From $p_j$}\;
+          \Exampleb<2>{$\mathit{delivered}_i \leftarrow \mathit{delivered}_i \cdot \langle m, j \rangle$}\;
+        }
+      }
+      \uncover<6->{
+        \When{\Structureb{\Deliver{rb} $\textsc{msg}(m)$ \From $p_j$}}{
+          $\mathit{broadcast}_i \leftarrow \mathit{broadcast}_i \cdot \langle m, j \rangle$\;
+        }
+      }
+    \end{algorithm}
+  }
+  
+  \onAlertBlock<-2>[y=-9mm, anchor=north]{Variables}{\vspace{-1mm}
+    \begin{description}
+    \item<2>[$\structure{\mathit{broadcast}_i[k]}$] \vspace{-1mm} $k^{\text{e}}$ message \Broadcast{to} par $p_i$
+    \item[${\textsc{cons}[k]}$] \vspace{-1mm} accord sur le $k^{\text{e}}$ message à délivrer
+    \item<2>[${\color{exampleColor}\mathit{delivered}_i[k]}$] \vspace{-1mm} $k^{\text{e}}$ message \Delivered{to} par $p_i$ (résultat de ${\textsc{cons}[k]}$)
+    \end{description}
+  }
+  
+  \on<-2>[y=-37mm]{
+    \begin{tikzpicture}[y=8mm]
+      \tikzset{
+        box/.style={fill highlighted,text highlighted,draw highlighted,rounded corners, text width=15mm, minimum height=3mm, align=center, font=\footnotesize},
+        tbox/.style={fill highlighted,rounded corners, inner sep=0mm, outer sep=0mm,},
+      }
+      \draw[->] (1,1) node[left]{$p_i$} -- (12,1);
+      \draw[->] (1,0) node[left]{$p_j$} -- (12,0);
+            
+      \node[structure, box] (C1) at (3  ,.5) {$\textsc{cons}[1]$};
+      \node[alert,     box] (C2) at (6.5,.5) {$\textsc{cons}[2]$};
+      \node[example,   box] (C3) at (10 ,.5) {$\textsc{cons}[3]$};
+
+      \node (i1p) at (1.5,1) {}; \node (i1d) at (4.5 ,1) {};
+      \node (i2p) at (5.0,1) {}; \node (i2d) at (8.0 ,1) {};
+      \node (i3p) at (8.5,1) {}; \node (i3d) at (11.5,1) {};
+      \node (j1p) at (1.5,0) {}; \node (j1d) at (4.5 ,0) {};
+      \node (j2p) at (5.0,0) {}; \node (j2d) at (8.0 ,0) {};
+
+      \path[-latex, structure] (i1p.center) edge[bend right=5mm] ([yshift= .5mm]C1.west);
+      \path[-latex, alert    ] (j1p.center) edge[bend left =5mm] ([yshift=-.5mm]C1.west);
+      \path[-latex, example  ] (i2p.center) edge[bend right=5mm] ([yshift= .5mm]C2.west);
+      \path[-latex, alert    ] (j2p.center) edge[bend left =5mm] ([yshift=-.5mm]C2.west);
+      \path[-latex, example  ] (i3p.center) edge[bend right=5mm] ([yshift= .5mm]C3.west);
+
+      \path[-latex, structure] ([yshift= .5mm]C1.east) edge[bend right=5mm] (i1d.center);
+      \path[-latex, alert    ] ([yshift=-.5mm]C1.east) edge[bend left =5mm] (j1d.center);
+      \path[-latex, alert    ] ([yshift= .5mm]C2.east) edge[bend right=5mm] (i2d.center);
+      \path[-latex, alert    ] ([yshift=-.5mm]C2.east) edge[bend left =5mm] (j2d.center);
+      \path[-latex, example  ] ([yshift= .5mm]C3.east) edge[bend right=5mm] (i3d.center);
+
+      \node at (i1p) {$\bullet$}; \node[structure, below] at (i1p) {$m_{i, 1}$};
+      \node at (i2p) {$\bullet$}; \node[alert, above    ] at (j1p) {$m_{j, 1}$};
+      \node at (j1p) {$\bullet$}; \node[example, below  ] at (i2p) {$m_{i, 2}$};
+
+      \begin{scope}[background]
+        \node[structure, fit=(i1p)(i1d), tbox] {};
+        \node[example, fit=(i2p)(i3d), tbox]   {};
+        \node[alert, fit=(j1p)(j2d), tbox]     {};
+      \end{scope}
+    \end{tikzpicture}
+  }
+
+  \obAlertBlock<3>[y=-9mm, anchor=north]{Correction : sûreté}{
+    \begin{itemize}
+    \item Pour tout $k$, tous les processus décident le même $\langle m, j\rangle$ pour $\textsc{cons}[k]$
+    \item Pour tout $p_i$, le $k^{e}$ message \Delivered{to} par $p_i$ est le même
+    \end{itemize}
+  }
+
+  \obAlertBlock<4->[y=-9mm, anchor=north]{Correction : vivacité}{
+    \begin{itemize}
+    \item Livraison par les processus non-émetteurs ? 
+    \item<5-> Terminaison de \Broadcast{to} ?
+    \end{itemize}
+    \uncover<6>{\structure{Helping} : diffuser son message ; proposer les messages des autres}
+  }
+
+  \ob<6>[bottom=-2mm]{
+    \begin{citing}
+    \item[CT96] \scriptsize Chandra, Toueg. \emph{Unreliable failure detectors for reliable distributed systems.} JACM (1996)
+    \end{citing}
+  }
+
+\end{frame}
+
+\endgroup
+\endinput

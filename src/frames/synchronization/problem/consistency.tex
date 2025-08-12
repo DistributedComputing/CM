@@ -1,0 +1,62 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwFunction{Execute}{execute}
+
+\begin{frame}[fragile]{Cohérence de la machine à états répliquée}
+
+  \on[top,text]{
+    \begin{algorithm}[H]
+      \LVariables{}{
+        $\mathit{state}_i \leftarrow q_0$\;
+      }
+      \Operation{$\Execute(c \in C)  \in R$}{
+        \Let $r\leftarrow \rho(\mathit{state}_i, c)$\;
+        \Broadcast{rb} $\textsc{command}(c)$\;
+        \Return $r$\;
+      }
+      \When{\Deliver{rb} $\textsc{command}(c \in C)$ \From $p_j$}{
+        $\mathit{state}_i \leftarrow \tau(\mathit{state}_i, c)$\;
+      }
+    \end{algorithm}
+  }
+
+  \onBlock[y=-25mm]{Problème}{
+    \centering
+    \begin{tikzpicture}
+      \draw[->] (0,1) node[left] {$p_0$} -- +(10,0);
+      \draw[->] (0,0) node[left] {$p_1$} -- +(10,0);
+
+      \draw[rounded corners, structure,   fill=structure!20]       (5,1)  +(-2,-.3) rectangle +(2,.3);
+      \draw[rounded corners, exampleColor,fill=exampleColor!20] (5,0)  +(-2,-.3) rectangle +(2,.3);
+
+      \draw[dotted] (0,1) -- +(10,0);
+      \draw[dotted] (0,0) -- +(10,0);
+
+      \draw[structure]    (5,1.5) node{$\mathit{acheter}(x) \rightarrow$ OK};
+      \draw[exampleColor] (5,-.5) node{$\mathit{acheter}(x) \rightarrow$ OK};
+
+      \draw[-latex, structure] (3.2,1) node{$\bullet$} -- (8,0);
+      \draw[-latex, structure] (3.2,1) node{$\bullet$} to[out=15, in=165] (6.8,1);
+      \draw[-latex, exampleColor] (3.2,0) node{$\bullet$} -- (8,1);
+      \draw[-latex, exampleColor] (3.2,0) node{$\bullet$} to[out=-15, in=-165] (6.8,0);
+
+      \draw (1,1.2)   node{\footnotesize $\{x\}$};
+      \draw (1,-0.2)   node{\footnotesize $\{x\}$};
+      \draw (7.5,1.2) node{\footnotesize $\emptyset$};
+      \draw (7.5,-0.2) node{\footnotesize $\emptyset$};
+      \draw (8.5,1.2) node{\footnotesize $\emptyset$};
+      \draw (8.5,-0.2) node{\footnotesize $\emptyset$};
+    \end{tikzpicture}
+  }
+
+\end{frame}
+
+\endgroup
+\endinput

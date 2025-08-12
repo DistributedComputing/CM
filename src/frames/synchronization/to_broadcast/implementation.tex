@@ -1,0 +1,60 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Implémentation de \Broadcast{to}}
+
+  \onBlock[top=-5mm]{Stratégie}{
+    \begin{enumerate}
+    \item Implémenter une version affaiblie du consensus
+      \begin{description}
+      \item[Accord: ] Au plus une valeur décidée
+      \item[Validité: ] Toute valeur décidée a été proposée
+      \item[Terminaison: ] \sout{Tout processus correct finit par décider une valeur}
+        \begin{itemize}
+        \item Tout processus correct décide \structure{avec probabilité $1$}
+          \begin{itemize}
+          \item Exemple : Ben-Or
+          \end{itemize}
+        \item Les processus décident \structure{si le système est assez stable}
+          \begin{itemize}
+          \item Exemple : Paxos
+          \end{itemize}
+        \end{itemize}
+      \end{description}
+    \item\vspace{3mm} Réduction de consensus à \Broadcast{to}
+      \begin{itemize}
+      \item On suppose qu'on a le consensus, implémenter \Broadcast{to}. 
+      \end{itemize}
+    \item\vspace{3mm} Réduction de \Broadcast{to} à la machine répliquée
+      \begin{itemize}
+      \item On suppose qu'on a \Broadcast{to}, implémenter le consensus. 
+      \end{itemize}
+    \end{enumerate}
+  }
+
+  \on[bottom=2mm]{
+    \begin{tikzpicture}[x=28mm, font=\scriptsize]
+      \tikzset{
+        box/.style={draw, structure, fill=structure!10, rounded corners, text width=20mm, minimum height=10mm, align=center},
+        arrow/.style={structure,-latex,},
+      }
+      \node[box] (a) at (0,0) {$\mathcal{CAMP}_{n,t}\left[t<\frac{n}{2}\right]$\\+ leader ?\\+ random ?};
+      \node[box] (b) at (1,0) {Consensus};
+      \node[box] (c) at (2,0) {\Broadcast{to}};
+      \node[box] (d) at (3,0) {Replicated\\State Machine};
+      \path[arrow] (a) edge[above] node{1} (b);
+      \path[arrow] (b) edge[above] node{2} (c);
+      \path[arrow] (c) edge[above] node{3} (d);
+    \end{tikzpicture}
+  }
+  
+\end{frame}
+
+\endgroup
+\endinput
