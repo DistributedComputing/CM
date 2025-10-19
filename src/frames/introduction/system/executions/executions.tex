@@ -1,0 +1,47 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Exécutions concrètes d'un algorithme}
+
+  Exécution concrète = chemin dans un système de transitions.
+
+  \begin{block}{Configuration globale du système}
+    La \alert{configuration globale} est définie par un tuple \alert{$\langle q_1, ..., q_i, ..., q_n, M \rangle$} :
+    \begin{itemize}
+    \item L'état local \alert{$q_i$} de chaque processus $p_i$ contenant :
+      \begin{description}
+      \item[Pile d'appels :] la valeur de ses variables locales
+      \item[Avancement :] la prochaine instruction à exécuter
+      \end{description}
+    \item L'ensemble \alert{$M$} des messages en cours d'acheminement
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Transitions}
+    Un \alert{ordonnanceur} (non-déterministe) décide le prochain pas parmi :
+    \begin{description}[Réception]
+    \item[Pas local] de $p_i$ (accès aux variables locales, appel de fonctions, etc)
+      \begin{itemize}
+      \item $\structure{\langle q_1, ..., \alert{q_i}, ..., q_n, M \rangle \leadsto \langle q_1, ..., \alert{q_i'}, ..., q_n, M \rangle}$
+      \end{itemize}
+    \item[Envoi] d'un message $m$ par $p_i$ à $p_j$
+      \begin{itemize}
+      \item $\structure{\langle q_1, ..., \alert{q_i}, ..., q_n, \alert{M} \rangle \leadsto \langle q_1, ..., \alert{q_i'}, ..., q_n, \alert{M \cup \{\langle p_i, p_j, m \rangle\}} \rangle}$
+      \end{itemize}
+    \item[Réception] d'un message $m$ par $p_j$ de la part de $p_i$ 
+      \begin{itemize}
+      \item $\structure{\langle q_1, ..., \alert{q_j}, ..., q_n, \alert{M} \rangle \leadsto \langle q_1, ..., \alert{q_j'}, ..., q_n, \alert{M \setminus \{\langle p_i, p_j, m \rangle\}} \rangle}$
+      \end{itemize}
+    \end{description}
+  \end{block}
+
+\end{frame}
+
+\endgroup
+\endinput

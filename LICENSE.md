@@ -26,21 +26,41 @@ Unless otherwise stated in the file header, these files are licensed under **CC 
 - **ShareAlike required:** Yes.
 
 *Suggested attribution example:*  
-“*Languages and Automata* — © 2025 Matthieu Perrin, CC BY-SA 4.0, changes: none”  
+“*Services de Communication et Systèmes Distribués* — © 2025 Matthieu Perrin, CC BY-SA 4.0, changes: none”  
 (or describe changes if you made any).
 
 ## Images
 
 Images in `src/img/` have varying licenses:
 
-- `Chomsky.jpg` — **CC BY-SA 2.0** (Augusto Starita, 2015)
-  <https://commons.wikimedia.org/wiki/File:Noam_Chomsky_portrait_2015.jpg>
-- `Rabin.jpg` — **CC BY-SA 2.0** (Konrad Jacobs)  
-  <https://commons.wikimedia.org/wiki/File:M_O_Rabin.jpg>
-- `Scott.jpg` — **CC BY-SA 2.5** (Andrej Bauer, 2003)  
-  <https://commons.wikimedia.org/wiki/File:Scott_Dana_small.jpg>
-- `Thompson.jpg` — **CC BY-SA 4.0** (A.C.Diller, 2019)  
-  <https://commons.wikimedia.org/wiki/File:Brian_Kernighan_and_Ken_Thompson.jpg>
+- `Lamport.jpg` — **CC-0** Usages allowed for any purpose
+  <https://commons.wikimedia.org/wiki/File:Leslie_Lamport.jpg>
 
 Please verify third-party licenses before redistributing compiled PDFs that include those images.
 
+### AI-generated images (DALL·E)
+
+The following illustrations were generated using **OpenAI's DALL·E** model.
+
+These images are **original works** created by the project author (Matthieu Perrin) using prompts designed specifically for educational purposes.
+They are released under the same license as the rest of this repository (**CC BY-SA 4.0**), unless otherwise noted.
+
+DALL·E output is not subject to any additional copyright or usage restrictions beyond those of this project’s license.
+
+- `Alice.png`
+- `Bob.png`
+- `Carole.png`
+- `Jardin.jpg`
+- `Metro.jpg`
+- `Rue.JPG`
+- `Salon.jpg`
+- `Seine.jpg`
+
+### Third-party trademarks (logos)
+
+The following logos are simple word or symbol marks that do not meet the originality threshold for copyright protection (public domain, see Wikimedia Commons <https://commons.wikimedia.org/wiki/Commons:Threshold_of_originality>). They remain trademarks of their respective owners and are used here solely for educational and descriptive purposes.
+
+- `Facebook.png` — <https://fr.m.wikipedia.org/wiki/Fichier:Facebook_Messenger_logo_2013.svg>
+- `Hangout.png` — <https://commons.wikimedia.org/wiki/File:Hangouts_icon.svg>
+- `Skype.png` — <https://commons.wikimedia.org/wiki/File:Skype_logo_(2019%E2%80%93present).svg>
+- `Whatsapp.png` — <https://commons.wikimedia.org/wiki/File:WhatsApp_Logo_green.svg>

@@ -1,0 +1,72 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwFunction{Propose}{propose}
+\SetKwData{Decided}{decided}
+
+\begin{frame}{Le consensus}
+
+  \on[text, top=-3mm]{
+    \begin{algorithm}[H]
+      \Interface{\textsc{consensus}}{
+        \lMethod{\Propose$(v \in \mathcal{V}) \in \mathcal{V}$}{\tcp*[f]{Propose $v$, décide $v'$}}
+      }
+    \end{algorithm}
+
+    \vspace{-1mm}
+    \begin{description}[Terminaison :]
+    \item[Accord :] Au plus une valeur décidée
+    \item[Validité :] Toute valeur décidée a été proposée
+    \item[Terminaison :] Tout processus correct finit par décider une valeur
+    \end{description}
+  }
+
+  \onAlertBlock<2->[y=-4mm]{Réduction de Total-Order Broadcast au consensus}{
+    \begin{algorithm}[H]
+      \lLVariables{}{$\Decided_i \leftarrow \bot$;}
+      \Method{\Propose$(v \in \mathcal{V}) \in \mathcal{V}$}{
+        \textsc{to}.\SBroadcast $\textsc{propose}(v)$;\\
+        \Return $\Decided_i$;
+      }
+      \When{\textsc{to}.\Deliver $\textsc{propose}(v)$ \From $p_j$}{
+        \lIf{$\Decided_i = \bot$}{$\Decided_i \leftarrow v$;}
+      }
+    \end{algorithm}
+  }
+
+  \on<2->[y=-9mm, right=.45\textwidth]{
+    \begin{tikzpicture}[y=10mm]
+      \draw[process] (0,1) node[left]{$p_1$} to (4,1);
+      \draw[process] (0,0) node[left]{$p_2$} to (4,0);
+
+      \node[alert, operation]     (p1) at (2,1) {$\Propose(a) \rightarrow b$};
+      \node[structure, operation] (p2) at (2,0) {$\Propose(b) \rightarrow b$};
+
+      \draw[alert, message]       (p1.west) to[bend left]  (p1.east);
+      \draw[alert, message]       (p1.west) to[bend below] (3.75,0);
+      \draw[structure, message]   (p2.west) to             (2,1);
+      \draw[structure, message]   (p2.west) to[bend right] (p2.east);
+    \end{tikzpicture}
+  }
+
+  \onAlertBlock<3->[y=-25mm]{Théorème (FLP85)}{
+    Il est impossible de résoudre le consensus dans $\mathcal{CAMP}_{n, t}[t\ge 1]$
+  }
+
+  \on[bottom=-2mm,text]{
+    \begin{citing}
+    \item[PSL80] M. Pease, R. Shostak, L. Lamport. \textit{Reaching agreement in the presence of faults.} JACM. 1980
+    \uncover<3->{\item[FLP85] M. J. Fischer, N. A. Lynch, M. S. Paterson. \textit{Impossibility of Distributed Consensus with One Faulty Process.} JACM, 1985}
+    \end{citing}
+  }
+
+\end{frame}
+
+\endgroup
+\endinput

@@ -1,0 +1,48 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwFunction{Insert}{insert}
+\SetKwFunction{Read}{read}
+\SetKwData{State}{state}
+
+\begin{frame}{Diffusion de message}
+
+  \begin{block}{Notion de diffusion de message}
+    Quand $p_i$ veut exécuter une commande, il averti toutes les répliques en \structure{diffusant} la commande.
+    \begin{algorithm}[H]
+      \Interface{\textsc{broadcast}}{
+        \lMethod{\Broadcast$(m)$}{\tcp*[f]{Envoie $m$ à tous les processus}}
+        \lEvent{\Deliver $m$ \From $p_j$}{\tcp*[f]{Reçoit le message $m$ de la part de $p_j$}}
+        \Method{\SBroadcast$(m)$}{
+          \Broadcast$(m)$;
+          \Wait{$m$ delivered locally}\;
+        }
+      }
+    \end{algorithm}
+  \end{block}
+
+  \begin{block}{L'implémentation la plus simple : Send-To-All}
+    \begin{algorithm}[H]
+      \Algo{\textsc{sta}}{
+        \Method{\textsc{sta}.\Broadcast$(m)$}{
+          \For{$j$ \From $1$ \To $n$}{
+            \Send $\textsc{m}(m)$ \To $p_j$\;
+          }
+        }
+        \When{\Receive $\textsc{m}(m)$ \From $p_j$}{
+          \textsc{sta}.\Deliver $m$ \From $p_j$\;
+        }
+      }
+    \end{algorithm}
+  \end{block}
+  
+\end{frame}
+
+\endgroup
+\endinput

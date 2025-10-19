@@ -3,28 +3,151 @@
 
 \begingroup
 
-\section{Introduction}
-
-\section{Communication}
-
-\section{Coordination}
-
-\section{Synchronisation}
-
-\subsection{Problème de concurrence}
-\input{synchronization/problem/consistency}
-
+\part{Introduction}
+ 
+ 
+\section{Généralités}
+ 
+\subsection{Positionnement dans le master}
+\input{introduction/generalities/master/master}
+ 
+\subsection{Bibliographie}
+\input{introduction/generalities/bibliography/bibliography}
+ 
+\section{Machine à états répliquée}
+ 
+\subsection{Modèle clients/serveur}
+\input{introduction/replication/statemachine/clientserver}
+\input{introduction/replication/statemachine/statemachine}
+ 
+\subsection{Réplication des données}
+\input{introduction/replication/replication/limits}
+\input{introduction/replication/replication/smr}
+\input{introduction/replication/replication/replication}
+ 
+\section{Système asynchrone à passage de messages}
+ 
+\subsection{Modèle de calcul}
+\input{introduction/system/model/processes}
+\input{introduction/system/model/messages}
+\input{introduction/system/model/camp}
+\input{introduction/system/model/example}
+  
+\subsection{Exécutions réparties}
+\input{introduction/system/executions/executions}
+\input{introduction/system/executions/executions_example}
+\input{introduction/system/executions/example}
+ 
+\subsection{La relation Happened before}
+\input{introduction/system/happensbefore/lamport}
+\input{introduction/system/happensbefore/happensbefore}
+\input{introduction/system/happensbefore/clock}
+\input{introduction/system/happensbefore/lamport_clock}
+ 
+\subsection{Un premier résultat d'impossibilité}
+\input{introduction/system/impossibility/detector}
+ 
+ 
+\part{Communication}
+ 
+ 
+\section{Problèmes de cohérence}
+ 
+\subsection{Service de messagerie instantanée}
+\input{communication/consistency/messaging/alice_bob}
+\input{communication/consistency/messaging/explanation}
+\input{communication/consistency/messaging/rosette}
+ 
+\subsection{Eventual consistency}
+\input{communication/consistency/EC/uqadt}
+\input{communication/consistency/EC/ec}
+\input{communication/consistency/EC/facebook}
+\input{communication/consistency/EC/inconsistent}
+ 
+\section{Diffusion fiable de messages}
+ 
+\subsection{Communication fiable entre les processus}
+\input{communication/broadcast/reliable/send_to_all}
+\input{communication/broadcast/reliable/motivation}
+\input{communication/broadcast/reliable/definition}
+\input{communication/broadcast/reliable/implementation}
+ 
+\subsection{Implémentation d'eventual consistency}
+\input{communication/broadcast/EC/motivation}
+\input{communication/broadcast/EC/crdt}
+\input{communication/broadcast/EC/implementation}
+\input{communication/broadcast/EC/memory}
+\input{communication/broadcast/EC/lww}
+ 
+\section{Ordre sur les messages}
+ 
+\subsection{Ajout de l'ordre FIFO}
+\input{communication/order/fifo/motivation}
+\input{communication/order/fifo/definition}
+\input{communication/order/fifo/implementation}
+ 
+\subsection{Ajout de l'ordre causal}
+\input{communication/order/causal/motivation}
+\input{communication/order/causal/definition}
+\input{communication/order/causal/implementation}
+\input{communication/order/causal/causal_convergence}
+ 
+ 
+\part{Synchronisation}
+ 
+ 
+\section{Nécessité des quorums}
+ 
+\subsection{Des messages à la mémoire}
+\input{synchronization/quorum/linearizability/linearizability}
+\input{synchronization/quorum/linearizability/message_patterns}
+ 
+\subsection{Le théorème CAP}
+\input{synchronization/quorum/cap/cap}
+\input{synchronization/quorum/cap/proof}
+\input{synchronization/quorum/cap/quorum}
+ 
+\section{Implémentation des registres}
+ 
+\subsection{Mutual Broadcast}
+\input{synchronization/register/mutual/mbroadcast}
+\input{synchronization/register/mutual/example}
+\input{synchronization/register/mutual/implementation}
+ 
+\subsection{Simulation ABD}
+\input{synchronization/register/abd/register}
+ 
+ 
+\part{Coordination}
+ 
+ 
+\section{Machine à états répliquée}
+ 
 \subsection{Diffusion totalement ordonnée}
-\input{synchronization/to_broadcast/consensus}
-\input{synchronization/to_broadcast/definition}
-\input{synchronization/to_broadcast/implementation}
-\input{synchronization/to_broadcast/reduction}
+\input{coordination/statemachine/to_broadcast/motivation}
+\input{coordination/statemachine/to_broadcast/definition}
+\input{coordination/statemachine/to_broadcast/to_smr}
+\input{coordination/statemachine/to_broadcast/reductions}
+\input{coordination/statemachine/to_broadcast/consensus}
+\input{coordination/statemachine/to_broadcast/reduction}
+ 
+\section{Solutions au Consensus}
+ 
+\subsection{L'algorithme de Ben-Or}
+\input{coordination/consensus/benor/hard}
+\input{coordination/consensus/benor/filter}
+\input{coordination/consensus/benor/aac}
+\input{coordination/consensus/benor/safe}
+\input{coordination/consensus/benor/benor}
+\input{coordination/consensus/benor/commonsqrt}
+\input{coordination/consensus/benor/commoncoin}
  
 \subsection{L'algorithme Paxos}
-\input{synchronization/paxos/leader}
-\input{synchronization/paxos/single_decree}
-\input{synchronization/paxos/multi_decrees}
-  
-\endgroup
+\input{coordination/consensus/paxos/motivation}
+\input{coordination/consensus/paxos/leader}
+\input{coordination/consensus/paxos/eventualleader}
+\input{coordination/consensus/paxos/single_decree}
+\input{coordination/consensus/paxos/multi_decrees}
 
+\endgroup
 \endinput

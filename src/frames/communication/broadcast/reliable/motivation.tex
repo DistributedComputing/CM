@@ -1,0 +1,86 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwFunction{Append}{append}
+\SetKwFunction{Read}{read}
+\SetKwData{State}{state}
+
+\begin{frame}{Nécessité de la diffusion fiable de messages}
+
+  \onBlock[top=-3mm]{Rappel : Send-To-All n'est pas fiable}{}
+  
+  \on[y=13mm]{
+    \begin{algorithm}[H]
+      \lLVariables{}{$\State_i \leftarrow \varepsilon$}
+      \lMethod{$\Read()$}{\Return $\State_i$}
+      \Method{$\Append(v)$}{
+        \Alert{\textsc{sta}.\Broadcast} $\textsc{m}(v)$\;
+      }
+      \When{\Alert{\textsc{sta}.\Deliver} $\textsc{m}(v)$ \From $p_j$}{
+        $\State_i \leftarrow \State_i \cdot v$\;
+      }
+    \end{algorithm}
+  }
+
+  \on[y=13mm, right=.5\textwidth]{
+    \begin{tikzpicture}[y=8mm]
+      \draw[process] (0,2) node[left]{$p_1$} node[replica below]{$\varepsilon$} to (5,2) node[replica, below left] {$a$} ;
+      \draw[crashed] (0,1) node[left]{$p_2$} node[replica]      {$\varepsilon$} to (1.5,1) ;
+      \draw[process] (0,0) node[left]{$p_3$} node[replica]      {$\varepsilon$} to (5,0) node[replica, above left] {$\varepsilon$} ;
+      
+      \node[alert, operation] (i1) at (2,1) {\hspace{8mm}$\Append(a)$};
+      \draw[alert, message]   (i1.west) to             (1.5,2);
+      \draw[alert, message]   ([xshift=2mm]i1.west) to[bend left]  ([xshift=6mm]i1.west);
+
+      \node[structure, operation] (r1) at (3,2) {$\Read() \rightarrow a$};
+      \node[example, operation] (r2) at (3,0) {$\Read() \rightarrow \varepsilon$};
+    \end{tikzpicture}
+  }
+
+  \onBlock<2->[y=-6mm]{Solution : la diffusion fiable de messages}{}
+
+  \on<2->[y=-24mm]{
+    \begin{algorithm}[H]
+      \lLVariables{}{$\State_i \leftarrow \varepsilon$}
+      \lMethod{$\Read()$}{\Return $\State_i$}
+      \Method{$\Append(v)$}{
+        \Alert{\textsc{urb}.\Broadcast} $\textsc{m}(v)$\;
+      }
+      \When{\Alert{\textsc{urb}.\Deliver} $\textsc{m}(v)$ \From $p_j$}{
+        $\State_i \leftarrow \State_i \cdot v$\;
+      }
+    \end{algorithm}
+  }
+  
+  \on<2->[y=-24mm, right=.5\textwidth]{
+    \begin{tikzpicture}[y=8mm]
+      \draw[process] (0,2) node[left]{$p_1$} node[replica below]{$\varepsilon$} to (5,2) node[replica, below left] {$a$} ;
+      \draw[crashed] (0,1) node[left]{$p_2$} node[replica]      {$\varepsilon$} to (1.5,1) ;
+      \draw[process] (0,0) node[left]{$p_3$} node[replica]      {$\varepsilon$} to (5,0) node[replica, above left] {$a$} ;
+      
+      \node[alert, operation] (i1) at (2,1) {\hspace{8mm}$\Append(a)$};
+      \draw[alert, message]   (i1.west) to             (1.5,2);
+      \draw[alert, message]   (i1.west) to[bend left]  ([xshift=5mm]i1.west);
+      \draw[alert, message]   (i1.west) to             (1,0);
+
+      \node[structure, operation] (r1) at (3,2) {$\Read() \rightarrow a$};
+      \node[structure, operation] (r2) at (3,0) {$\Read() \rightarrow a$};
+    \end{tikzpicture}
+  }
+
+  \on<2->[y=-40mm]{
+    \alert{
+      Quelles sont les propriétés attendues d'une telle abstraction \textsc{urb} ?
+    }
+  }
+    
+\end{frame}
+
+\endgroup
+\endinput

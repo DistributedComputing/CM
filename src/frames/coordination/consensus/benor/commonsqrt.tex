@@ -1,0 +1,146 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwFunction{Draw}{draw}
+\SetKwFunction{Rand}{random}
+\SetKwData{Count}{count}
+\SetKwData{Sum}{sum}
+
+\begin{frame}{Un common coin simple $(t < \sqrt{n})$}
+
+  \on[top=-3mm]{
+    \begin{algorithm}[H]
+      \lLVariables{}{
+        $\Count_i \leftarrow 0$; $\Sum_i \leftarrow 0$;
+      }
+      \Method{$\Draw() \in \mathbb{B}$}{
+        \textsc{sta}.\Broadcast $\textsc{draw}(\Rand())$; \tcp*[f]{Tirage local dans $\{0, 1\}$}\\
+        \Wait $\Count_i \ge n-t$; \tcp*[f]{Récolte $n - t$ valeur}\\
+        \Return $\Sum_i \ge \frac{\Count_i}{2}$; \tcp*[f]{Retourne la valeur la plus reçue}
+      }
+      \When{\textsc{sta}.\Deliver $\textsc{draw}(r_j)$ \From $p_j$}{
+        $\Sum_i \leftarrow \Sum_i + r_j$;
+        $\Count_i \leftarrow \Count_i + 1$;\\
+      }
+    \end{algorithm}
+  }
+
+  \obExampleBlock<2>[y=10mm, anchor=north]{Exemple pour $n=9$, $t=2$, et $3$ processus tirent \example{$\Rand() = 1$}}{
+    \begin{itemize}
+    \item Messages \textsc{draw} envoyés : 
+      \begin{itemize}
+      \item \alert{$6$} processus envoient \alert{$\textsc{draw}(0)$}
+      \item \example{$3$} processus envoient \example{$\textsc{draw}(1)$}
+      \end{itemize}
+    \item Messages \textsc{draw} reçus : 
+      \begin{itemize}
+      \item Chaque processus reçoit au moins $6-2 = \alert{4}$ messages \alert{$\textsc{draw}(0)$}
+      \item Chaque processus reçoit au plus \example{$3$} messages \example{$\textsc{draw}(1)$}
+      \end{itemize}
+    \item Tous les processus reçoivent plus de \alert{$\textsc{draw}(0)$} que de \example{$\textsc{draw}(1)$}
+      \begin{itemize}
+      \item Tous les processus retournent $0$
+      \end{itemize}
+    \end{itemize}
+  }
+
+  \obBlock<3>[y=10mm, anchor=north]{Analyse}{
+    \begin{itemize}
+    \item\vspace{-1mm} Le nombre de messages \example{$\textsc{draw}(1)$} est \structure{\footnotesize$\displaystyle \sum_{i=1}^n r_i$}
+    \item\vspace{-1mm} On cherche $\rho > 0$ tel que
+      \alert{\footnotesize$\displaystyle \mathbb{P}\left( \sum_{i=1}^n r_i\leq \frac{n-t}{2}\right) \geq \rho $} et
+      \example{\footnotesize$\displaystyle \mathbb{P}\left( \sum_{i=1}^n r_i\geq \frac{n+t}{2}\right) \geq \rho $}
+    \end{itemize}
+  }
+  
+  \onBlock<4>[y=10mm, anchor=north]{Théorème Central-Limite}{
+    Pour $n$ variables aléatoires $r_1, ..., r_n$ réelles d'espérance $\mu$ et d'écart-type $\sigma$ :\\[-2mm]
+    $$\forall \alpha>0,  \lim_{n \to \infty}\mathbb{P}\left(\frac{\sum_{i=1}^n r_i - n \mu}{\sigma\sqrt{n}}\leq \alpha\right)  =  \Phi(\alpha)$$
+  }
+  
+  \on<3->[bottom=-3mm]{
+    \begin{tikzpicture}
+      \def\mu{0}       % moyenne
+      \def\sigma{1}    % écart-type
+      \def\A{4.5}      % facteur d'échelle vertical (optionnel)
+      \def\B{0.12mm}      % facteur d'échelle vertical (optionnel)
+
+      \uncoverb<3>{
+        \draw[fill=alert!30]   (-5,0) rectangle (-4,1*\B);
+        \draw[fill=alert!30]   (-4,0) rectangle (-3,9*\B);
+        \draw[fill=alert!30]   (-3,0) rectangle (-2,36*\B);
+        \draw[fill=alert!30]   (-2,0) rectangle (-1,84*\B);
+        \draw[fill=black!20]   (-1,0) rectangle ( 0,126*\B);
+        \draw[fill=black!20]   ( 0,0) rectangle ( 1,126*\B);
+        \draw[fill=example!30] ( 1,0) rectangle ( 2,84*\B);
+        \draw[fill=example!30] ( 2,0) rectangle ( 3,36*\B);
+        \draw[fill=example!30] ( 3,0) rectangle ( 4,9*\B);
+        \draw[fill=example!30] ( 4,0) rectangle ( 5,1*\B);
+      }
+      \uncover<4>{
+        \draw[domain=-5:5, samples=500, smooth] plot (\x,{\A*(1/(\sigma*sqrt(2*pi)))*exp(-((\x-\mu)^2)/(2*\sigma^2))});
+        \begin{scope}[background]
+          \fill<4>[alert!30,   domain=-4:-1, samples=150, smooth] plot (\x,{\A*(1/(\sigma*sqrt(2*pi)))*exp(-((\x-\mu)^2)/(2*\sigma^2))}) -- (-1,0) -- (-4,0) -- cycle;
+          \fill<4>[black!20,   domain=-1:1,  samples=100, smooth] plot (\x,{\A*(1/(\sigma*sqrt(2*pi)))*exp(-((\x-\mu)^2)/(2*\sigma^2))}) -- ( 1,0) -- (-1,0) -- cycle;
+          \fill<4>[example!30, domain=1:4,   samples=150, smooth] plot (\x,{\A*(1/(\sigma*sqrt(2*pi)))*exp(-((\x-\mu)^2)/(2*\sigma^2))}) -- ( 4,0) -- ( 1,0) -- cycle;
+        \end{scope}
+      }
+
+      \scriptsize
+      \uncoverb<3>{
+        \draw (-4.5,0) node[below]{$0$}; 
+        \draw (-3.5,0) node[below]{$1$}; 
+        \draw (-2.5,0) node[below]{$2$}; 
+        \draw (-1.5,0) node[below]{$3$}; 
+        \draw (-0.5,0) node[below]{$4$}; 
+        \draw ( 0.5,0) node[below]{$5$}; 
+        \draw ( 1.5,0) node[below]{$6$}; 
+        \draw ( 2.5,0) node[below]{$7$}; 
+        \draw ( 3.5,0) node[below]{$8$}; 
+        \draw ( 4.5,0) node[below]{$9 = n$}; 
+      }
+      \uncover<4>{
+        \draw (-5,0) node[below]{$0$}; 
+        \draw ( 0,0) node[below]{$n/2$}; 
+        \draw ( 5,0) node[below]{$t^2 = n$}; 
+      }
+
+      \draw[->]             (-5,0) -- ( 5.2,0) node[right]{$s$};
+      \draw[->]             (-5,0) -- (-5  ,2) node[below left]{$\displaystyle\mathbb{P}\left(\sum_{i=1}^n r_i = s\right)$};
+      \draw[densely dotted] (-1,0) -- (-1,2);
+      \draw[densely dotted] ( 0,0) -- ( 0,2);
+      \draw[densely dotted] ( 1,0) -- ( 1,2);
+      \path[latex-latex]    (-1,2) edge node[above]{$t\only<4>{\simeq \sqrt{n}}$} (1,2);
+      \node[right]       at ( 1,2) {$\frac{n+t}{2}$};
+      \node[left]        at (-1,2) {$\frac{n-t}{2}$};
+
+      \footnotesize
+      \uncoverb<3>{
+        \node   at (-3,1) {Si \alert{  $\displaystyle \sum_{i=1}^n r_i \leq \frac{n-t}{2}$}, accord sur \alert{$0$}};
+        \node   at ( 3,1) {Si \example{$\displaystyle \sum_{i=1}^n r_i \geq \frac{n+t}{2}$}, accord sur \example{$1$}};
+      }
+      \uncover<4>{
+        \node[alert]   at (-3,1) {$\displaystyle \lim_{n \to \infty}\mathbb{P}\left( \sum_{i=1}^n r_i\leq \frac{n-\sqrt{n}}{2} \right) \simeq 0.159$};
+        \node[example] at ( 3,1) {$\displaystyle \lim_{n \to \infty}\mathbb{P}\left( \sum_{i=1}^n r_i\geq \frac{n+\sqrt{n}}{2} \right) \simeq 0.159$};
+      }
+
+    \end{tikzpicture}
+  }
+
+  \ob<-2>[bottom=-2mm, text]{
+    \begin{citing}
+    \item[R83] M. Rabin. \emph{Randomized byzantine generals.} SFCS. 1983
+    \item[AH90] J. Aspnes, M. Herlihy. \emph{Fast randomized consensus using shared memory.} J. of Algorithms. 1990
+    \end{citing}
+  }
+  
+\end{frame}
+
+\endgroup
+\endinput

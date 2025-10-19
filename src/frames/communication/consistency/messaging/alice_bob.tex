@@ -1,0 +1,69 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Services de messagerie \onlyb<6>{: Hangouts}\onlyb<7>{: WhatsApp}\onlyb<8>{: Skype}}
+
+  \on[y=-5mm]{
+    \begin{tikzpicture}
+      \node     [faded background picture=Seine,  text width=\paperwidth/2] (A) at (-\paperwidth/4,0) {};
+      \node<-2> [faded background picture=Jardin, text width=\paperwidth/2] (B) at ( \paperwidth/4,0) {};
+      \node<5-> [faded background picture=Rue,    text width=\paperwidth/2] (B) at ( \paperwidth/4,0) {};
+      \node<3-4>[faded background picture=Metro,  text width=\paperwidth/2] (B) at ( \paperwidth/4,0) {};
+
+      \node[anchor=south, nosep] at (A.south) {\includegraphics[height=22mm]{Alice}};
+      \node[anchor=south, nosep] at (B.south) {\includegraphics[height=22mm]{Bob}};
+
+      \uncoverb<6>{
+        \node at (0,2.5) {\includegraphics[width=8mm]{Hangout}};
+      }
+      \uncoverb<7>{
+        \node at (0,2.5) {\includegraphics[width=8mm]{Whatsapp}};
+      }
+      \uncoverb<8>{
+        \node at (0,2.5) {\includegraphics[width=8mm]{Skype}};
+      }
+    \end{tikzpicture}
+  }
+
+  \on[x=-.25\paperwidth, y=15mm]{
+    \begin{chat}[color=structure]{Bob}
+      \only<2->{\chatSend{Pause café ?}}
+      \onlyb<8>{\chatRecv[color=example]{Évidemment !}}
+      \only<4->{\chatSend{Tu n'as pas répondu. \\ Tu m'en veux ?}}
+      \onlyb<7>{\chatRecv[color=example]{Évidemment !}}
+      \only<5>{\node at (0,-25mm) {\Large ?};}
+    \end{chat}
+  }
+
+  \on[x=.25\paperwidth, y=15mm]{
+    \begin{chat}[color=example]{Alice}
+      \only<2->{\chatRecv[color=structure]{Pause café ?}}
+      \only<3-5,7->{\chatSend{Évidemment !}}
+      \onlyb<6>{\chatErr{Évidemment !}}
+      \onlyb<6->{\chatRecv[color=structure]{Tu n'as pas répondu. \\ Tu m'en veux ?}}
+      \only<5>{\node at (0,-25mm) {\Large ?};}
+    \end{chat}
+  }
+
+  \ob<2>[x=-.25\paperwidth, y=-15mm]{
+    \chatBubble[color=structure]{Pause café ?}
+  }
+
+  \on<3>[x=.25\paperwidth, y=-15mm]{
+    \chatBubble[color=example]{Évidemment !}
+  }
+
+  \on<4>[x=-.25\paperwidth, y=-15mm]{
+    \chatBubble[color=structure]{Tu n'as pas répondu. \\ Tu m'en veux ?}
+  }
+
+\end{frame}
+
+\endgroup
+\endinput

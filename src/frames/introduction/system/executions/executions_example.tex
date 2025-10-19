@@ -1,0 +1,123 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\tikzset{
+  sshape/.style={
+    text width=19mm,
+    rectangle,
+    rounded corners,
+    fill=black!10,
+  },
+}
+
+\newcommand\scontent[4]{
+  \begin{tabular}{@{}r@{}c@{~}l@{}}
+    \tiny $p_1$  & \tiny : & \tiny \texttt{#1} \\[-.5mm]
+    \tiny $p_2$  & \tiny : & \tiny \texttt{#2} \\[-.5mm]
+    \tiny $\X_2$ & \tiny : & \tiny \texttt{#3} \\[-.5mm]
+    \tiny $M$    & \tiny : & \tiny \texttt{#4}
+  \end{tabular}
+}
+
+\SetKwData{Done}{done}
+\SetKwData{X}{value}
+
+\begin{frame}{Système de transitions}
+
+  \on[top]{
+    \begin{algorithm}[H]
+      \LVariables{}{
+        $\Done_i \leftarrow \False$\;
+        $\X_i \leftarrow 0$\;
+      }
+      \Process{$p_1$}{
+        \nl \Send $m$ \To $p_2$\;
+      }
+      \Process{$p_2$}{
+        \nl $\X_2 \leftarrow 1$\;
+        \nl \Wait $\Done_2$\;
+        \nl$\Print(\X_2)$\;
+      }
+      \When{$p_2$ \Receives $m$ \From $p_1$}{
+        $\X_2 \leftarrow 2$\; 
+        $\Done_2 \leftarrow \True$\;
+      }
+    \end{algorithm}
+  }
+  
+  \on[x=.25\textwidth]{
+    \begin{tikzpicture}[automaton, x=15mm, y=17mm]
+      \state[structure on=<2->,  sshape, initial]   (00) at (1,4) {\scontent{\texttt{start}} {\texttt{start}} {0} {$\emptyset$}};
+
+      \state[structure on=<2>,   sshape]            (11) at (0,3) {\scontent{\texttt{term}}  {\texttt{start}} {0} {$\{\langle p_1, p_2, m \rangle\}$}};
+      \state[structure on=<2>,   sshape]            (12) at (0,2) {\scontent{\texttt{term}}  {\texttt{start}} {2} {$\emptyset$}};
+      \state[structure on=<2>,   sshape]            (13) at (0,1) {\scontent{\texttt{term}}  {\texttt{L3}}    {1} {$\emptyset$}};
+      \state[structure on=<2>,   sshape, accepting] (14) at (0,0) {\scontent{\texttt{term}}  {\texttt{term}}  {1} {$\emptyset$}};
+
+      \state[structure ob=<3-4>, sshape]            (21) at (2,3) {\scontent{\texttt{start}} {\texttt{L3}}    {1} {$\emptyset$}};
+      \state[structure ob=<3>,   sshape]            (22) at (2,2) {\scontent{\texttt{term}}  {\texttt{L3}}    {1} {$\{\langle p_1, p_2, m \rangle\}$}};
+      \state[structure ob=<3>,   sshape]            (23) at (2,1) {\scontent{\texttt{term}}  {\texttt{L3}}    {2} {$\emptyset$}};
+      \state[structure ob=<3>,   sshape, accepting] (24) at (2,0) {\scontent{\texttt{term}}  {\texttt{term}}  {2} {$\emptyset$}};
+      
+      \path[alert]     (00) edge node[left]{$p_1$ : \Send $m$}     (11);
+      \path[structure] (11) edge node[left]{$p_2$ : \Receive $m$}  (12);
+      \path[structure] (12) edge node[left]{$p_2$ : \texttt{L2}}   (13);
+      \path[structure] (13) edge node[left]{$p_2$ : $\Print(1)$} (14);
+
+      \path[structure] (00) edge node[right]{~$p_2$ : \texttt{L2}}   (21);
+      \path[alert]     (21) edge node[right]{$p_1$ : \Send $m$}     (22);
+      \path[structure] (22) edge node[right]{$p_2$ : \Receive $m$}  (23);
+      \path[structure] (23) edge node[right]{$p_2$ : $\Print(2)$} (24);
+
+      \path[structure] (21) edge[loop right, looseness=2] node[right]{$p_2$ : \texttt{L3}} (21);
+    \end{tikzpicture}
+  }
+
+  \on<2>[x=-.3\textwidth, bottom=3mm]{
+    \begin{tikzpicture}[y=8mm, anchor=center, x=9mm]
+      \draw[process] (0,1) node[left]{$p_1$} to (5,1);
+      \draw[process] (0,0) node[left]{$p_2$} to (5,0);
+      \scriptsize
+      \node[example, operation,minimum height=5mm] (p2) at (3.5,0) {$\X_2 \leftarrow 1$};
+      \begin{scope}[alert]
+        \node[event]     (send-m) at (.5,1) {};
+        \node[operation,minimum height=5mm] (rece-m) at (1.5,0) {$\X_2 \leftarrow 2$};
+        \path[message]   (send-m.center) edge node{$m$} (rece-m.west);
+      \end{scope}
+    \end{tikzpicture}
+  }
+
+  \ob<3>[x=-.3\textwidth, bottom=3mm]{
+    \begin{tikzpicture}[y=8mm, anchor=center, x=9mm]
+      \draw[process] (0,1) node[left]{$p_1$} to (5,1);
+      \draw[process] (0,0) node[left]{$p_2$} to (5,0);
+      \scriptsize
+      \node[example, operation, minimum height=5mm] (p2) at (2.5,0) {$\X_2 \leftarrow 1$ \hspace{2cm}};
+      \begin{scope}[alert]
+        \node[event]     (send-m) at (.5,1) {};
+        \node[operation] (rece-m) at (3,0) {$\X_2 \leftarrow 2$};
+        \path[message]   (send-m.center) edge node{$m$} (rece-m.west);
+      \end{scope}
+    \end{tikzpicture}
+  }
+
+  \ob<4>[x=-.3\textwidth, bottom=3mm]{
+    \begin{tikzpicture}[y=8mm, anchor=center, x=9mm]
+      \draw[crashed] (0,1) node[left]{$p_1$} to (1,1);
+      \draw[process] (0,0) node[left]{$p_2$} to (5,0);
+      \scriptsize
+      \node[example,   operation, minimum height=5mm] (p2) at (2.5,0) {$\X_2 \leftarrow 1$ \hspace{2.2cm}};
+      \node[structure, operation, minimum height=4mm] (wu) at (3.2,0) {\Wait \False...};
+    \end{tikzpicture}
+  }
+  
+\end{frame}
+
+\endgroup
+\endinput

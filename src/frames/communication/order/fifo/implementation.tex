@@ -1,0 +1,78 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwData{Clock}{clock}
+\SetKwData{Delivered}{delivered}
+\SetKwData{Tick}{tick}
+\SetKwData{Now}{now}
+\SetKwData{Update}{update}
+
+\begin{frame}{Implémentation de FIFO Broadcast}
+
+  \ob<-2>[top]{
+    \begin{algorithm}[H]
+      \lLVariables{}{$\Delivered_i \leftarrow [0, ..., 0]$}
+      \Method{$\textsc{fifo}.\Broadcast(m)$}{
+        \textsc{sta}.\SBroadcast $\textsc{msg}(m, \Delivered_i[i])$;
+      }
+      \When{\textsc{sta}.\Deliver $\textsc{msg}(m, \mathit{sn}_j)$ \From $p_j$}{
+        \Wait{$\Delivered_i[j] = \mathit{sn}_j$};\\
+        \textsc{fifo}.\Deliver $m$ \From $p_j$;\\
+        $\Delivered_i[j] \leftarrow \mathit{sn}_j+1$;
+      }
+    \end{algorithm}
+  }
+
+  \on<3>[top]{
+    \begin{algorithm}[H]
+      \lLVariables{}{\Example{$\Clock_i$;}\tcp*[f]{$\Delivered_i[1..n]$}}
+      \Method{$\textsc{fifo}.\Broadcast(m)$}{
+        \textsc{sta}.\SBroadcast $\textsc{msg}(m,~\Example{\Clock_i.\Now(i)})$;\tcp*[r]{$\Delivered_i[i]$}
+      }
+      \When{\textsc{sta}.\Deliver $\textsc{msg}(m, \mathit{date}_j)$ \From $p_j$}{
+        \Wait{\Example{$\mathit{date}_j \ge \Clock_i.\Now(j)$}};\tcp*[r]{$\Delivered_i[j]$}
+        \textsc{fifo}.\Deliver $m$ \From $p_j$;\\
+        \Example{$\Clock_i.\Update(j)$};\tcp*[r]{$\Delivered_i[j] \leftarrow \mathit{sn}+1$}
+      }
+    \end{algorithm}
+  }
+
+  \obExampleBlock<1>[anchor=north]{Exemple d'exécution}{}
+  \ob<1>[y=-25mm]{
+    \begin{tikzpicture}[y=12mm]
+      \draw[process] (0,1) node[left]{$p_1$}                                            to (10,1);
+      \draw[process] (0,0) node[left]{$p_2$} node[replica below]{$\Delivered_2[1] = 0$} to (10,0);
+
+      \draw[alert]   (1,1) node (m1) {} node[above] {$m$} ;
+      \draw[alert, message]     (m1.center) to[bend left]   (2,1) ;
+      \draw[alert, message]     (m1.center) to node[swap]{$sn=0$} (4.5,0) node[replica below]{$1$};
+
+      \draw[example] (3,1) node (m2) {} node[above] {$m'$} ;
+      \draw[example, message]   (m2.center) to[bend left]   (4,1) ;
+      \draw[example, message]   (m2.center) to node{$sn=1$} (3.5,.05) to[bend left] (5.5,0) node[replica below]{$2$} ;
+    \end{tikzpicture}
+  }
+
+  \onBlock<2->[anchor=north]{Remarques}{
+    \begin{itemize}
+    \item FIFO-Ordering : pour tout $j$, $\Delivered_i[j]$ = prochain $sn$ attendu de $p_j$.
+    \item On peut renforcer les propriétés en remplaçant \textsc{sta} par \textsc{rb} ou \textsc{urb}
+    \item En pratique, \Wait est implémenté par des buffers
+    \item<3> Pour tout processus $p_j$, $\Delivered_i[j]$ implémente une horloge logique
+      \begin{itemize}
+      \item Le temps logique est l'ordre de processus
+      \item Les dates sont des entiers (horloge scalaire)
+      \end{itemize}
+    \end{itemize}
+  }
+  
+\end{frame}
+
+\endgroup
+\endinput

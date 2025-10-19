@@ -1,0 +1,60 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\newcommand{\Abort}{\textsc{Abort}}
+\newcommand{\Adopt}{\textsc{Adopt}}
+\newcommand{\Commit}{\textsc{Commit}}
+
+\begin{frame}{Consensus basé sur un leader}
+
+  \begin{alertblock}{Rappel -- Impossibilité du consensus}
+    Il est impossible d'avoir à la fois :
+    \begin{description}
+    \item[Accord: ] Au plus une valeur décidée
+    \item[Validité: ] Toute valeur décidée a été proposée
+    \item[Terminaison: ] \alert{\sout{{\color{black} Tout processus correct finit par décider une valeur}}}
+    \end{description}
+  \end{alertblock}
+    
+  \begin{block}{Stratégies pour le consensus}
+    \begin{itemize}
+    \item Garder le consensus toujours sûr
+    \item Choisir une valeur commune en espérant la vivacité
+    \end{itemize}
+  \end{block}
+   
+  \begin{exampleblock}{Exemples}
+    \begin{description}[Ben-Or :]
+    \item[Ben-Or :] Choisir une valeur \example{aléatoire}
+      \begin{itemize}
+      \item Tout processus correct décide \example{avec probabilité $1$}
+      \end{itemize}
+    \item[Paxos :] Choisir la valeur d'un \example{leader} 
+      \begin{itemize}
+      \item Les processus décident \example{si le système est assez stable}
+      \end{itemize}
+    \end{description}
+  \end{exampleblock}
+
+  \on[x=40mm, y=-15mm]{
+     \begin{tikzpicture}[automaton]\footnotesize
+      \state[structure, rectangle, initial right] (a) at (0, 1) {Vérifier l'accord};
+      \state[structure, rectangle]                (b) at (0, 2) {Choisir une valeur};
+      \state[structure, rectangle, accepting]     (c) at (0, 0) {Décider};
+      \path (b) edge[bend right] (a);
+      \path (a) edge[bend right] node[swap]{\Abort} (b);
+      \path (a) edge[loop left, looseness=3] node{\Adopt} (a);
+      \path (a) edge             node{\Commit} (c);
+    \end{tikzpicture}
+  }
+  
+\end{frame}
+
+\endgroup
+\endinput

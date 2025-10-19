@@ -1,0 +1,49 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\tikzset{
+  box/.style={draw, rounded corners, text width=20mm, minimum height=10mm, align=center, draw highlighted, fill highlighted, text highlighted},
+}
+
+\begin{frame}{Réductions à explorer}
+  
+  \begin{tikzpicture}[x=28mm, y=17mm, font=\scriptsize]
+    \node[alert,     box] (leader) at (0  , 2) {Élection    \\ de leader};
+    \node[structure, box] (cons)   at (1  , 2) {Consensus};
+    \node[structure, box] (tob)    at (2  , 2) {Total-order \\ Broadcast};
+    \node[example,   box] (rsm)    at (3  , 2) {Replicated  \\ State Machine};
+    \node[example,   box] (mb)     at (1  , 1) {Mutual      \\ Broadcast};
+    \node[alert,     box] (quorum) at (0.5, 0) {Quorums     \\ $t < \frac{n}{2}$};
+    \node[example,   box] (rb)     at (1.5, 0) {Reliable    \\ Broadcast};
+
+    \path[-latex]      (leader) edge (cons);
+    \path[latex-latex] (cons)   edge (tob);
+    \path[latex-latex] (tob)    edge (rsm);
+    \path[-latex]      (quorum) edge (mb);
+    \path[-latex]      (mb)     edge (cons);
+    \path[-latex]      (rb)     edge (mb);
+    \path[-latex]      (rb)     edge (tob);
+  \end{tikzpicture}
+
+  \vspace{3mm}
+  \begin{block}{Comment implémenter Total-order Broadcast ?}
+    \begin{itemize}
+    \item \structure{\textsc{to}.\Broadcast} est équivalent au \structure{consensus} en calculabilité
+    \item Les deux ont besoin d'hypothèses sur le système $\mathcal{CAMP}_{n,t}$
+      \begin{itemize}
+      \item Des quorums pour empêcher les partitions \alert{$t < \frac{n}{2}$}
+      \item Des périodes assez stables pour implémenter un \alert{leader}
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+  
+\end{frame}
+
+\endgroup
+\endinput

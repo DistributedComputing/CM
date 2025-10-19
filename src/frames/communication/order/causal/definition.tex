@@ -1,0 +1,72 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Causal Broadcast}
+
+  \onBlock[top=-5mm]{Propriétés héritées de \textsc{sta}.\Broadcast}{
+    \vspace{-1mm}
+    \begin{description}[Causal-Ordering :]
+    \item[CB-Validité :]    Si $p_i$ \textsc{cb}.\Deliver $m$ de $p_j$, $p_j$ a \textsc{cb}.\Broadcast $m$
+    \item[CB-Intégrité :]   $p_i$ \textsc{cb}.\Deliver $m$ au plus une fois
+    \item[CB-Terminaison :] \textsc{cb}.\Broadcast par correct $\Rightarrow$ \textsc{cb}.\Deliver par corrects.
+    \end{description}
+  }
+
+  \onAlertBlock[y=8mm]{Nouvelle propriété d'ordre}{
+    \vspace{-1mm}
+    \begin{description}[Causal-Ordering :]
+    \item[Causal-Ordering :] Si un processus $p_i$ \textsc{cb}.\Deliver $m$ puis \textsc{cb}.\Broadcast $m'$, \\
+      alors aucun processus $p_j$ ne \textsc{cb}.\Deliver $m'$ avant $m$
+    \end{description}
+  }
+
+
+  \onBlock[bottom=1mm]{Remarques}{
+    \vspace{-1mm}
+    \begin{itemize}
+    \item\vspace{-1mm} \structure{Autre formulation :} $\text{\textsc{cb}.\Broadcast~} m \hb \text{ \textsc{cb}.\Broadcast~} m
+      \Rightarrow
+      \text{ \textsc{cb}.\Deliver~} m \text{ par } p_i  \hb \text{ \textsc{cb}.\Deliver~} m \text{ par } p_i$
+    \item Causal-Ordering $\Rightarrow$ FIFO-Ordering
+    \item \structure{Ajout de propriétés :} \textsc{rb-cb}.\Broadcast, \textsc{urb-cb}.\Broadcast
+    \end{itemize}
+  }
+
+
+  \on[y=-10mm, x=10mm]{
+    \begin{tikzpicture}[y=4mm]
+      \draw[process]   (0,2) node[left]{$p_1$} to (7,2);
+      \draw[process]   (0,1) node[left]{$p_2$} to (7,1);
+      \draw[process]   (0,0) node[left]{$p_3$} to (7,0);
+
+      \draw[structure]          (1,2) node (m1) {} node[above] {$m$} ;
+      \draw[structure, message] (m1.center) to[bend left] (2,2) ;
+      \draw[structure, message] (m1.center) to            (2,1) ;
+      \draw[structure, message] (m1.center) to            (4,0) ;
+
+      \draw[example]            (3,1) node (m2) {} node[above] {$m'$} ;
+      \draw[example, message]   (m2.center) to            (4,2) ;
+      \draw[example, message]   (m2.center) to[bend left] (4,1) ;
+      \draw[example, message]   (m2.center) to            (3.5,0) ;
+
+      \draw[alert, thick] (4.5,2.25) -- (6.5,-.25);
+      \draw[alert, thick] (6.5,2.25) -- (4.5,-.25);
+    \end{tikzpicture}
+  }
+  
+  \on[bottom=-2mm, text]{
+    \begin{citing}
+    \item[HT94] V. Hadzilacos, S. Toueg. \emph{A modular approach to fault-tolerant broadcasts and related problems.} 1994
+    \end{citing}
+  }  
+
+\end{frame}
+
+\endgroup
+\endinput

@@ -1,0 +1,50 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwFunction{Time}{time}
+
+\begin{frame}{Temps et horloges logiques}
+ 
+  \begin{block}{Définitions -- Temps logique}
+    \begin{description}[Horloge :]
+    \item[Temps :] relation d'ordre \structure{$\rightarrow$} (partielle ou totale) sur les pas d'exécution
+    \item[Date :] type de valeurs muni d'un ordre (partiel ou total) \structure{$\le$}
+    \item[Horloge :] fonction (algorithmique) \alert{strictement croissante} \structure{$\Time$}
+      qui associe une date à certains pas : 
+      $\alert{\forall a, b, \quad a \rightarrow b \quad \Rightarrow \quad \Time(a) < \Time(b)}$
+    \end{description}
+  \end{block}
+
+  \begin{exampleblock}{Exemple -- Temps physique}
+    \vspace{-2mm}
+    \begin{description}[Temps :]
+    \item[Temps :] ordre total en mécanique newtonnienne
+    \item[Date :] nombre réel $t$ mesuré en secondes
+    \item[Horloge :] à pendule, ressort, quartz, atomique, ...
+    \end{description}
+  \end{exampleblock}
+
+  \pause
+  
+  \begin{alertblock}{Exemple -- Horloges de Lamport}
+    \vspace{-2mm}
+    \begin{description}[Horloge :]
+    \item[Date :] horloge \structure{scalaire} \hfill \alert{$\mathit{Date} = \mathbb{N}$}
+    \item[Temps :] \vspace{-1mm} capture la relation \structure{happened before} \hfill \alert{$a \hb b  \rightarrow \Time(a) < \Time(b)$}
+    \end{description}
+    \alert{Attention :} La réciproque n'est pas vraie en général :
+    \centering
+    $\alert{\exists a, b, a || b \land \Time(a) < \Time(b)} \quad \quad \alert{\exists a, b, a \neq b \land \Time(a) = \Time(b)}$
+  \end{alertblock}
+  
+\end{frame}
+
+\endgroup
+\endinput
+

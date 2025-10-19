@@ -1,0 +1,44 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Communication}
+
+  \vspace{-2mm}
+  \begin{block}{Interface de communication}
+    Les processus communiquent en s'envoyant des messages sur un réseau
+    \begin{description}[Réception :]
+      \item[Émission :]  un processus $p_i$ peut \structure{envoyer} un message $m$ à $p_j$ en appelant :
+      \begin{algorithm}[H]
+        \Send $m$ \To $p_j$; \tcp{exécuté par $p_i$}
+      \end{algorithm}
+      \item[Réception :] plus tard, un \structure{événement de réception} de $m$ est généré chez $p_j$ :
+        \begin{algorithm}[H]
+          \lWhen{\Receive $m$ \From $p_i$}{\tcp*[h]{code exécuté par $p_j$}}
+      \end{algorithm}
+    \end{description}
+    Pour simplifier, un message à soi-même est reçu immédiatement. 
+  \end{block}
+  
+  \vspace{-2mm}
+  \begin{block}{Hypothèse -- Canaux fiables asynchrones}
+    \begin{description}[Réception :]
+    \item[Validité :] si $p_i$ reçoit $m$ de $p_j$, $p_j$ a envoyé $m$ à $p_i$
+    \item[Intégrité :] chaque processus $p_i$ reçoit $m$ au plus une fois
+    \item[Fiabilité :] si un processus correct $p_i$ envoie $m$ à un processus correct $p_j$, \\
+      $p_j$ reçoit $m$ de $p_i$
+    \end{description}
+    \alert{Asynchronisme :} ni borne sur la durée de transfert, ni ordre sur la réception
+  \end{block}
+  
+\end{frame}
+
+\endgroup
+\endinput
+
+

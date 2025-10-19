@@ -1,0 +1,146 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwFunction{Leader}{leader}
+\SetKwFunction{Propose}{propose}
+\SetKwData{Decided}{decided}
+\SetKwData{Ballot}{ballot}
+\SetKwData{Val}{val}
+
+\begin{frame}[fragile]{L'algorithme Single-decree Paxos}
+
+  \on[top=-3mm]{\small
+    \begin{algorithm}[H]
+      \lLVariables{}{
+        \Structureb<1,5>{$\Decided_i \leftarrow \bot$};
+        \Structureb<2>{$\Ballot_i \leftarrow \langle 0, 0 \rangle $};
+        \Exampleb<3-5>{$\Val_i \leftarrow \bot$};
+      }
+      \Operation{$\Propose(v)$}{
+        \lIf{$\Val_i = \bot$}{\Exampleb<5>{$\Val_i \leftarrow v$};}
+        \While{\Structureb<1,5>{$\Decided_i = \bot$}}{
+          \If{\Structureb<1,6>{$leader() = i$}}{
+            \Structureb<2>{\Let $t$ \St $\langle t, i\rangle >  \Ballot_i$};\\
+            \Alert<3-4>{\textsc{mb}.\SBroadcast $\textsc{begin}(t)$};\\
+            \lIf{\Alert<3-4>{$\langle t, i\rangle = \Ballot_i$}}{ 
+              \Example<3-4>{\textsc{mb}.\SBroadcast $\textsc{voted}(t, \Exampleb<5>{\Val_i})$};
+            }
+            \lIf{\Alert<3-4>{$\langle t, i\rangle = \Ballot_i$}}{ 
+              \Structureb<1,4>{\textsc{rb}.\Broadcast $\textsc{decide}(\Exampleb<5>{\Val_i})$};
+            }
+          }
+        }
+        \Structureb<1,5>{\Return $\Decided_i$};
+      }
+      \When{\Alert<3-4>{\textsc{mb}.\Deliver $\textsc{begin}(t)$} \From $p_j$}{
+        \lIf{\Alert<3-4>{$\langle t, j\rangle \ge \Ballot_i$}}{
+          \Alert<3-4>{$\Ballot_i \leftarrow \langle t, j \rangle $};
+        }
+      }
+      \When{\Example<3-4>{\textsc{mb}.\Deliver $\textsc{voted}(t,v)$} \From $p_j$}{
+        \lIf{\Alert<3-4>{$\langle t, j\rangle \ge \Ballot_i$}}{
+          \Alert<3-4>{$\Ballot_i \leftarrow \langle t, j \rangle $};
+          \Example<3-5>{$\Val_i \leftarrow v$};
+        }
+      }
+      \When{\Structure<1,4>{\textsc{rb}.\Deliver $\textsc{decide}(v)$} \From $p_j$}{
+        \Structureb<1,5>{$\Decided_i \leftarrow v$};
+      }
+    \end{algorithm}
+  }
+
+  \obAlertBlock<1>[anchor=north, y=-20mm]{Un algorithme centralisé}{
+    \begin{itemize}
+    \item La valeur décidée est choisie par un leader
+    \end{itemize}
+  }
+
+  \obAlertBlock<2>[anchor=north, y=-20mm]{Système de rondes asynchrones}{
+    \begin{description}[ballot number :]
+    \item[ballot number :] Ordre lexicographique total sur des estampilles de Lamport
+    \item[leader :] Seul $p_i$ peut être \emph{leader} pour $\langle t, i \rangle$
+    \end{description}
+  }
+  
+  \obAlertBlock<3>[anchor=north, y=-20mm]{Chaque ronde est divisée en deux phases}{
+    \begin{description}[\textsc{voted} :]
+    \item[\alert{\textsc{begin} :}] Arrête les rondes précédentes et récupère leur valeur
+    \item[\example{\textsc{voted} :}] Transmet la valeur aux rondes suivantes
+    \end{description}
+  }
+
+  \onAlertBlock<4>[anchor=north, y=-18mm]{Correction : accord (par l'absurde)}{}
+
+  \on<4>[y=-10mm, right=35mm]{\small
+    Soient $\langle t_i, i \rangle < \langle t_j, j \rangle$\\
+    les deux plus petits \\ \emph{ballot numbers} tels que :
+    \begin{itemize}
+    \item $p_i$ envoie $\textsc{decide}(v_i)$
+    \item $p_j$ envoie $\textsc{decide}(v_j)$
+    \end{itemize}
+    avec $v_i \neq v_j$. \\
+    D'après mutual ordering :
+  }
+
+  \on<4>[bottom, x=.25\textwidth]{
+    \begin{tikzpicture}[anchor=mid,y=5mm, x=8mm]
+      \draw[->] (0,1) node[left]{$p_i$} -- (5,1);
+      \draw[->] (0,0) node[left]{$p_j$} -- (5,0);
+      
+      \node[example]   at (1,1) {$\bullet$}; \node[above left, example]   at (1,1) {\scriptsize $\textsc{voted}(t_i, v_i)$};
+      \node[alert]     at (1,0) {$\bullet$}; \node[below left, alert]     at (1,0) {\scriptsize $\textsc{begin}(t_j)$};
+      \node[structure] at (4,0) {$\bullet$}; \node[above, structure] at (4,0) {\scriptsize $\textsc{decide}(v_i)$};
+
+      \path[-latex,example  ] (1,1) edge[bend left]  (2,1);
+      \path[-latex,example  ] (1,1) edge             (2,0);
+      \path[-latex,alert    ] (1,0) edge[bend right] (3,0);
+      \path[-latex,structure] (4,0) edge +(.5,-.5);
+    \end{tikzpicture}
+  }
+
+  \on<4>[bottom, x=-.25\textwidth]{
+    \begin{tikzpicture}[anchor=mid,y=5mm, x=8mm]
+      \draw[->] (0,1) node[left]{$p_i$} -- (5,1);
+      \draw[->] (0,0) node[left]{$p_j$} -- (5,0);
+      
+      \node[example]   at (1,1) {$\bullet$}; \node[above left, example]   at (1,1) {\scriptsize $\textsc{voted}(t_i, v_i)$};
+      \node[alert]     at (1,0) {$\bullet$}; \node[below left, alert]     at (1,0) {\scriptsize $\textsc{begin}(t_j)$};
+      \node[structure] at (4,1) {$x$}; \node[below, structure] at (4,1) {\scriptsize $\textsc{decide}(v_i)$};
+
+      \path[-latex,example  ] (1,1) edge[bend left]  (3,1);
+      \path[-latex,alert    ] (1,0) edge             (2,1);
+      \path[-latex,alert    ] (1,0) edge[bend right] (2,0);
+    \end{tikzpicture}
+  }
+
+  \obAlertBlock<5>[anchor=north, y=-18mm]{Correction : validité}{
+    \begin{itemize}
+    \item\vspace{-1mm} Seules $\bot$ et des valeurs proposées sont écrites dans $\Decided_i$ et $\Val_i$
+    \item\vspace{-1mm} Seules des valeurs proposées sont envoyées par $\textsc{voted}$ et $\textsc{decide}$
+    \item\vspace{-1mm} Lors de la décision, $\Decided_i\neq\bot$
+    \end{itemize}
+  }
+
+  \obAlertBlock<6>[anchor=north, y=-18mm]{Correction : terminaison}{
+    \begin{itemize}
+    \item Si un seul leader correct, il termine sa ronde et envoie $\textsc{decide}(\Val_i)$
+    \item Un jour, un leader correct est élu...
+    \end{itemize}
+  }
+
+  \on[bottom=-2mm, text]{
+    \begin{citing}
+    \item[L98] Leslie Lamport. \emph{The part-time parliament.} ACM TOCS (1998)
+    \end{citing}
+  }
+  
+\end{frame}
+
+\endgroup
+\endinput

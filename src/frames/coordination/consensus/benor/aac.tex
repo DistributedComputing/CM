@@ -1,0 +1,235 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwFunction{Propose}{propose}
+\SetKwFunction{Filter}{filter}
+\SetKwData{F}{f}
+
+\tikzset{
+  output adopt/.style={
+    rectangle,
+    minimum height=2.5mm,
+    anchor=north,
+    align=center,
+    draw highlighted,
+    text highlighted,
+    outer sep=0pt,
+    inner sep=1pt,
+    text width=6mm,
+  },
+  algo value/.style={
+    rectangle,
+    minimum height=2.5mm,
+    anchor=north,
+    align=center,
+    draw highlighted,
+    fill highlighted,
+    outer sep=0pt,
+    inner sep=1pt,
+  },
+  output/.style={
+    algo value,
+    text width=6mm,
+  },
+  output grey/.style={
+    draw,
+    fill=black!20,
+    output,
+  },
+  output graph/.style={
+    rectangle,
+    rounded corners,
+    outer sep=0pt,
+    inner sep=1pt,
+    minimum width=12mm,
+    minimum height=4mm,
+    draw,
+  },
+}
+
+\newcommand{\Abort}{\textsc{Abort}}
+\newcommand{\Adopt}{\textsc{Adopt}}
+\newcommand{\Commit}{\textsc{Commit}}
+\newcommand{\Filtered}{\mathit{filtered}}
+
+\begin{frame}{L'abstraction Abort-Adopt-Commit}
+
+  \on[top=-3mm]{
+    \begin{algorithm}[H]
+      \Algo{\textsc{aac}}{
+        \lSVariables{}{
+          $\F_1$, $\F_2$ : \textsc{filter};
+        }
+        \Method{$\Propose(v)$}{
+          \Let $\Filtered = \F_2.\Filter(\F_1.\Filter(v))$;\\
+          \lIf{$\exists w, \Filtered = \{\{w\}\}$}{
+            \Return~~\Structure[draw=structure]{$\Commit(w)$}~~;
+          }
+          \lElseIf{$\exists w, \{w\} \in \Filtered$}{
+            \Return~~\Structure[draw=structure, fill=none]{$\Adopt(w)$}~~;
+          }
+          \lElse{
+            \Return~~\Fade[draw, inner sep=2pt]{$\Abort$}~~;
+          }
+        }
+      }
+    \end{algorithm}
+  }
+
+  \obBlock<1>[anchor=north, y=7mm]{Exécutions possibles pour 3 processus}{}
+  
+  \ob<1>[y=-24mm, x=-1mm]{
+    \begin{tikzpicture}[x=8mm, y=12mm]
+      \tiny
+      \node[alert,   output] (I11) at (1,2)       {$\bullet$} ;
+      \node[alert,   output] (I12) at (I11.south) {$\bullet$} ;
+      \node[alert,   output] (I13) at (I12.south) {$\bullet$} ;
+      \node[alert,   output] (I21) at (5,2)       {$\bullet$} ;
+      \node[alert,   output] (I22) at (I21.south) {$\bullet$} ;
+      \node[example, output] (I23) at (I22.south) {$\bullet$} ;
+      \node[alert,   output] (I31) at (9,2)       {$\bullet$} ;
+      \node[example, output] (I32) at (I31.south) {$\bullet$} ;
+      \node[example, output] (I33) at (I32.south) {$\bullet$} ;
+      \node[example, output] (I41) at (13,2)      {$\bullet$} ;
+      \node[example, output] (I42) at (I41.south) {$\bullet$} ;
+      \node[example, output] (I43) at (I42.south) {$\bullet$} ;
+      
+      \node[alert,   output] (O11) at (1,1)       {$\{\bullet\}$} ;
+      \node[alert,   output] (O12) at (O11.south) {$\{\bullet\}$} ;
+      \node[alert,   output] (O13) at (O12.south) {$\{\bullet\}$} ;
+      \node[alert,   output] (O21) at (3,1)       {$\{\bullet\}$} ;
+      \node[alert,   output] (O22) at (O21.south) {$\{\bullet\}$} ;
+      \node[output grey]           (O23) at (O22.south) {$\{\alert{\bullet}, \example{\bullet}\}$} ;
+      \node[alert,   output] (O31) at (5,1)       {$\{\bullet\}$} ;
+      \node[output grey]           (O32) at (O31.south) {$\{\alert{\bullet}, \example{\bullet}\}$} ;
+      \node[output grey]           (O33) at (O32.south) {$\{\alert{\bullet}, \example{\bullet}\}$} ;
+      \node[output grey]           (O41) at (7,1)       {$\{\alert{\bullet}, \example{\bullet}\}$} ;
+      \node[output grey]           (O42) at (O41.south) {$\{\alert{\bullet}, \example{\bullet}\}$} ;
+      \node[output grey]           (O43) at (O42.south) {$\{\alert{\bullet}, \example{\bullet}\}$} ;
+      \node[output grey]           (O51) at (9,1)       {$\{\alert{\bullet}, \example{\bullet}\}$} ;
+      \node[output grey]           (O52) at (O51.south) {$\{\alert{\bullet}, \example{\bullet}\}$} ;
+      \node[example, output] (O53) at (O52.south) {$\{\bullet\}$} ;
+      \node[output grey]           (O61) at (11,1)      {$\{\alert{\bullet}, \example{\bullet}\}$} ;
+      \node[example, output] (O62) at (O61.south) {$\{\bullet\}$} ;
+      \node[example, output] (O63) at (O62.south) {$\{\bullet\}$} ;
+      \node[example, output] (O71) at (13,1)      {$\{\bullet\}$} ;
+      \node[example, output] (O72) at (O71.south) {$\{\bullet\}$} ;
+      \node[example, output] (O73) at (O72.south) {$\{\bullet\}$} ;
+
+      \node[alert,   output]   (F011) at (1,0)        {\Commit} ;
+      \node[alert,   output]   (F012) at (F011.south) {\Commit} ;
+      \node[alert,   output]   (F013) at (F012.south) {\Commit} ;
+      \node[alert,   output]   (F021) at (2,0)        {\Commit} ;
+      \node[alert,   output]   (F022) at (F021.south) {\Commit} ;
+      \node[alert,   output adopt]   (F023) at (F022.south) {\Adopt} ;
+      \node[alert,   output]   (F031) at (3,0)        {\Commit} ;
+      \node[alert,   output adopt]   (F032) at (F031.south) {\Adopt} ;
+      \node[alert,   output adopt]   (F033) at (F032.south) {\Adopt} ;
+      \node[alert,   output adopt]   (F041) at (4,0)        {\Adopt} ;
+      \node[alert,   output adopt]   (F042) at (F041.south) {\Adopt} ;
+      \node[alert,   output adopt]   (F043) at (F042.south) {\Adopt} ;
+      \node[alert,   output adopt]   (F051) at (5,0)        {\Adopt} ;
+      \node[alert,   output adopt]   (F052) at (F051.south) {\Adopt} ;
+      \node[output grey]             (F053) at (F052.south) {\Abort} ;
+      \node[alert,   output adopt]   (F061) at (6,0)        {\Adopt} ;
+      \node[output grey]             (F062) at (F061.south) {\Abort} ;
+      \node[output grey]             (F063) at (F062.south) {\Abort} ;
+      \node[output grey]             (F071) at (7,0)        {\Abort} ;
+      \node[output grey]             (F072) at (F071.south) {\Abort} ;
+      \node[output grey]             (F073) at (F072.south) {\Abort} ;
+      \node[output grey]             (F081) at (8,0)        {\Abort} ;
+      \node[output grey]             (F082) at (F081.south) {\Abort} ;
+      \node[example,   output adopt] (F083) at (F082.south) {\Adopt} ;
+      \node[output grey]             (F091) at (9,0)        {\Abort} ;
+      \node[example,   output adopt] (F092) at (F091.south) {\Adopt} ;
+      \node[example,   output adopt] (F093) at (F092.south) {\Adopt} ;
+      \node[example,   output adopt] (F101) at (10,0)       {\Adopt} ;
+      \node[example,   output adopt] (F102) at (F101.south) {\Adopt} ;
+      \node[example,   output adopt] (F103) at (F102.south) {\Adopt} ;
+      \node[example,   output adopt] (F111) at (11,0)       {\Adopt} ;
+      \node[example,   output adopt] (F112) at (F111.south) {\Adopt} ;
+      \node[example, output]   (F113) at (F112.south) {\Commit} ;
+      \node[example,   output adopt] (F121) at (12,0)       {\Adopt} ;
+      \node[example, output]   (F122) at (F121.south) {\Commit} ;
+      \node[example, output]   (F123) at (F122.south) {\Commit} ;
+      \node[example, output]   (F131) at (13,0)       {\Commit} ;
+      \node[example, output]   (F132) at (F131.south) {\Commit} ;
+      \node[example, output]   (F133) at (F132.south) {\Commit} ;
+      
+      \path[-latex] (I13) edge (O11);
+      \path[-latex] (I23) edge (O21);
+      \path[-latex] (I23) edge (O31);
+      \path[-latex] (I23) edge (O41);
+      \path[-latex] (I33) edge (O41);
+      \path[-latex] (I33) edge (O51);
+      \path[-latex] (I33) edge (O61);
+      \path[-latex] (I43) edge (O71);
+
+      \path[-latex] (O13) edge (F011);
+      \path[-latex] (O23) edge (F021);
+      \path[-latex] (O23) edge (F031);
+      \path[-latex] (O23) edge (F041);
+      \path[-latex] (O33) edge (F041);
+      \path[-latex] (O33) edge (F051);
+      \path[-latex] (O33) edge (F061);
+      \path[-latex] (O43) edge (F071);
+
+      \path[-latex] (O53) edge (F081);
+      \path[-latex] (O53) edge (F091);
+      \path[-latex] (O53) edge (F101);
+      \path[-latex] (O63) edge (F101);
+      \path[-latex] (O63) edge (F111);
+      \path[-latex] (O63) edge (F121);
+      \path[-latex] (O73) edge (F131);
+
+      \draw (I12.west) node[left]{$v$} ;
+      \draw (O12-|I12.west) node[left]{$\F_1$} ;
+      \draw (F012-|I12.west) node[left]{$\F_2 \circ \F_1$} ;
+    \end{tikzpicture}
+  }
+
+  \onBlock<2>[anchor=north, y=7mm, left=.7\textwidth]{Propriétés}{
+    \begin{description}[Conservation :]
+    \item[Terminaison :] \Propose termine pour les corrects
+    \item[Conservation :] Si seulement $v$ est proposée, \\ seul $\Commit(v)$ est retourné
+    \item[Pré-accord :] Les valeurs retournées sont \\\alert{identiques ou adjacentes} \\dans le graphe :
+    \end{description}
+  }
+  \on<2>[y=-15mm, x=.33\textwidth]{
+    \begin{tikzpicture}[y=8mm, x=16mm]
+      \footnotesize
+      \node[output graph, fill=black!20]                (ab) at (0,0) {$\Abort$};
+      \node[output graph, structure]                    (ax) at (90:1) {$\Adopt(x)$};
+      \node[output graph, structure, fill=structure!30] (cx) at (90:2) {$\Commit(x)$};
+      \node[output graph, alert]                        (ay) at (-60:1) {$\Adopt(y)$};
+      \node[output graph, alert, fill=alert!30]         (cy) at (-60:2) {$\Commit(y)$};
+      \node[output graph, example]                      (az) at (-120:1) {$\Adopt(z)$};
+      \node[output graph, example, fill=example!30]     (cz) at (-120:2) {$\Commit(z)$};
+
+      \path (ab) edge (ax);
+      \path (ab) edge (ay);
+      \path (ab) edge (az);
+      \path (ax) edge (cx);
+      \path (ay) edge (cy);
+      \path (az) edge (cz);
+    \end{tikzpicture}
+  }
+
+  \on<2>[bottom=-2mm, text]{
+    \begin{citing}
+    \item[PMJ16] E. Gafni. \emph{Round-by-round fault detectors unifying synchrony and asynchrony.} PODC. 1998
+    \item[AW24] H. Attiya, J. Welch. \emph{Multi-Valued Connected Consensus: A New Perspective on Crusader Agreement and Adopt-Commit.} OPODIS. 2023
+    \end{citing}
+  }  
+  
+\end{frame}
+
+\endgroup
+\endinput
+

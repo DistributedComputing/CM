@@ -1,0 +1,72 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwFunction{Crashed}{crashed}
+
+\begin{frame}{Implémentation d'un détecteur de fautes}
+
+  \onBlock[top=-5mm]{Problème -- Détecteur de fautes parfait $P$}{
+    
+    \begin{description}[Complétude :]
+    \item[Interface :] Une méthode $\Crashed(p_j)$, appelée par $p_i$
+      \begin{algorithm}[H]
+        \Interface{$\mathit{P}$}{
+          \lMethod{$\Crashed(p_j \in \mathit{Proc}) \in \mathbb{B}$}{\tcp*[h]{appelée par $p_i$}}
+        }
+      \end{algorithm}
+    \item[Vivacité :] $\Crashed$ termine
+    \item[Exactitude :] si $p_j$ est \alert{correct},  $\Crashed(p_j) \rightarrow \False$
+    \item[Complétude :] si $p_j$ est \alert{déjà tombé en panne}, $\Crashed(p_j) \rightarrow \True$
+    \end{description}
+  }
+
+  \onBlock<2->[y=-12mm]{Théorème -- Inexistence de $P$}{
+    Il n'existe aucune implémentation de $P$ dans le modèle considéré.
+
+    \structure{Démonstration :} par \alert{indistinguabilité} des exécutions suivantes par $p_i$.
+  }
+
+  \on<2->[x=-.3\textwidth, bottom=3mm]{
+    \begin{tikzpicture}[y=8mm, anchor=center, x=9mm]
+      \draw[crashed] (0,1) node[left]{$p_j$} to (.5,1);
+      \draw[process] (0,0) node[left]{$p_i$} to (4.5,0);
+      
+      \node[structure, operation] (pj) at (2.25,0) {$\Crashed(p_j) \rightarrow \True$};
+    \end{tikzpicture}
+  }
+
+  \on<2->[x=.2\textwidth, bottom=3mm]{
+    \begin{tikzpicture}[y=8mm, anchor=center, x=9mm]
+      \draw[process] (0,1) node[left]{$p_j$} to (6,1);
+      \draw[process] (0,0) node[left]{$p_i$} to (6,0);
+
+      \draw[dashed] (.5,.5) node[left]{\scriptsize réseau lent} -- (4 ,.5);
+      
+      \node[structure, operation] (pj) at (2.1,0) {$\Crashed(p_j) \rightarrow \True$};
+
+      \begin{scope}[alert]
+        \node[event]   (send-1) at (1,1) {};
+        \node[event]   (rece-1) at (5,0) {};
+        \path[message] (send-1.center) edge[out=-25, in=140] (rece-1.center);
+      \end{scope}
+
+      \begin{scope}[example]
+        \node[event]   (send-2) at (2.6,1) {};
+        \node[event]   (rece-2) at (5.6,0) {};
+        \path[message] (send-2.center) edge[out=-10, in=140] (rece-2.center);
+      \end{scope}
+
+
+    \end{tikzpicture}
+  }
+  
+\end{frame}
+
+\endgroup
+\endinput

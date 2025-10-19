@@ -1,0 +1,79 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: Communication
+% Section: Cohérence faible
+% Frame: Eventual Consistency
+
+\begingroup
+
+\SetKwFunction{Insert}{insert}
+\SetKwFunction{Append}{append}
+\SetKwFunction{Read}{read}
+\SetKwData{State}{state}
+
+\begin{frame}{Vers l'implémentation d'eventual consistency}
+
+  \onBlock[top=-3mm]{La diffusion fiable seule ne suffit pas}{}
+  
+  \on[y=13mm]{
+    \begin{algorithm}[H]
+      \lLVariables{}{$\State_i \leftarrow \varepsilon$}
+      \lMethod{$\Read()$}{\Return $\State_i$}
+      \Method{$\Append(v)$}{
+        \Alert{\textsc{rb}.\Broadcast} $\textsc{m}(v)$\;
+      }
+      \When{\Alert{\textsc{rb}.\Deliver} $\textsc{m}(v)$ \From $p_j$}{
+        $\State_i \leftarrow \State_i \cdot v$\;
+      }
+    \end{algorithm}
+  }
+
+  \on[y=13mm, right=.5\textwidth]{
+    \begin{tikzpicture}[y=10mm]
+      \draw[process] (0,1) node[left]{$p_1$} node[replica      ] {$\varepsilon$} to (5,1) node[replica, above left] {$\alert{a} \cdot \example{b}$} ;
+      \draw[process] (0,0) node[left]{$p_2$} node[replica below] {$\varepsilon$} to (5,0) node[replica, below left] {$\example{b} \cdot \alert{a}$} ;
+      
+      \node[alert,   operation] (ia) at (2,1) {$\Append(a)$};
+      \draw[alert,   message]   (ia.west) to[bend left]  (ia.east);
+      \draw[alert,   message]   (ia.west) to[bend below] (4,0);
+
+      \node[example, operation] (ib) at (2,0) {$\Append(b)$};
+      \draw[example, message]   (ib.west) to[bend above] (4,1);
+      \draw[example, message]   (ib.west) to[bend right] (ib.east);
+    \end{tikzpicture}
+  }
+
+  \onBlock<2->[y=-6mm]{Un cas simple : les mises à jour commutatives}{}
+
+  \on<2->[y=-24mm]{
+    \begin{algorithm}[H]
+      \lLVariables{}{$\State_i \leftarrow \emptyset$}
+      \lMethod{$\Read()$}{\Return $\State_i$}
+      \Method{$\Insert(v)$}{
+        \Alert{\textsc{rb}.\Broadcast} $\textsc{m}(v)$\;
+      }
+      \When{\Alert{\textsc{rb}.\Deliver} $\textsc{m}(v)$ \From $p_j$}{
+        $\State_i \leftarrow \State_i \cup \{v\}$\;
+      }
+    \end{algorithm}
+  }
+  
+  \on<2->[y=-24mm, right=.5\textwidth]{
+    \begin{tikzpicture}[y=10mm]
+      \draw[process] (0,1) node[left]{$p_1$} node[replica      ] {$\emptyset$} to (5,1) node[replica, above left] {$\{\alert{a}, \example{b}\}$} ;
+      \draw[process] (0,0) node[left]{$p_2$} node[replica below] {$\emptyset$} to (5,0) node[replica, below left] {$\{\alert{a}, \example{b}\}$} ;
+      
+      \node[alert,   operation] (ia) at (2,1) {$\Insert(a)$};
+      \draw[alert,   message]   (ia.west) to[bend left]  (ia.east);
+      \draw[alert,   message]   (ia.west) to[bend below] (4,0);
+
+      \node[example, operation] (ib) at (2,0) {$\Insert(b)$};
+      \draw[example, message]   (ib.west) to[bend above] (4,1);
+      \draw[example, message]   (ib.west) to[bend right] (ib.east);
+    \end{tikzpicture}
+  }
+
+\end{frame}
+
+\endgroup
+\endinput

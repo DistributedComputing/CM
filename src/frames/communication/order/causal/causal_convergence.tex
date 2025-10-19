@@ -1,0 +1,199 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: Communication
+% Section: Cohérence faible
+% Frame: Eventual Consistency
+
+\begingroup
+
+\SetKwFunction{Read}{read}
+\SetKwFunction{Write}{write}
+\SetKwData{Vals}{vals}
+\SetKwData{Time}{time}
+\SetKwFunction{V}{v}
+\SetKwFunction{TS}{ts}
+
+\begin{frame}{Mémoire causalement convergente}
+
+  \on<2->[y=18mm, x=35mm]{
+    \begin{tikzpicture}[anchor=center]
+      \node[nosep, text width=40mm, text height=25mm] (execution)  at (0,0) {};
+      \node[nosep, text width=25mm, text height=25mm] (concurrent) at (0,0) {};
+      \node[nosep, text width=40mm, text height=08mm] (local)      at (0,0) {};
+      \node[nosep, text width=08mm, text height=08mm] (present)    at (0,0) {};
+      
+      \fill[structure!15] (concurrent.north west) rectangle (concurrent.south east);
+      \fill[alert!15]     (execution.north west) -- (concurrent.north west) -- (present.north west) -- (present.south west) -- (concurrent.south west) -- (execution.south west);
+      \fill[example!15]   (execution.north east) -- (concurrent.north east) -- (present.north east) -- (present.south east) -- (concurrent.south east) -- (execution.south east);
+      \fill[structure!30] (present.north west) rectangle (present.south east);
+      \fill[alert!30]     (local.north west) rectangle (present.south west);
+      \fill[example!30]   (local.north east) rectangle (present.south east);
+      
+      \draw (concurrent.north west) -- (present.north west) -- (present.south west) -- (concurrent.south west);
+      \draw (concurrent.north east) -- (present.north east) -- (present.south east) -- (concurrent.south east);
+      \draw (local.north west) -- (local.north east);
+      \draw (local.south west) -- (local.south east);
+      
+      \scriptsize
+      \node[alert, below right, align=left]   at (execution.north west) {Passé \\causal};
+      \node[alert, below right]               at (local.north west)     {Passé local};
+      \node[structure, below]                 at (concurrent.north)     {Présent concurrent};
+      \node[structure, below]                 at (present.north)        {Présent};
+      \node[example, below left, align=right] at (execution.north east) {Futur \\causal};
+      \node[example, above left]              at (local.south east)     {Futur local};
+
+      \tiny
+      \draw (-10mm,0)        node[alert]     (plo1) {$\bullet$} node[left]       {};
+      \draw (-5mm,0)         node[alert]     (plo2) {$\bullet$} node[below left] {};
+      \draw (-10mm, 6mm)     node[alert]     (pca1) {$\bullet$} node[left]       {};
+      \draw (-15mm,-8mm)     node[alert]     (pca2) {$\bullet$} node[left]       {};
+      \draw (present.center) node[structure] (pres) {$\bullet$} node[below]      {};
+      \draw (  0mm, 6mm)     node[structure] (con1) {$\bullet$} node[above]      {};
+      \draw ( -3mm,-8mm)     node[structure] (con2) {$\bullet$} node[below]      {};
+      \draw (  3mm,-8mm)     node[structure] (con3) {$\bullet$} node[below]      {};
+      \draw ( 8mm, 0mm)     node[example]   (floc) {$\bullet$} node[right]      {};
+      \draw ( 12mm, 6mm)     node[example]   (fca1) {$\bullet$} node[right]      {};
+      \draw ( 15mm,-8mm)     node[example]   (fca2) {$\bullet$} node[right]      {};
+
+      \path[->] (pca1) edge (con1);
+      \path[->] (con1) edge (fca1);
+      
+      \path[->] (plo1) edge (plo2);
+      \path[->] (plo2) edge (pres);
+      \path[->] (pres) edge (floc);
+
+      \path[->] (pca2) edge (con2);
+      \path[->] (con2) edge (con3);
+      \path[->] (con3) edge (fca2);
+
+      \path[->] (pca1) edge (plo2);
+      \path[->] (pca2) edge (plo1);
+      
+      \path[->] (floc) edge (fca1);
+      \path[->] (pres) edge (fca2);
+    \end{tikzpicture}
+  }
+  
+  \on[top=-1mm]{
+    \begin{algorithm}[H]
+      \LVariables{}{
+        $\Vals_i \leftarrow \textsc{map}\{ x \rightarrow \langle \bot, \langle 0, 0 \rangle\rangle \} $;\\
+        $\Time_i  \leftarrow 0$;
+      }
+      \lMethod{$\Read(x)$}{\Return $\Vals_i[x].\V$;}
+      \Method{$\Write(x, v)$}{
+        \Alert{\textsc{rb-cb}}.\SBroadcast $\textsc{w}(x, v, \Time_i+1)$;
+      }
+      \When{\Alert{\textsc{rb-cb}}.\Deliver $\textsc{w}(x, v, t)$ \From $p_j$}{
+        $\Time_i \leftarrow \max(\Time_i, t)$;\\
+        \lIf{$\Vals_i[x].\TS <_{lex} \langle t, j \rangle$}{
+          $\Vals_i[x] \leftarrow \langle v, \langle t, j \rangle \rangle$;
+        }
+      }
+    \end{algorithm}
+  }
+
+  \obExampleBlock<1>[y=-2mm, anchor=north]{Exemples d'exécution -- Garantie de causalité}{
+    \centering
+    \begin{tikzpicture}[y=10mm]
+      \draw[process] (0,2) node[left]{$p_1$} to (10,2);
+      \draw[process] (0,1) node[left]{$p_2$} to (10,1);
+      \draw[process] (0,0) node[left]{$p_3$} to (10,0);
+
+      \node[alert, operation]         (wa) at (1.25,1) {$x.\Write(a)$};
+      \path[alert, message]           (wa.west) edge (.6,2);
+      \path[alert, message]           (wa.west) edge[bend left]  (wa.east);
+      \path[alert, message]           (wa.west) edge[bend below] (3.5,0);
+      
+      \node[structure, operation]     (r1) at (2,2) {$x.\Read() \rightarrow a$};
+      \node[example, operation]       (wb) at (4.5,2) {$y.\Write(b)$};
+      \path[example, message]         (wb.west) edge[bend left] (wb.east);
+      \path[example, message]         (wb.west) edge            (5,1);
+      \path[example, message]         (wb.west) edge            (4,0);
+      
+      \node[structure, operation]     (r2) at (5.5,0) {$y.\Read() \rightarrow b$};
+      \node[structure, operation]     (r3) at (8.1,0) {$x.\Read() \rightarrow a$};
+    \end{tikzpicture}
+  }
+  
+  \onBlock<2>[y=-2mm, anchor=north]{Définition -- Convergence causale}{
+    Une exécution $H$ est \structure{causalement convergente} s'il existe :
+    \begin{itemize}
+    \item Un \structure{ordre partiel $\rightarrow$} sur les opérations qui contient l'ordre de processus
+    \item Un \structure{ordre total $\le$} sur les opérations qui contient l'ordre $\rightarrow$
+    \end{itemize}
+    tels que la valeur retournée par chaque opération de requête $o \in \mathit{Query}$
+    est la même que dans l'exécution séquentielle de toutes les mises à jour
+    qui précèdent $o$ selon $\rightarrow$, dans l'ordre $\le$.
+  }
+  
+  \obExampleBlock<3>[y=-2mm, anchor=north]{Exemples -- Convergence causale}{
+    \centering
+    \begin{tikzpicture}[y=10mm]
+      \draw[process] (0,2) node[left]{$p_1$} to (10,2);
+      \draw[process] (0,1) node[left]{$p_2$} to (10,1);
+      \draw[process] (0,0) node[left]{$p_3$} to (10,0);
+
+      \node[example,   operation, outer sep=0pt]     (wa) at (1.25,1) {$x.\Write(a)$};
+      \node[example,   operation, outer sep=0pt]     (wc) at (1.25,0) {$y.\Write(c)$};
+      \node[structure, operation, outer sep=0pt]     (r0) at (4,1) {$y.\Read() \rightarrow c$};
+      \node[structure, operation, outer sep=0pt]     (r1) at (1.8,2) {$x.\Read() \rightarrow a$};
+      \node[example,   operation, outer sep=0pt]     (wb) at (4.7,2) {$y.\Write(b)$};
+      \node[structure, operation, outer sep=0pt]     (r2) at (5.3,0) {$y.\Read() \rightarrow b$};
+      \node[structure, operation, outer sep=0pt]     (r3) at (8.3,0) {$x.\Read() \rightarrow a$};
+      
+      \node[alert, font=\tiny, anchor=east] at (wa.east) {1}; 
+      \node[alert, font=\tiny, anchor=east] at (wc.east) {2}; 
+      \node[alert, font=\tiny, anchor=east] at (r0.east) {3}; 
+      \node[alert, font=\tiny, anchor=east] at (r1.east) {4}; 
+      \node[alert, font=\tiny, anchor=east] at (wb.east) {5}; 
+      \node[alert, font=\tiny, anchor=east] at (r2.east) {6}; 
+      \node[alert, font=\tiny, anchor=east] at (r3.east) {7}; 
+      
+      \path[->, alert] (wa) edge (r1);
+      \path[->, alert] (r1) edge (wb);
+      \path[->, alert] (wb) edge[bend left] (r2);
+      \path[->, alert] (wc) edge (r2);
+      \path[->, alert] (r2) edge (r3);
+      \path[->, alert] (wc) edge (r0);
+      \path[->, alert] (wa) edge (r0);
+    \end{tikzpicture}
+  }
+  
+  \obBlock<4>[y=-2mm, anchor=north]{Théorème -- L'algorithme implémente la convergence causale}{
+    \begin{itemize}
+    \item L'\structure{ordre partiel $\rightarrow$} est l'ordre happens before $\hb$
+    \item L'\structure{ordre total $\le$} est défini par les estampilles de Lamport
+    \item On a bien $\rightarrow \subseteq \le$, d'après les propriétés des horloges de Lamport
+    \item La valeur retournée par les lectures est bien la dernière écrite
+    \end{itemize}
+  }
+  
+  \obAlertBlock<5>[y=-2mm, anchor=north]{L'algorithme n'est pas séquentiellement cohérent}{
+    \centering
+    \begin{tikzpicture}[y=10mm]
+      \draw[process] (0,1) node[left]{$p_1$} to (10,1);
+      \draw[process] (0,0) node[left]{$p_2$} to (10,0);
+
+      \node[alert, operation]         (wa) at (3,1) {$x.\Write(a)$};
+      \path[alert, message]           (wa.west) edge[bend left]  (wa.east);
+      \path[alert, message]           (wa.west) edge[bend below] (8,0);
+      \node[structure, operation]     (r1) at (6,1) {$y.\Read() \rightarrow \bot$};
+      
+      \node[example, operation]       (wb) at (3,0) {$y.\Write(b)$};
+      \path[example, message]         (wb.west) edge[bend above] (8,1);
+      \path[example, message]         (wb.west) edge[bend right] (wb.east);
+      \node[structure, operation]     (r2) at (6,0) {$x.\Read() \rightarrow \bot$};
+    \end{tikzpicture}
+  }
+
+  \on<2>[bottom=-2mm, text]{
+    \begin{citing}
+    \item[PMJ16] M. Perrin, A. Mostéfaoui, C. Jard. \emph{Causal consistency: beyond memory}. PPoPP. 2016
+    \end{citing}
+  }  
+
+\end{frame}
+
+\endgroup
+\endinput

@@ -1,0 +1,227 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\tikzset{
+  output adopt/.style={
+    rectangle,
+    minimum height=2.5mm,
+    anchor=north,
+    align=center,
+    draw highlighted,
+    text highlighted,
+    outer sep=0pt,
+    inner sep=1pt,
+    text width=6mm,
+  },
+  algo value/.style={
+    rectangle,
+    minimum height=2.5mm,
+    anchor=north,
+    align=center,
+    draw highlighted,
+    fill highlighted,
+    outer sep=0pt,
+    inner sep=1pt,
+  },
+  output/.style={
+    algo value,
+    text width=6mm,
+  },
+  output grey/.style={
+    draw,
+    fill=black!20,
+    output,
+  },
+  output graph/.style={
+    rectangle,
+    rounded corners,
+    outer sep=0pt,
+    inner sep=1pt,
+    minimum width=12mm,
+    minimum height=4mm,
+    draw,
+  },
+}
+
+\SetKwFunction{Decide}{decide}
+\SetKwFunction{Propose}{propose}
+\SetKwFunction{Filter}{filter}
+\SetKwFunction{Draw}{draw}
+\SetKwFunction{Rand}{random}
+\SetKwData{AAC}{aac}
+\SetKwData{Coin}{coin}
+
+\newcommand{\Abort}{\textsc{Abort}}
+\newcommand{\Adopt}{\textsc{Adopt}}
+\newcommand{\Commit}{\textsc{Commit}}
+
+\begin{frame}{L'algorithme de Ben-Or (consensus binaire)}
+
+  \on[top=-3mm]{
+    \begin{algorithm}[H]
+      \lSVariables{}{
+        $\AAC[0, ...]$; \only<2>{\Alert{$\Coin[0, ...]$;}}
+      }
+      \Method{$\Propose(v \in \mathbb{B}) \in \mathbb{B}$}{
+        \For{$\mathit{round}$ \From $0$ \To $\infty$}{
+          \Switch{$\AAC[\mathit{round}].\Propose(v)$}{
+            \lCase{$\Commit(w)$}{$\Decide(w)$; \tcp*[f]{diffuse $w$ puis termine}}
+            \lCase{$\Adopt(w)$}{$v \leftarrow w$; \tcp*[f]{adopte $w$}}
+            \onlyb<1>{\lCase{$\Abort$}{$\Alert{v \leftarrow \Rand()}$;\tcp*[f]{choisit une valeur aléatoire}}}
+            \only<2>{\lCase{$\Abort$}{$\Alert{v \leftarrow \Coin[\mathit{round}].\Draw()}$;\tcp*[f]{tirage commun}}}
+          }
+        }
+      }
+    \end{algorithm}
+  }
+
+  \obBlock<1>[anchor=north, y=7mm]{Probabilité de terminaison}{
+    \begin{itemize}
+    \item\vspace{-1mm} Terminaison à la ronde suivante avec probabilité au moins $\frac{1}{2^{n-1}}$
+    \item\vspace{-1mm} Complexité moyenne en $\mathcal{O}(2^n)$ rondes
+    \end{itemize}
+  }
+  
+  \ob<1>[y=-26mm]{
+    \begin{tikzpicture}[x=8mm, y=16mm]
+      \tiny
+      \node[alert,   output]         (F011) at (1,0)        {\Commit} ;
+      \node[alert,   output]         (F012) at (F011.south) {\Commit} ;
+      \node[alert,   output]         (F013) at (F012.south) {\Commit} ;
+      \node[alert,   output]         (F021) at (2,0)        {\Commit} ;
+      \node[alert,   output]         (F022) at (F021.south) {\Commit} ;
+      \node[alert,   output adopt]   (F023) at (F022.south) {\Adopt} ;
+      \node[alert,   output]         (F031) at (3,0)        {\Commit} ;
+      \node[alert,   output adopt]   (F032) at (F031.south) {\Adopt} ;
+      \node[alert,   output adopt]   (F033) at (F032.south) {\Adopt} ;
+      \node[alert,   output adopt]   (F041) at (4,0)        {\Adopt} ;
+      \node[alert,   output adopt]   (F042) at (F041.south) {\Adopt} ;
+      \node[alert,   output adopt]   (F043) at (F042.south) {\Adopt} ;
+      \node[alert,   output adopt]   (F051) at (5,0)        {\Adopt} ;
+      \node[alert,   output adopt]   (F052) at (F051.south) {\Adopt} ;
+      \node[output grey]             (F053) at (F052.south) {\Abort} ;
+      \node[alert,   output adopt]   (F061) at (6,0)        {\Adopt} ;
+      \node[output grey]             (F062) at (F061.south) {\Abort} ;
+      \node[output grey]             (F063) at (F062.south) {\Abort} ;
+      \node[output grey]             (F071) at (7,0)        {\Abort} ;
+      \node[output grey]             (F072) at (F071.south) {\Abort} ;
+      \node[output grey]             (F073) at (F072.south) {\Abort} ;
+      \node[output grey]             (F081) at (8,0)        {\Abort} ;
+      \node[output grey]             (F082) at (F081.south) {\Abort} ;
+      \node[example,   output adopt] (F083) at (F082.south) {\Adopt} ;
+      \node[output grey]             (F091) at (9,0)        {\Abort} ;
+      \node[example,   output adopt] (F092) at (F091.south) {\Adopt} ;
+      \node[example,   output adopt] (F093) at (F092.south) {\Adopt} ;
+      \node[example,   output adopt] (F101) at (10,0)       {\Adopt} ;
+      \node[example,   output adopt] (F102) at (F101.south) {\Adopt} ;
+      \node[example,   output adopt] (F103) at (F102.south) {\Adopt} ;
+      \node[example,   output adopt] (F111) at (11,0)       {\Adopt} ;
+      \node[example,   output adopt] (F112) at (F111.south) {\Adopt} ;
+      \node[example, output]         (F113) at (F112.south) {\Commit} ;
+      \node[example,   output adopt] (F121) at (12,0)       {\Adopt} ;
+      \node[example, output]         (F122) at (F121.south) {\Commit} ;
+      \node[example, output]         (F123) at (F122.south) {\Commit} ;
+      \node[example, output]         (F131) at (13,0)       {\Commit} ;
+      \node[example, output]         (F132) at (F131.south) {\Commit} ;
+      \node[example, output]         (F133) at (F132.south) {\Commit} ;
+
+      \node[alert,   output] (IB11) at (4,-1)       {$\bullet$} ;
+      \node[alert,   output] (IB12) at (IB11.south) {$\bullet$} ;
+      \node[alert,   output] (IB13) at (IB12.south) {$\bullet$} ;
+      \node[alert,   output] (IB21) at (6,-1)       {$\bullet$} ;
+      \node[alert,   output] (IB22) at (IB21.south) {$\bullet$} ;
+      \node[example, output] (IB23) at (IB22.south) {$\bullet$} ;
+      \node[alert,   output] (IB31) at (8,-1)       {$\bullet$} ;
+      \node[example, output] (IB32) at (IB31.south) {$\bullet$} ;
+      \node[example, output] (IB33) at (IB32.south) {$\bullet$} ;
+      \node[example, output] (IB41) at (10,-1)      {$\bullet$} ;
+      \node[example, output] (IB42) at (IB41.south) {$\bullet$} ;
+      \node[example, output] (IB43) at (IB42.south) {$\bullet$} ;
+
+      \path[-latex, black!30] (F053) edge (IB21);
+      \path[-latex, black!30] (F063) edge (IB21);
+      \path[-latex, black!30] (F063) edge (IB31);
+      \path[-latex, black!30] (F073) edge (IB21);
+      \path[-latex, black!30] (F073) edge (IB31);
+      \path[-latex, black!30] (F083) edge (IB21);
+      \path[-latex, black!30] (F083) edge (IB31);
+      \path[-latex, black!30] (F093) edge (IB31);
+
+      \path[-latex] (F043) edge node[left] {$1$}           (IB11);
+      \path[-latex] (F053) edge node[above]{$\frac{1}{2}$} (IB11);
+      \path[-latex] (F063) edge node[above]{$\frac{1}{4}$} (IB11);
+      \path[-latex] (F073) edge node[below]{$\frac{1}{8}$} (IB11);
+      \path[-latex] (F073) edge node[below]{$\frac{1}{8}$} (IB41);
+      \path[-latex] (F083) edge node[above]{$\frac{1}{4}$} (IB41);
+      \path[-latex] (F093) edge node[above]{$\frac{1}{2}$} (IB41);
+      \path[-latex] (F103) edge node[right]{$1$}           (IB41);
+
+      \footnotesize
+      \node[anchor=south, outer sep=3pt] at (F011) {$p=1$} ;
+      \node[anchor=south, outer sep=3pt] at (F021) {$p=1$} ;
+      \node[anchor=south, outer sep=3pt] at (F031) {$p=1$} ;
+      \node[anchor=south, outer sep=3pt] at (F041) {$p=1$} ;
+      \node[anchor=south, outer sep=3pt] at (F051) {$p=\frac{1}{2}$} ;
+      \node[anchor=south, outer sep=3pt] at (F061) {$p=\frac{1}{4}$} ;
+      \node[anchor=south, outer sep=3pt] at (F071) {$p=\frac{1}{4}$} ;
+      \node[anchor=south, outer sep=3pt] at (F081) {$p=\frac{1}{4}$} ;
+      \node[anchor=south, outer sep=3pt] at (F091) {$p=\frac{1}{2}$} ;
+      \node[anchor=south, outer sep=3pt] at (F101) {$p=1$} ;
+      \node[anchor=south, outer sep=3pt] at (F111) {$p=1$} ;
+      \node[anchor=south, outer sep=3pt] at (F121) {$p=1$} ;
+      \node[anchor=south, outer sep=3pt] at (F131) {$p=1$} ;
+      
+      \normalsize
+      \path[brace] (F033.south east) edge[brace] node{$\alert{\Decide(\bullet)}$} (F013.south west);
+      \path[brace] (F133.south east) edge[brace] node{$\example{\Decide(\bullet)}$} (F113.south west);
+    \end{tikzpicture}
+  }
+  
+  \onBlock<2>[anchor=north, y=7mm]{Notion de common coin}{
+    \begin{description}[Pire cas :]
+    \item[Biais :] Il existe $\rho > 0$ tel que
+      \begin{itemize}
+      \item Tous les processus tirent $0$ avec probabilité au moins $\rho$
+      \item Tous les processus tirent $1$ avec probabilité au moins $\rho$
+      \item Aucune garantie avec probabilité au plus $1- 2 \rho$
+      \end{itemize}
+    \item[Pire cas :] Terminaison à la ronde suivante avec probabilité au moins $\rho$
+      \begin{itemize}
+      \item Complexité moyenne en $\mathcal{O}(\frac{1}{\rho} + 1)$ rondes
+      \end{itemize}
+      \centering
+      \begin{tikzpicture}[x=16mm, y=16mm]
+        \tiny
+        \node[alert,   output]       (A1) at (0,0)      {$\bullet$} ;
+        \node[example, output]       (A2) at (A1.south) {$\bullet$} ;
+        \node[example, output]       (A3) at (A2.south) {$\bullet$} ;
+        \node[alert,   output adopt] (B1) at (1,0)      {\Adopt} ;
+        \node[output grey]           (B2) at (B1.south) {\Abort} ;
+        \node[output grey]           (B3) at (B2.south) {\Abort} ;
+        \node[alert,   output]       (C1) at (2,0)      {$\bullet$} ;
+        \node[alert,   output]       (C2) at (C1.south) {$\bullet$} ;
+        \node[alert,   output]       (C3) at (C2.south) {$\bullet$} ;
+
+        \path[-latex] (B2) edge node[above] {$\rho$} (C2);
+        \path[-latex] (B2) edge node[above] {$\rho$} (A2);
+      \end{tikzpicture}
+    \end{description}
+  }
+
+  \on[bottom=-3mm, width=1.1\textwidth]{
+    \begin{citing}
+    \item[B83] Michael Ben-Or. \emph{Another advantage of free choice for completely asynchronous agreement protocols.} PODC 1983
+    \end{citing}  
+  }
+
+\end{frame}
+
+\endgroup
+\endinput
+

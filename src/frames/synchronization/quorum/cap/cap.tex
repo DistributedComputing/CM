@@ -1,0 +1,45 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwFunction{Read}{read}
+\SetKwFunction{Write}{write}
+
+\begin{frame}{Le théorème CAP}
+
+  \begin{block}{Conjecture -- Brewer}
+    Il est impossible d'implémenter une base de données distribuée vérifiant :
+    \begin{description}[Partition tolerance :]
+    \item[Consistency :] toutes les répliques voient les \alert{mêmes données}
+    \item[Availability :] chaque requête \alert{finit par} recevoir une réponse
+    \item[Partition tolerance :] le système fonctionne même si des \alert{partitions du réseau} ne peuvent plus communiquer
+    \end{description}
+  \end{block}
+
+  \uncover<2->{
+    \begin{block}{Théorème -- Attiya, Bar Noy, Dolev ; Gilbert, Lynch}
+      Dans le modèle par passage de message asynchrone avec crash, \\
+      il est impossible d'implémenter une mémoire lire/écrire :
+      \begin{description}[Partition tolerance :]
+      \item[Consistency :] interdisant le motif RW1 (\alert{linéarisabilité}, \alert{c. séquentielle})
+      \item[Availability :] dont les méthodes \Read et \Write \alert{terminent}
+      \item[Partition tolerance :] même si \alert{$t\ge \frac{n}{2}$} processus tombent en panne
+      \end{description}
+    \end{block}
+  }
+  
+  \begin{citing}
+    \uncover<2->{\item[ABD95] H. Attiya, A. Bar-Noy, D. Dolev. \emph{Sharing memory robustly in message-passing systems}. JACM, 1995}
+    \uncover<1->{\item[B00] E. A. Brewer. \emph{Towards robust distributed systems (abstract)}. PODC, 2000}
+    \uncover<2->{\item[GL02] S. Gilbert and N. Lynch. \emph{Brewer's conjecture and the feasibility of consistent, available, partition-tolerant web services}. ACM SIGACT News, 2002}
+  \end{citing}
+
+\end{frame}
+
+\endgroup
+\endinput

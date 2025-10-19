@@ -1,0 +1,79 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwData{Done}{done}
+\SetKwData{X}{value}
+
+\begin{frame}{Un premier exemple}
+
+  \on[top, text]{Que peut écrire $p_2$ ?}
+  
+  \on[y=-3mm]{
+    \begin{algorithm}[H]
+      \LVariables{}{
+        $\Done_i \leftarrow \False$\;
+        $\X_i \leftarrow 0$\;
+      }
+      \Process{$p_1$}{
+        \Alert{\Send $m$ \To $p_2$}\;
+      }
+      \Process{$p_2$}{
+        \Example{$\X_2 \leftarrow 1$}\;
+        \Wait{ \Structure{$\Done_2$}}\;
+        $\Print(\X_2)$\;
+      }
+      \When{$p_2$ \Receives $m$ \From $p_1$}{
+        \Alert{$\X_2 \leftarrow 2$}\; 
+        \Structure{$\Done_2 \leftarrow \True$}\;
+      }
+    \end{algorithm}
+  }
+
+  \onBlock<2->[right=.5\textwidth, top=-5mm]{$p_2$ écrit $1$}{
+    \begin{tikzpicture}[y=8mm, anchor=center]
+      \draw[process] (0,1) node[left]{$p_1$} to (5,1);
+      \draw[process] (0,0) node[left]{$p_2$} to (5,0);
+      \scriptsize
+      \node[example, operation] (p2) at (3.5,0) {$\X_2 \leftarrow 1$};
+      \begin{scope}[alert]
+        \node[event]     (send-m) at (.5,1) {};
+        \node[operation] (rece-m) at (1.5,0) {$\X_2 \leftarrow 2$};
+        \path[message]   (send-m.center) edge node{$m$} (rece-m.west);
+      \end{scope}
+    \end{tikzpicture}
+  }
+
+  \onBlock<2->[right=.5\textwidth]{$p_2$ écrit $2$}{
+    \begin{tikzpicture}[y=8mm, anchor=center]
+      \draw[process] (0,1) node[left]{$p_1$} to (1,1);
+      \draw[process] (0,0) node[left]{$p_2$} to (5,0);
+      \scriptsize
+      \node[example, operation, minimum height=5mm] (p2) at (2.5,0) {$\X_2 \leftarrow 1$ \hspace{2cm}};
+      \begin{scope}[alert]
+        \node[event]     (send-m) at (.5,1) {};
+        \node[operation] (rece-m) at (3,0) {$\X_2 \leftarrow 2$};
+        \path[message]   (send-m.center) edge node{$m$} (rece-m.west);
+      \end{scope}
+    \end{tikzpicture}
+  }
+
+  \onBlock<2->[right=.5\textwidth, bottom]{$p_2$ n'écrit rien}{
+    \begin{tikzpicture}[y=8mm, anchor=center]
+      \draw[crashed] (0,1) node[left]{$p_1$} to (1,1);
+      \draw[process] (0,0) node[left]{$p_2$} to (5,0);
+      \scriptsize
+      \node[example,   operation, minimum height=5mm] (p2) at (2.5,0) {$\X_2 \leftarrow 1$ \hspace{2.2cm}};
+      \node[structure, operation, minimum height=4mm] (wu) at (3.2,0) {\Wait \False...};
+    \end{tikzpicture}
+  }
+  
+\end{frame}
+
+\endgroup
+\endinput

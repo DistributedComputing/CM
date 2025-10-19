@@ -1,0 +1,59 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwFunction{Acheter}{acheter}
+
+\begin{frame}{Linéarisabilité}
+
+  Soit $M = \langle C, R, Q, q_0, \tau, \rho \rangle$ une machine à états. 
+  
+  \begin{block}{Définition -- Linéarisabilité}
+    Une exécution $H$ est \structure{linéarisable} pour $M$ s'il existe une exécution séquentielle\\[-2mm]
+    $$
+    H_S = q_0 \xrightarrow{c_1 \rightarrow r_1} q_1 \xrightarrow{c_2 \rightarrow r_2} q_2 \xrightarrow{\dots} \dots
+    $$
+
+    \vspace{-2mm} telle que :
+    \begin{description}
+    \item[Sémantique :] pour tout $i\ge 1$, $\tau(q_{i-1}, c_{i}) = q_{i}$ et $\rho(q_{i-1}, c_{i}) = r_{i}$.
+    \item[Opérations :] $H$ et $H_S$ contiennent les mêmes opérations $o_i = c_i \rightarrow r_i$ ;
+    \item[Temps réel :] si l'opération $o_i$ se termine avant que $o_j$ ne commence dans $H$,\\
+      alors $o_i$ précède $o_j$ dans $H_S$ ;
+    \end{description}
+    
+    \centering
+    \begin{tikzpicture}[x=10mm,y=7mm]
+      \draw[densely dotted] (0,3) node[left]{$Q$}   -- (9,3);
+      \draw[process]        (0,2) node[left]{$p_1$} to (9,2);
+      \draw[process]        (0,1) node[left]{$p_2$} to (9,1);
+      \draw[process]        (0,0) node[left]{$p_3$} to (9,0);
+
+      \node[alert,     operation] (o1) at (2,1) {$\Acheter(a)\rightarrow\xmark$};
+      \node[example,   operation] (o2) at (4,0) {$\Acheter(a)\rightarrow\cmark$};
+      \node[structure, operation] (o3) at (6,2) {$\Acheter(a)\rightarrow\xmark$};
+
+      \scriptsize
+      \node[below right] at (0,3) {$\{a, b\}$};
+      \draw[alert,     lin point] (o1.east) -- +(0,2) node[below right] {$\{b\}$};
+      \draw[example,   lin point] (o2.west) -- +(0,3) node[below right] {$\{b\}$};
+      \draw[structure, lin point] (o3.west) -- +(0,1) node[below right] {$\{b\}$};
+    \end{tikzpicture}
+
+  \end{block}
+
+  \on[bottom=-2mm, text]{
+    \begin{citing}
+    \item[PMJ16] M. Herlihy, J. Wing. \emph{Linearizability: A correctness condition for concurrent objects}. TOPLAS. 1990
+    \end{citing}
+  }  
+
+\end{frame}
+
+\endgroup
+\endinput

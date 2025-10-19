@@ -1,0 +1,148 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwFunction{Time}{time}
+\SetKwData{TS}{ts}
+
+\begin{frame}{Horloge logique de Lamport}
+  
+  \begin{algorithm}[H]
+    \lLVariables{}{
+      $\TS_i \leftarrow 0$\tcp*[f]{date scalaire locale (entier)}
+    }
+    \When{dating an internal step $a$}{
+      $\TS_i \leftarrow \TS_i + 1$
+      \tcp*[r]{$\Time(a) = \TS_i$}
+    }
+    \When{sending $m$ \To $p_j$}{
+      $\TS_i \leftarrow \TS_i + 1$\;
+      \Send $\textsc{stamped}(m, \TS_i)$ \To $p_j$
+      \tcp*[r]{$\Time(s_m) = \TS_i$}
+    }
+    \When{\Receive $\textsc{stamped}(m, t_j)$ \From $p_j$}{
+      $\TS_i \leftarrow \max(\TS_i, t_j) + 1$\;
+      \KWStyle{receive} $m$
+      \tcp*[r]{$\Time(r_m) = \TS_i > t_j$}
+    }
+  \end{algorithm}
+
+  \begin{exampleblock}{Exemple d'exécution \only<2>{: zones temporelles}\only<3>{: exécution indistinguable}}
+    \only<-2>{
+      \begin{tikzpicture}[y=8mm, x=12mm, shorten >=2pt]
+        \draw[process] (0,2) node[left]{$p_1$} to (8,2);
+        \draw[process] (0,1) node[left]{$p_2$} to (8,1);
+        \draw[process] (0,0) node[left]{$p_3$} to (8,0);
+
+        \draw    (0.5,2) node[alert] (11) {$\bullet$} node[above]{1};
+        \draw    (2  ,2) node[alert] (21) {$\bullet$} node[above]{2};
+        \draw    (3  ,2) node[alert] (31) {$\bullet$} node[above]{3};
+        \draw    (5.5,2) node[alert] (41) {$\bullet$} node[above]{4};
+        \node at (6  ,2)             (51) {};
+        \draw    (7  ,2) node[alert] (61) {$\bullet$} node[above]{6};
+        \node at (7.5,2)             (71) {};
+
+        \draw    (1.5,1) node[alert] (12) {$\bullet$} node[above]{1};
+        \draw    (2.5,1) node[alert] (22) {$\bullet$} node[below]{2};
+        \node at (3  ,1)             (32) {};
+        \draw    (3.5,1) node[alert] (42) {$\bullet$} node[below]{4};
+        \draw    (4.5,1) node[alert] (52) {$\bullet$} node[below]{5};
+        \draw    (5.5,1) node[alert] (62) {$\bullet$} node[above]{6};
+        \node at (6.5,1)             (72) {};
+
+        \draw    (1  ,0) node[alert] (13) {$\bullet$} node[below]{1};
+        \draw    (2  ,0) node[alert] (23) {$\bullet$} node[below]{2};
+        \draw    (3  ,0) node[alert] (33) {$\bullet$} node[below]{3};
+        \draw    (4  ,0) node[alert] (43) {$\bullet$} node[below]{4};
+        \draw    (5  ,0) node[alert] (53) {$\bullet$} node[below]{5};
+        \node at (6  ,0)             (63) {};
+        \draw    (7  ,0) node[alert] (73) {$\bullet$} node[below]{7};
+
+        \path[alert, message] (21.center) edge            (52.center);
+        \path[alert, message] (31.center) edge            (42.center);
+        \path[alert, message] (12.center) edge            (23.center);
+        \path[alert, message] (53.center) edge            (61.center);
+        \path[alert, message] (33.center) edge[bend left] (43.center);
+        \path[alert, message] (62.center) edge            (73.center);
+
+        \coordinate (0top) at (0 ,2.5);
+        \coordinate (0bot) at (0 ,-.5);
+
+        \begin{scope}[background]
+          \uncover<2>{
+            \fill[structure!80, rounded corners] (0bot) rectangle (8,2.5);
+            \fill[structure!70, rounded corners] (0top) -- (71.west |- 0top) -- (71.west) -- (72.west) -- (73.west) -- (73.west |- 0bot) -- (0bot);
+            \fill[structure!60, rounded corners] (0top) -- (61.west |- 0top) -- (61.west) -- (62.west) -- (63.west) -- (63.west |- 0bot) -- (0bot);
+            \fill[structure!50, rounded corners] (0top) -- (51.west |- 0top) -- (51.west) -- (52.west) -- (53.west) -- (53.west |- 0bot) -- (0bot);
+            \fill[structure!40, rounded corners] (0top) -- (41.west |- 0top) -- (41.west) -- (42.west) -- (43.west) -- (43.west |- 0bot) -- (0bot);
+            \fill[structure!30, rounded corners] (0top) -- (31.west |- 0top) -- (31.west) -- (32.west) -- (33.west) -- (33.west |- 0bot) -- (0bot);
+            \fill[structure!20, rounded corners] (0top) -- (21.west |- 0top) -- (21.west) -- (22.west) -- (23.west) -- (23.west |- 0bot) -- (0bot);
+            \fill[structure!10, rounded corners] (0top) -- (11.west |- 0top) -- (11.west) -- (12.west) -- (13.west) -- (13.west |- 0bot) -- (0bot);
+          }
+        \end{scope}
+        
+      \end{tikzpicture}
+    }
+    \onlyb<3>{
+      \begin{tikzpicture}[y=8mm, x=12mm, shorten >=2pt]
+        \draw[process] (0,2) node[left]{$p_1$} to (8,2);
+        \draw[process] (0,1) node[left]{$p_2$} to (8,1);
+        \draw[process] (0,0) node[left]{$p_3$} to (8,0);
+
+        \draw    (1  ,2) node[alert] (11) {$\bullet$} node[above]{1};
+        \draw    (2  ,2) node[alert] (21) {$\bullet$} node[above]{2};
+        \draw    (3  ,2) node[alert] (31) {$\bullet$} node[above]{3};
+        \draw    (4  ,2) node[alert] (41) {$\bullet$} node[above]{4};
+        \node at (5  ,2)             (51) {};
+        \draw    (6  ,2) node[alert] (61) {$\bullet$} node[above]{6};
+
+        \draw    (1  ,1) node[alert] (12) {$\bullet$} node[above]{1};
+        \draw    (2  ,1) node[alert] (22) {$\bullet$} node[below]{2};
+        \node at (3  ,1)             (32) {};
+        \draw    (4  ,1) node[alert] (42) {$\bullet$} node[below]{4};
+        \draw    (5  ,1) node[alert] (52) {$\bullet$} node[below]{5};
+        \draw    (6  ,1) node[alert] (62) {$\bullet$} node[above]{6};
+
+        \draw    (1  ,0) node[alert] (13) {$\bullet$} node[below]{1};
+        \draw    (2  ,0) node[alert] (23) {$\bullet$} node[below]{2};
+        \draw    (3  ,0) node[alert] (33) {$\bullet$} node[below]{3};
+        \draw    (4  ,0) node[alert] (43) {$\bullet$} node[below]{4};
+        \draw    (5  ,0) node[alert] (53) {$\bullet$} node[below]{5};
+        \node at (5  ,0)             (63) {};
+        \draw    (7  ,0) node[alert] (73) {$\bullet$} node[below]{7};
+
+        \path[alert, message] (21.center) edge            (52.center);
+        \path[alert, message] (31.center) edge            (42.center);
+        \path[alert, message] (12.center) edge            (23.center);
+        \path[alert, message] (53.center) edge            (61.center);
+        \path[alert, message] (33.center) edge[bend left] (43.center);
+        \path[alert, message] (62.center) edge            (73.center);
+
+        \coordinate (0top) at (0 ,2.5);
+        \coordinate (0bot) at (0 ,-.5);
+        
+        \begin{scope}[background]
+          \fill[structure!80, rounded corners] (0bot) rectangle (8,2.5);
+          \fill[structure!70, rounded corners] (0bot) rectangle (6.5,2.5);
+          \fill[structure!60, rounded corners] (0bot) rectangle (5.5,2.5);
+          \fill[structure!50, rounded corners] (0bot) rectangle (4.5,2.5);
+          \fill[structure!40, rounded corners] (0bot) rectangle (3.5,2.5);
+          \fill[structure!30, rounded corners] (0bot) rectangle (2.5,2.5);
+          \fill[structure!20, rounded corners] (0bot) rectangle (1.5,2.5);
+          \fill[structure!10, rounded corners] (0bot) rectangle (0.5,2.5);
+          \fill[structure!10, rounded corners] (0bot) -- (0.5,-0.5) -- (0.5,2.5) -- (0top);
+        \end{scope}
+        
+      \end{tikzpicture}
+    }
+  \end{exampleblock}
+  
+\end{frame}
+
+\endgroup
+\endinput

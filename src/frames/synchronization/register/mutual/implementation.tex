@@ -1,0 +1,104 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwData{Acks}{acks}
+\SetKwData{Delivered}{delivered}
+
+\begin{frame}{Implémentation de Mutual Broadcast}
+
+  \on[bottom]{
+    \begin{algorithm}[H]
+      \LVariables{}{
+        $\Delivered_i \leftarrow [0, ..., 0]$;\\
+        $\Acks_i \leftarrow [0, ...]$;
+      }
+      \Method{$\textsc{mb}.\Broadcast(m)$}{
+        \Alert<1>{\textsc{rb}.\Broadcast $\textsc{init}(m)$;}\\
+        \Structure<1>{\Wait $\Acks_i[m] > \frac{n}{2}$;}\\
+        \Alertb<2>{\textsc{mb}.\Deliver $m$ \From $p_i$;}\\
+      }
+      \When{\textsc{rb}.\Deliver $\textsc{init}(m)$ \From $p_j$}{
+        \Alert<1>{\Send $\textsc{ack}(m, \Exampleb<3>{\Delivered_i})$ \To $p_j$;}\\
+        \Exampleb<3>{$\Delivered_i[j] \leftarrow \Delivered_i[j] + 1$;}\\
+        \Alertb<2>{\lIf{$j \neq i$}{
+          \textsc{mb}.\Deliver $m$ \From $p_j$;
+        }}
+      }
+      \When{\Receive $\textsc{ack}(m, \Exampleb<3>{\mathit{date}_j})$ \From $p_j$}{
+        \Exampleb<3>{\Wait{$\forall k, \Delivered_i[k] \ge \mathit{date}_j[k]$};}\\
+        \Structure<1>{$\Acks_i[m] \leftarrow \Acks_i[m] + 1$;}
+      }
+    \end{algorithm}
+  }
+
+  \on[right=.5\textwidth, y=15mm]{
+    \begin{tikzpicture}[y=7mm, x=5mm]
+
+      \draw[process] (0,4) node[left]{$p_1$} to (10,4);
+      \draw[process] (0,3) node[left]{$p_2$} to (10,3);
+      \draw[process] (0,2) node[left]{$p_3$} to (10,2);
+      \draw[process] (0,1) node[left]{$p_4$} to (10,1);
+      \draw[process] (0,0) node[left]{$p_5$} to (10,0);
+      
+      \draw[alert]                          (1,4)          node (init1) {} node[above=1.5mm, ob=<1>] {\footnotesize $\textsc{init}(m_1)$};
+      \draw<1,3>[message, alert]                 (init1.center)                 to[bend right]                                                                 (2.0,4);
+      \onlyb<2>{
+        \draw[message, alert]                 (init1.center)                 to[bend right]                                                                 (5.6,4);
+      }
+      \draw[message, alert]                 (init1.center)                 to                                                                             (2.6,3);
+      \draw[message, alert]                 (init1.center)                 to                                                                             (3.4,2);
+      \only<-2>{
+        \draw[message, alert]                 (init1.center)                 to                                                                             (4.2,1);
+        \draw[message, alert]                 (init1.center)                 to                                                                             (5.0,0);
+      }
+      \draw<1,3>[message, alert, densely dotted] (2.2,4)        node (ack12) {} to[bend right] node[midway, sloped, swap, ob=<1>] {\footnotesize \textsc{ack}} (3.2,4);
+      \draw<1,3>[message, alert, densely dotted] (2.8,3)        node (ack12) {} to             node[midway, sloped, swap, ob=<1>] {\footnotesize \textsc{ack}} (3.8,4);
+      \onlyb<1>{
+        \draw[message, alert, densely dotted] (3.6,2)        node (ack13) {} to             node[midway, sloped, swap, ob=<1>] {\footnotesize \textsc{ack}} (5.6,4);
+        \draw[message, alert, densely dotted] (4.4,1)        node (ack14) {} to             node[midway, sloped, swap, ob=<1>] {\footnotesize \textsc{ack}} (7.4,4);
+        \draw[message, alert, densely dotted] (5.2,0)        node (ack15) {} to             node[midway, sloped, swap, ob=<1>] {\footnotesize \textsc{ack}} (9.2,4);
+      }
+      \draw<3>[message, alert, densely dotted] (3.6,2)        node (ack13) {} to node[midway, sloped, swap] {\footnotesize [0,0,0,0,1]}  (5.6,4) to[bend right] (9,4);
+      
+      \uncover<3>{
+        \draw[example]                          (1,0)          node (init2) {} ;
+        \draw[message, example]                 (init2.center)                 to[bend right] (2.0,0);
+        \draw[message, example]                 (init2.center)                 to             (2.0,1);
+        \draw[message, example]                 (init2.center)                 to             (2.0,2);
+        \draw[message, example]                 (init2.center)                 to             (8.0,4);
+        \draw[message, example, densely dotted] (2.2,1)        node (ack22) {} to             (3.0,0);
+        \draw[message, example, densely dotted] (2.2,2)        node (ack23) {} to             (3.5,0);
+      }
+      \begin{scope}[background]
+        \onlyb<-2>{
+          \node[alert,   operation, fit={(init1.center)(5.6,4)}] {};
+        }
+        \node<3->[alert,   operation, fit={(init1.center)(9,4)}] {};
+        \node<3->[example, operation, fit={(init2.center)(3.5,0)}] {};
+      \end{scope}
+
+      \path<3>[structure, thick, ->, shorten <=3pt, shorten >=3pt] (2.2,2) edge[bend right] (3.6,2);
+      
+    \end{tikzpicture}
+  }
+
+  \on<3>[right=.4\textwidth, anchor=north, y=-10mm]{
+    \begin{itemize}
+    \item $p_3 \in Q_1 \cap Q_5$
+    \item $p_3$ délivre $m_5$ avant $m_1$
+    \item $\textsc{ack}$ transmet la causalité
+    \item $p_1$ délivre $m_5$ avant $m_1$
+    \item pas MP1
+    \end{itemize}
+  }
+  
+\end{frame}
+
+\endgroup
+\endinput

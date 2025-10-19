@@ -1,0 +1,180 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwFunction{Filter}{filter}
+\SetKwData{Received}{received}
+\SetKwData{Values}{values}
+
+\tikzset{
+  output/.style={
+    rectangle,
+    minimum height=2mm,
+    anchor=north,
+    align=center,
+    draw highlighted,
+    fill highlighted,
+    outer sep=0pt,
+    inner sep=1pt,
+    text width=10mm,
+  },
+}
+
+
+\begin{frame}{L'algorithme de filtre $(t < \frac{n}{2})$}
+
+  \on[top=-3mm]{
+    \begin{algorithm}[H]
+      \Algo{\textsc{filter}}{
+        \lLVariables{}{
+          $\Received_i \leftarrow 0$;
+          $\Values_i \leftarrow \emptyset$;
+        }
+        \Method{$\Filter(v)$}{
+          \textsc{sta}.\Broadcast $\textsc{filter}(v)$;\\
+          \Wait $\Structure{\Received_i \ge n-t}$;\\
+          \Return $\Values_i$;
+        }
+        \When{\textsc{sta}.\Deliver $\textsc{filter}(v)$}{
+          $\Values_i \leftarrow \Values_i \cup \{v\}$;\\
+          $\Received_i \leftarrow \Received_i + 1$;\\
+        }
+      }
+    \end{algorithm}
+  }
+
+  \ob<2>[y=13mm, right=.5\textwidth]{
+    \begin{tikzpicture}[y=10mm]
+      \draw[process] (0,2) node[left]{$p_1$} to (5,2);
+      \draw[process] (0,1) node[left]{$p_2$} to (5,1);
+      \draw[process] (0,0) node[left]{$p_3$} to (5,0);
+
+      \node[alert, operation, minimum width=35mm] (f1) at (2,2) {$\Filter(\bullet) \rightarrow \{\bullet\}$};
+      \node[alert, operation, minimum width=35mm] (f2) at (2,1) {$\Filter(\bullet) \rightarrow \{\bullet\}$};
+      \node[alert, operation, minimum width=35mm] (f3) at (2,0) {$\Filter(\bullet) \rightarrow \{\bullet\}$};
+      
+      \draw[alert!50, message] (f1.west) to[bend left=40]  (4.7,0);
+      \draw[alert!50, message] (f3.west) to[bend right=40] (4.7,2);
+      \draw[alert!50, message] (f3.west) to[bend above]    (4.5,1);
+
+      \draw[alert, message]    (f1.west) to[bend left]     ([xshift=4mm]f1.west);
+      \draw[alert, message]    (f1.west) to[bend below]    (f2.east);
+      \draw[alert, message]    (f2.west) to[bend above]    (f1.east);
+      \draw[alert, message]    (f2.west) to[bend right]    ([xshift=4mm]f2.west);
+      \draw[alert, message]    (f2.west) to[bend below]    (f3.east);
+      \draw[alert, message]    (f3.west) to[bend right=60] ([xshift=4mm]f3.west);
+    \end{tikzpicture}
+  }
+  
+  \ob<3>[y=13mm, right=.5\textwidth]{
+    \begin{tikzpicture}[y=10mm]
+      \draw[process] (0,2) node[left]{$p_1$} to (5,2);
+      \draw[process] (0,1) node[left]{$p_2$} to (5,1);
+      \draw[process] (0,0) node[left]{$p_3$} to (5,0);
+
+      \node[alert,     operation, minimum width=35mm] (f1) at (2,2) {$\Filter(\bullet) \rightarrow \{\example{\bullet}, \alert{\bullet}\}$};
+      \node[example, operation, minimum width=35mm] (f2) at (2,1) {$\Filter(\bullet) \rightarrow \{\example{\bullet}, \alert{\bullet}\}$};
+      \node[example, operation, minimum width=35mm] (f3) at (2,0) {$\Filter(\bullet) \rightarrow \{\example{\bullet}\}$};
+      
+      \draw[alert!50,     message]   (f1.west) to[bend left=40]   (4.7,0);
+      \draw[example!50, message]   (f3.west) to[bend right=40]  (4.7,2);
+      \draw[example!50, message]   (f3.west) to[bend above]     (4.5,1);
+
+      \draw[alert,     message]   (f1.west) to[bend left]     ([xshift=4mm]f1.west);
+      \draw[alert,     message]   (f1.west) to[bend below]    (f2.east);
+      \draw[example, message]   (f2.west) to[bend above]    (f1.east);
+      \draw[example, message]   (f2.west) to[bend right]    ([xshift=4mm]f2.west);
+      \draw[example, message]   (f2.west) to[bend below]    (f3.east);
+      \draw[example, message]   (f3.west) to[bend right=60] ([xshift=4mm]f3.west);
+    \end{tikzpicture}
+  }
+
+  \on<4>[y=13mm, right=.5\textwidth]{
+    \begin{tikzpicture}[y=10mm]
+      \draw[process] (0,2) node[left]{$p_1$} to (5,2);
+      \draw[process] (0,1) node[left]{$p_2$} to (5,1);
+      \draw[process] (0,0) node[left]{$p_3$} to (5,0);
+
+      \node[alert,     operation, minimum width=35mm] (f1) at (2,2) {$\Filter(\bullet) \rightarrow \{\example{\bullet}, \alert{\bullet}\}$};
+      \node[example, operation, minimum width=35mm] (f2) at (2,1) {$\Filter(\bullet) \rightarrow \{\example{\bullet}\}$};
+      \node[example, operation, minimum width=35mm] (f3) at (2,0) {$\Filter(\bullet) \rightarrow \{\example{\bullet}\}$};
+      
+      \draw[alert!50,     message]   (f1.west) to[bend left=40]   (4.7,0);
+      \draw[example!50, message]   (f3.west) to[bend right=40]  (4.7,2);
+      \draw[alert!50,     message]   (f1.west) to[bend below]    (4.5,1);
+
+      \draw[alert,     message]   (f1.west) to[bend left]     ([xshift=4mm]f1.west);
+      \draw[example, message]   (f2.west) to[bend above]    (f1.east);
+      \draw[example, message]   (f2.west) to[bend right]    ([xshift=4mm]f2.west);
+      \draw[example, message]   (f2.west) to[bend below]    (f3.east);
+      \draw[example, message]   (f3.west) to[bend above]    (f2.east);
+      \draw[example, message]   (f3.west) to[bend right=60] ([xshift=4mm]f3.west);
+    \end{tikzpicture}
+  }
+  
+  \onBlock<2->[anchor=north]{Propriétés}{
+    \begin{tikzpicture}[x=12mm]
+      \node<2->[alert,               output] (I11) at (1,3)       {$\bullet$} ;
+      \node<2->[alert,               output] (I12) at (I11.south) {$\bullet$} ;
+      \node<2->[alert,               output] (I13) at (I12.south) {$\bullet$} ;
+      \node<4->[alert,               output] (I21) at (3,3)       {$\bullet$} ;
+      \node<4->[alert,               output] (I22) at (I21.south) {$\bullet$} ;
+      \node<4->[example,             output] (I23) at (I22.south) {$\bullet$} ;
+      \node<3->[alert,               output] (I31) at (5,3)       {$\bullet$} ;
+      \node<3->[example,             output] (I32) at (I31.south) {$\bullet$} ;
+      \node<3->[example,             output] (I33) at (I32.south) {$\bullet$} ;
+      \node<2->[example,             output] (I41) at (7,3)       {$\bullet$} ;
+      \node<2->[example,             output] (I42) at (I41.south) {$\bullet$} ;
+      \node<2->[example,             output] (I43) at (I42.south) {$\bullet$} ;
+      
+      \node<2->[alert,               output] (O11) at (1,2)       {$\{\bullet\}$} ;
+      \node<2->[alert,               output] (O12) at (O11.south) {$\{\bullet\}$} ;
+      \node<2->[alert,               output] (O13) at (O12.south) {$\{\bullet\}$} ;
+      \node<4->[alert,               output] (O21) at (2,2)       {$\{\bullet\}$} ;
+      \node<4->[alert,               output] (O22) at (O21.south) {$\{\bullet\}$} ;
+      \node<4->[draw, fill=black!20, output] (O23) at (O22.south) {$\{\alert{\bullet}, \example{\bullet}\}$} ;
+      \node<4->[alert,               output] (O31) at (3,2)       {$\{\bullet\}$} ;
+      \node<4->[draw, fill=black!20, output] (O32) at (O31.south) {$\{\alert{\bullet}, \example{\bullet}\}$} ;
+      \node<4->[draw, fill=black!20, output] (O33) at (O32.south) {$\{\alert{\bullet}, \example{\bullet}\}$} ;
+      \node<4->[draw, fill=black!20, output] (O41) at (4,2)       {$\{\alert{\bullet}, \example{\bullet}\}$} ;
+      \node<4->[draw, fill=black!20, output] (O42) at (O41.south) {$\{\alert{\bullet}, \example{\bullet}\}$} ;
+      \node<4->[draw, fill=black!20, output] (O43) at (O42.south) {$\{\alert{\bullet}, \example{\bullet}\}$} ;
+      \node<3->[draw, fill=black!20, output] (O51) at (5,2)       {$\{\alert{\bullet}, \example{\bullet}\}$} ;
+      \node<3->[draw, fill=black!20, output] (O52) at (O51.south) {$\{\alert{\bullet}, \example{\bullet}\}$} ;
+      \node<3->[example,             output] (O53) at (O52.south) {$\{\bullet\}$} ;
+      \node<4->[draw, fill=black!20, output] (O61) at (6,2)       {$\{\alert{\bullet}, \example{\bullet}\}$} ;
+      \node<4->[example,             output] (O62) at (O61.south) {$\{\bullet\}$} ;
+      \node<4->[example,             output] (O63) at (O62.south) {$\{\bullet\}$} ;
+      \node<2->[example,             output] (O71) at (7,2)       {$\{\bullet\}$} ;
+      \node<2->[example,             output] (O72) at (O71.south) {$\{\bullet\}$} ;
+      \node<2->[example,             output] (O73) at (O72.south) {$\{\bullet\}$} ;
+
+      \path<2->[-latex] (I13) edge (O11);
+      \path<4->[-latex] (I23) edge (O21);
+      \path<4->[-latex] (I23) edge (O31);
+      \path<4->[-latex] (I23) edge (O41);
+      \path<4->[-latex] (I33) edge (O41);
+      \path<3->[-latex] (I33) edge (O51);
+      \path<4->[-latex] (I33) edge (O61);
+      \path<2->[-latex] (I43) edge (O71);
+
+      \draw<2-> (I12.west) node[left]{Entrées :} ;
+      \draw<2-> (O12-|I12.west) node[left]{Sorties :} ;
+    \end{tikzpicture}
+
+    \begin{description}
+    \item<2->[Conservation :] Si une seule valeur est proposée, l'accord est conservé 
+    \item<4->[Pré-accord :] Impossible que $p_i$ retourne $\{v\}$ et $p_j$ retourne $\{w\}$, avec $v\neq w$
+    \end{description}
+  }
+
+\end{frame}
+
+\endgroup
+\endinput
+

@@ -1,0 +1,69 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: Communication
+% Section: Cohérence faible
+% Frame: Eventual Consistency
+
+\begingroup
+
+\begin{frame}{Eventual Consistency}
+
+  \vspace{-1mm}
+  \begin{block}{Définition -- Eventual Consistency}
+    \vspace{-1mm}
+    Une exécution $E$ vérifie \structure{EC} si :
+    s'il n'y a qu'un \structure{nombre fini} de mises à jour, alors
+    il existe un \structure{état de convergence} $q_{\mathrm{cv}}$ tel que 
+    \structure{toutes sauf un nombre fini} de requêtes renvoient la même réponse que dans $q_{\mathrm{cv}}$.
+    $$\alert{|\mathit{Update}(E)| < \infty \Rightarrow \exists q_{cv}\in Q : |\{ c \rightarrow r \in \mathit{Query}(E) \mid \rho(q_{cv}, c) \neq r\}| < \infty}$$
+  \end{block}
+
+  \begin{tikzpicture}[y=4.5mm]
+    \draw[process] (0,2) node[left]{$p_1$} node[replica] {$q_0$} to (10,2) node[replica, above left] {$q_{cv}$}; 
+    \draw[process] (0,1) node[left]{$p_2$} node[replica] {$q_0$} to (10,1) node[replica, above left] {$q_{cv}$}; 
+    \draw[process] (0,0) node[left]{$p_3$} node[replica] {$q_0$} to (10,0) node[replica, above left] {$q_{cv}$}; 
+
+    \draw[double]  (3,-.2) -- (3,2.2);
+    \draw[double]  (6,-.2) -- (6,2.2);
+    \node at (3,2) [replica] {$q_1$};
+    \node at (3,1) [replica] {$q_2$};
+    \node at (3,0) [replica] {$q_3$};
+    \node at (6,2) [replica] {$q_{cv}$};
+    \node at (6,1) [replica] {$q_{cv}$};
+    \node at (6,0) [replica] {$q_{cv}$};
+    \node[below=2mm] at (1.5,0)  {\small mises à jour (fini)};
+    \node[below=2mm] at (4.5,0)  {\small pré-convergence (fini)};
+    \node[below=2mm] at (8,0)    {\small convergence (infini)};
+    
+    \node[structure, operation] at (2,2)    {\tiny $u_2$};
+    \node[structure, operation] at (1,1)    {\tiny $u_1$};
+    \node[alert,     operation] at (1.5,0)  {\tiny $c_1 \rightarrow \xmark$};
+    \node[alert,     operation] at (4.5,2)  {\tiny $c_3 \rightarrow \xmark$};
+    \node[example,   operation] at (4,1)    {\tiny $c_2 \rightarrow \cmark$};
+    \node[alert,     operation] at (5.25,0) {\tiny $c_4 \rightarrow \xmark$};
+    \node[example,   operation] at (8,2)    {\tiny $c_6 \rightarrow \cmark$};
+    \node[example,   operation] at (8.5,1)  {\tiny $c_7 \rightarrow \cmark$};
+    \node[example,   operation] at (7.5,0)  {\tiny $c_5 \rightarrow \cmark$};
+  \end{tikzpicture}
+  
+  \vspace{-1mm}
+  \begin{alertblock}{Remarques}
+    \vspace{-1mm}
+    Eventual consistency ne donne aucune garantie :
+    \begin{itemize}
+    \item Ni sur ce qu'il se passe s'il y a une infinité de mises à jour
+    \item Ni sur l'état de convergence
+    \item Ni sur le temps nécessaire pour atteindre la convergence
+    \end{itemize}
+  \end{alertblock}
+
+  \on[bottom=-2mm, text]{
+    \begin{citing}
+    \item[V09] W. Vogels. \emph{Eventually Consistent}. CACM 2009
+    \end{citing}
+  }  
+  
+\end{frame}
+
+\endgroup
+\endinput

@@ -1,0 +1,146 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\tikzset{
+  fadebox/.style={
+    rounded corners,
+    fill=black!10,
+    draw=black!30,
+    inner sep=0pt,
+    outer sep=0pt,
+  },
+}
+
+\begin{frame}{Un deuxième exemple}
+
+  \on[top, left=.5\textwidth]{
+    \begin{algorithm}[H]
+      \lProcess{$p_1$}{\Alert{\Send $m_1$ \To $p_2$}}
+    \end{algorithm}
+  }
+  \on[top, right=.5\textwidth]{
+    \begin{algorithm}[H]
+      \lProcess{$p_2$}{\Example{\Send $m_2$ \To $p_1$}}
+    \end{algorithm}
+  }
+  
+  \on<2->[y=10mm]{
+    \begin{tikzpicture}[automaton, x=30mm, y=12mm]
+      \state[structure ob=<{3-8}>, initial]   (11) at (0,2) {};
+      \state[structure ob=<{6-8}>]            (12) at (0,1) {};
+      \state[structure ob=<{6}>]              (13) at (0,0) {};
+      \state[structure ob=<{3-5}>]            (21) at (1,2) {};
+      \state[structure ob=<{4-5,7-8}>]        (22) at (1,1) {};
+      \state[structure ob=<{5-7}>]            (23) at (1,0) {};
+      \state[structure ob=<{3}>]              (31) at (2,2) {};
+      \state[structure ob=<{3-4,8}>]          (32) at (2,1) {};
+      \state[structure ob=<{3-8}>, accepting] (33) at (2,0) {};
+
+      \path[alert]   (11) edge node[left] {$p_1$ : \Send $m_1$}    (12);
+      \path[alert]   (12) edge node[left] {$p_2$ : \Receive $m_1$} (13);
+      \path[alert]   (21) edge node[left] {$p_1$ : \Send $m_1$}    (22);
+      \path[alert]   (22) edge node[right]{$p_2$ : \Receive $m_1$} (23);
+      \path[alert]   (31) edge node[right]{$p_1$ : \Send $m_1$}    (32);
+      \path[alert]   (32) edge node[right]{$p_2$ : \Receive $m_1$} (33);
+      \path[example] (11) edge node[above]{$p_2$ : \Send $m_2$}    (21);
+      \path[example] (21) edge node[above]{$p_1$ : \Receive $m_2$} (31);
+      \path[example] (12) edge node[below]{$p_2$ : \Send $m_2$}    (22);
+      \path[example] (22) edge node[above]{$p_1$ : \Receive $m_2$} (32);
+      \path[example] (13) edge node[below]{$p_2$ : \Send $m_2$}    (23);
+      \path[example] (23) edge node[below]{$p_1$ : \Receive $m_2$} (33);
+    \end{tikzpicture}
+  }
+
+  \onBlock<3->[bottom]{6 exécutions concrètes possibles}{
+    \centering
+    \begin{tikzpicture}[y=13mm, anchor=center, x=36mm]
+
+      \uncover<3-> {
+        \node (H1) at (0,1) {
+          \begin{tikzpicture}[y=5mm, x=5mm]
+            \draw[process] (0,1) node[left]{$p_1$} to (5,1);
+            \draw[process] (0,0) node[left]{$p_2$} to (5,0);
+            \path[alert, message]   (3,1) edge (4,0);
+            \path[example, message] (1,0) edge (2,1);
+          \end{tikzpicture}
+        };
+      }
+
+      \uncover<4-> {
+        \node (H2) at (1,1) {
+          \begin{tikzpicture}[y=5mm, x=5mm]
+            \draw[process] (0,1) node[left]{$p_1$} to (5,1);
+            \draw[process] (0,0) node[left]{$p_2$} to (5,0);
+            \path[alert, message]   (2,1) edge (4,0);
+            \path[example, message] (1,0) edge (3,1);
+          \end{tikzpicture}
+        };
+      }
+
+      \uncover<5-> {
+        \node (H3) at (2,1) {
+          \begin{tikzpicture}[y=5mm, x=5mm]
+            \draw[process] (0,1) node[left]{$p_1$} to (5,1);
+            \draw[process] (0,0) node[left]{$p_2$} to (5,0);
+            \path[alert, message]   (2,1) edge (3,0);
+            \path[example, message] (1,0) edge (4,1);
+          \end{tikzpicture}
+        };
+      }
+
+      \uncover<6-> {
+        \node (H4) at (0,0) {
+          \begin{tikzpicture}[y=5mm, x=5mm]
+            \draw[process] (0,1) node[left]{$p_1$} to (5,1);
+            \draw[process] (0,0) node[left]{$p_2$} to (5,0);
+            \path[alert, message]   (1,1) edge (2,0);
+            \path[example, message] (3,0) edge (4,1);
+          \end{tikzpicture}
+        };
+      }
+
+      \uncover<7-> {
+        \node (H5) at (1,0) {
+          \begin{tikzpicture}[y=5mm, x=5mm]
+            \draw[process] (0,1) node[left]{$p_1$} to (5,1);
+            \draw[process] (0,0) node[left]{$p_2$} to (5,0);
+            \path[alert, message]   (1,1) edge (3,0);
+            \path[example, message] (2,0) edge (4,1);
+          \end{tikzpicture}
+        };
+      }
+
+      \uncover<8-> {
+        \node (H6) at (2,0) {
+          \begin{tikzpicture}[y=5mm, x=5mm]
+            \draw[process] (0,1) node[left]{$p_1$} to (5,1);
+            \draw[process] (0,0) node[left]{$p_2$} to (5,0);
+            \path[alert, message]   (1,1) edge (4,0);
+            \path[example, message] (2,0) edge (3,1);
+          \end{tikzpicture}
+        };
+      }
+
+      \begin{scope}[background]
+        \node[fit=(H1)(H6)]  {};
+        \node<9>[fadebox, fit=(H2)(H6)] {};
+        \node<9>[fadebox, fit=(H1)]     {};
+        \node<9>[fadebox, fit=(H4)]     {};
+        \node<9>[black!70] at (1.5,.5)  {\small Exécutions indistinguables pour $p_1$ et $p_2$};
+      \end{scope}
+      
+    \end{tikzpicture}
+  }
+
+\end{frame}
+
+\endgroup
+\endinput
+
+

@@ -1,0 +1,67 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwFunction{Read}{read}
+\SetKwFunction{Write}{write}
+
+\begin{frame}{Surmonter CAP : la notion de quorum}
+
+  \begin{block}{Définitions}
+    Soit $\Pi = \{p_1, ..., p_n\}$ l'ensemble des processus.
+    \begin{itemize}
+    \item un \structure{quorum} est un sous-ensemble \alert{$Q \subseteq \Pi$}
+    \item un \structure{système de quorums} est un ensemble $\mathcal{Q} \subseteq \mathcal{P}(\Pi)$ tel que :
+      $$\alert{\forall Q_1, Q_2 \in \mathcal{Q}, Q_1 \cap Q_2 \neq \emptyset}$$ 
+    \item le \structure{système de quorums majoritaires} est \alert{$\mathcal{Q}_{\mathrm{maj}} = \left\{Q \subseteq \Pi \,\middle|\, |Q| > \frac{n}{2}\right\}$}
+    \end{itemize}
+  \end{block}
+
+  \begin{center}
+    \begin{tikzpicture}[x=10mm, y=5mm, anchor=center]
+      \draw[process, example  ] (0,4) node[left] {$p_1$} to (6,4) node (x1) {}; 
+      \draw[process, example  ] (0,3) node[left] {$p_2$} to (6,3) node (x2) {}; 
+      \draw[process, alert    ] (0,2) node[left] {$p_3$} to (6,2) node (z1) {}; 
+      \draw[process, structure] (0,1) node[left] {$p_4$} to (6,1) node (y1) {}; 
+      \draw[process, structure] (0,0) node[left] {$p_5$} to (6,0) node (y2) {}; 
+
+      \path[example  ] (x1.north) edge[brace] node {$Q_x$} (z1.south);
+      \path[structure] (z1.north) edge[brace] node {$Q_y$} (y2.south);
+      
+      \node[example,   operation] (xw)  at (1.5,4) {$x.\Write(1)$};
+      \node[example,   event]    (xw3) at (1.5,3) {};
+      \node[example,   event]    (xw2) at (1.5,2) {};
+      \node[structure, event]    (xr2) at (4.5,2) {};
+      \node[structure, event]    (xr1) at (4.5,1) {};
+      \node[structure, operation] (xr)  at (4.5,0) {$x.\Read() \rightarrow 0$};
+
+      \path[example,   message] (xw.west)  edge (xw2.west);
+      \path[example,   message] (xw.west)  edge (xw3.west);
+      \path[example,   message] (xw3.east) edge (xw.east) ;
+      \path[example,   message] (xw2.east) edge (xw.east) ;
+
+      \path[structure, message] (xr.west)  edge (xr2.west);
+      \path[structure, message] (xr.west)  edge (xr1.west);
+      \path[structure, message] (xr1.east) edge (xr.east) ;
+      \path[structure, message] (xr2.east) edge (xr.east) ;
+
+      \path[alert, thick, ->, shorten <=2mm, shorten >=2mm]   (xw2) edge[bend left=10] (xr2) ;
+    \end{tikzpicture}
+  \end{center}
+
+  \vspace{-3mm}
+  \begin{block}{Remarque}
+    \begin{itemize}
+    \item Il existe un quorum majoritaire de \alert{corrects} sous l'hypothèse \alert{$t<\frac{n}{2}$}
+    \end{itemize}
+  \end{block}
+  
+\end{frame}
+
+\endgroup
+\endinput

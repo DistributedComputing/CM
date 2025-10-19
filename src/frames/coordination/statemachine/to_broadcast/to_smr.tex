@@ -1,0 +1,82 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwFunction{Apply}{apply}
+\SetKwFunction{Deliver}{deliver}
+\SetKwData{State}{state}
+\SetKwData{Result}{result}
+\SetKwData{Command}{command}
+
+\begin{frame}{Implémentation de la machine à états répliquée}
+
+  \on[top=-2mm, text]{
+    Soit $\langle C, R, Q, q_0, \tau, \rho \rangle$ une machine à états\\
+    \begin{algorithm}[H]
+      \LVariables{}{
+        $\State_i \leftarrow q_0$; $\Result_i \leftarrow \bot$;
+      }
+      \Method{$\Apply(c \in C)$}{
+        \Alert{\textsc{to}.\SBroadcast $\textsc{cmd}(c)$;}\\
+        \Return $\Result_i$;
+      }
+      \When{\textsc{to}.\Deliver $\textsc{cmd}(c)$ \From $p_j$}{
+        \lIf{$j=i$}{$\Result_i \leftarrow \rho(\State_i, c)$;}
+        $\State_i \leftarrow \tau(\State_i, c)$;
+      }
+    \end{algorithm}
+  }
+
+  \onBlock[y=-22mm]{Théorème -- L'algorithme est linéarisable}{
+    \vspace{-2mm}
+    \begin{itemize}
+    \item L'ordre de linéarisation est l'ordre de délivrance des messages
+    \item Respect du temps réel car Total-Ordering $\Rightarrow$ Mutual-Ordering
+    \end{itemize}
+
+    \centering
+    \begin{tikzpicture}[y=7mm]
+      \draw[process] (0,2) node[left]{$p_1$} to (10,2);
+      \draw[process] (0,1) node[left]{$p_2$} to (10,1);
+      \draw[process] (0,0) node[left]{$p_3$} to (10,0);
+
+      \node[replica]           at (0,1) {$q_0$};
+      \node[replica,alert]     at (2.5,1) {$q_1 = \tau(q_0, c_1)$};
+      \node[replica,example]   at (6,2) {$q_2 = \tau(q_1, c_2)$};
+      \node[replica,structure] at (8,0) {$q_3 = \tau(q_2, c_3)$};
+
+      \node[alert, operation]                    (c1) at (2,2) {$c_1 \rightarrow \rho(q_0, c_1)$};
+      \node[example, operation, text width=30mm] (c2) at (2.8,0) {$c_2 \rightarrow \rho(q_1, c_2)$};
+      \node[structure, operation]                (c3) at (7,1) {$c_3 \rightarrow \rho(q_2, c_3)$};
+
+      \coordinate (0top) at (0 ,2.5);
+      \coordinate (0bot) at (0 ,-.5);
+
+      \begin{scope}[background]
+        \fill[structure!15, rounded corners] (0bot) rectangle (10,2.5);
+        \fill[example!15,   rounded corners] (0top) -- (8,2 |- 0top)     -- (8,2)     -- (c3.east) -- (7,0)     -- (7,0 |- 0bot)     -- (0bot);
+        \fill[alert!15,     rounded corners] (0top) -- (4,2 |- 0top)     -- (6,2)     -- (6.5,1)   -- (c2.east) -- (c2.east |- 0bot) -- (0bot);
+        \fill[black!5,      rounded corners] (0top) -- (c1.east |- 0top) -- (c1.east) -- (2,1)     -- (1.5,0)   -- (1.5,0 |- 0bot)   -- (0bot);
+      \end{scope}
+      
+      \draw[alert, message]     (c1.west) to[bend left]  (c1.east);
+      \draw[alert, message]     (c1.west) to             (2,1);
+      \draw[alert, message]     (c1.west) to             (1.5,0);
+      \draw[example, message]   (c2.west) to[bend above] (6,2);
+      \draw[example, message]   (c2.west) to[bend above] (6.5,1);
+      \draw[example, message]   (c2.west) to[bend right] (c2.east);
+      \draw[structure, message] (c3.west) to             (8,2);
+      \draw[structure, message] (c3.west) to[bend right] (c3.east);
+      \draw[structure, message] (c3.west) to             (7,0);
+    \end{tikzpicture}
+  }
+
+\end{frame}
+
+\endgroup
+\endinput

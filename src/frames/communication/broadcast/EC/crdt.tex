@@ -1,0 +1,59 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: Communication
+% Section: Cohérence faible
+% Frame: Eventual Consistency
+
+\begingroup
+
+\SetKwFunction{Get}{get}
+\SetKwFunction{Add}{add}
+\SetKwFunction{Insert}{insert}
+\SetKwFunction{SetKey}{setKey}
+
+\begin{frame}{CRDT : Conflict-free Replicated Data Type}
+
+  \vspace{-3mm}
+  \begin{block}{Définition -- Conflict-free Replicated Data Type}
+    Soit $M=\langle C, R, Q, q_0, \tau, \rho \rangle$ une machine à états à requêtes/mises à jour.
+    \begin{itemize}
+    \item On dit que deux mises à jour $u, u'$ \structure{commutent} si :
+      \begin{center}
+        $\alert{\forall q\in Q, \tau(\tau(q, u), u') = \tau(\tau(q, u'), u)}$
+      \end{center}
+    \item On dit que $M$ est un \structure{CRDT} si toutes ses mises à jour commutent :
+      \begin{center}
+        $\alert{\forall u, u'\in \mathit{Update}, \forall q\in Q, \tau(\tau(q, u), u') = \tau(\tau(q, u'), u)}$
+      \end{center}
+    \end{itemize}
+  \end{block}
+
+  \pause
+
+  \vspace{-1mm}
+  \begin{exampleblock}{Exemples et contre-exemples}
+  \vspace{-1mm}
+    \begin{itemize}
+    \item<2-> Le compteur $\Get/\Add$ est un CRDT :
+      \begin{center}
+        $\example{\forall n, a, b, \tau(\tau(n, \Add(a)), \Add(b)) = n+a+b = \tau(\tau(n, \Add(b)), \Add(a))}$
+      \end{center}
+    \item<3-> Le G-set $\Get/\Insert$ est un CRDT (l'insertion commute)
+    \item<4-> La base de données clé-valeurs n'est pas un CRDT :
+      \begin{center}
+        \example{$\SetKey(k, a)$ écrase $\SetKey(k, b)$}
+      \end{center}
+    \item<5-> Les services de messagerie instantanée ne sont pas des CRDT.
+    \end{itemize}
+  \end{exampleblock}
+
+  \on[bottom=-2mm, text]{
+    \begin{citing}
+    \item[SPBZ11] M. Shapiro, N. Preguiça, C. Baquero, M. Zawirski. \emph{A comprehensive study of Convergent and Commutative Replicated Data Types}. 2011
+    \end{citing}
+  }  
+  
+\end{frame}
+
+\endgroup
+\endinput

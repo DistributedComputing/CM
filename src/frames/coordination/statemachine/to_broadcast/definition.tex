@@ -1,0 +1,70 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Total-Order Broadcast (Atomic Broadcast)}
+
+  \onBlock[top=-5mm]{Propriétés héritées de \textsc{sta}.\Broadcast}{
+    \vspace{-1mm}
+    \begin{description}[Total-ordering :]
+    \item[TO-Validité :]    Si $p_i$ \textsc{to}.\Deliver $m$ de $p_j$, $p_j$ a \textsc{to}.\Broadcast $m$
+    \item[TO-Intégrité :]   $p_i$ \textsc{to}.\Deliver $m$ au plus une fois
+    \item[TO-Terminaison :] \textsc{to}.\Broadcast par correct $\Rightarrow$ \textsc{to}.\Deliver par corrects.
+    \end{description}
+  }
+
+  \onAlertBlock[y=8mm]{Nouvelle propriété d'ordre}{
+    \vspace{-1mm}
+    \begin{description}[Total-ordering :]
+    \item[Total-ordering :] Si un processus \textsc{to}.\Deliver $m$ avant $m'$, \\aucun processus ne \textsc{to}.\Deliver $m'$ avant $m$. 
+    \end{description}
+  }
+
+  \onBlock[bottom=9mm]{Remarques}{
+    \vspace{-1mm}
+    \begin{itemize}
+    \item Total-Ordering $\Rightarrow$ Mutual-Ordering $\Rightarrow$ Causal-Ordering $\Rightarrow$ FIFO-Ordering
+    \item \structure{Ajout de propriétés :} \textsc{rb-to}.\Broadcast, \textsc{urb-to}.\Broadcast
+    \end{itemize}
+  }
+
+  \on[y=-10mm, x=10mm]{
+    \begin{tikzpicture}[y=4mm]
+      \draw[process]   (0,3) node[left]{$p_1$} to (6,3);
+      \draw[process]   (0,2) node[left]{$p_2$} to (6,2);
+      \draw[process]   (0,1) node[left]{$p_3$} to (6,1);
+      \draw[process]   (0,0) node[left]{$p_4$} to (6,0);
+
+      \draw[structure]          (1,3) node (m1) {} node[above] {$m$};
+      \draw[structure, message] (m1.center) to[bend left]  (2,3);
+      \draw[structure, message] (m1.center) to[bend left]  (1.5,2);
+      \draw[structure, message] (m1.center) to[bend left]  (3,1);
+      \draw[structure, message] (m1.center) to[bend left]  (2.5,0);
+
+      \draw[example]            (1,0) node (m2) {} node[below] {$m'$};
+      \draw[example, message]   (m2.center) to[bend right] (2.5,3);
+      \draw[example, message]   (m2.center) to[bend right] (3,2);
+      \draw[example, message]   (m2.center) to[bend right] (1.5,1);
+      \draw[example, message]   (m2.center) to[bend right] (2,0);
+
+      \draw[alert, thick] (3.5,3.25) -- (5.5,-.25);
+      \draw[alert, thick] (5.5,3.25) -- (3.5,-.25);
+    \end{tikzpicture}
+  }
+  
+  \on[bottom=-2mm, text]{
+    \begin{citing}
+    \item[BJ87] K. P. Birman, T. A. Joseph. \emph{Reliable Communication in the Presence of Failures}. TOCS, 1987.
+    \item[DSU04] X. Défago, A. Schiper, P. Urbán. \emph{Total Order Broadcast and Multicast Algorithms: Taxonomy and Survey}. ACM CSUR, 2004.
+    \end{citing}
+  }  
+
+\end{frame}
+
+\endgroup
+\endinput

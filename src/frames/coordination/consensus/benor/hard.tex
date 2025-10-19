@@ -1,0 +1,175 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Consensus -- De la difficulté de tolérer les pannes}
+
+  \on[y=-5mm]{
+    \begin{tikzpicture}
+      \node       [faded background picture=Seine,  text width=\paperwidth/3] (A) at (-\paperwidth/3,0) {};
+      \node<4,5>  [faded background picture=Metro,  text width=\paperwidth/3] (B) at (0,0) {};
+      \node<-3,6->[faded background picture=Jardin, text width=\paperwidth/3] (B) at (0,0) {};
+      \node       [faded background picture=Salon,  text width=\paperwidth/3] (C) at (\paperwidth/3,0) {};
+      \node[anchor=south, inner sep=0pt, outer sep=0pt] at (A.south) {\includegraphics[height=22mm]{Alice}};
+      \node[anchor=south, inner sep=0pt, outer sep=0pt] at (B.south) {\includegraphics[height=22mm]{Bob}};
+      \node[anchor=south, inner sep=0pt, outer sep=0pt] at (C.south) {\includegraphics[height=22mm]{Carole}};
+    \end{tikzpicture}
+  }
+
+  \on[x=-\paperwidth/3, y=15mm]{
+    \begin{chat}[color=structure]{Bob, Carole}
+      \chatSend{On fait quoi ce soir ?}
+      \onlyb<2>{
+        \chatSend{Un restaurant ?}
+      }
+      \onlyb<3>{
+        \chatSend{Un restaurant ?}
+        \chatRecv[color=example]{On se fait un resto ?}
+        \chatRecv[color=alert]  {Un petit resto ?}
+      }
+      \only<4-6>{
+        \chatSend{Un restaurant ?}
+        \chatRecv[color=alert]  {Un petit resto ?}
+      }
+      \onlyb<7>{
+        \chatSend{Un cinéma ?}
+      }
+      \onlyb<8-9>{
+        \chatSend{Un cinéma ?}
+        \chatRecv[color=example]{On se fait un ciné ?}
+      }
+    \end{chat}
+  }
+  
+  \on[y=15mm]{
+    \begin{chat}[color=example]{Alice, Carole}
+      \chatRecv[color=structure]{On fait quoi ce soir ?}
+      \onlyb<2>{
+        \chatSend{On se fait un resto ?}
+      }
+      \onlyb<3>{
+        \chatSend{On se fait un resto ?}
+        \chatRecv[color=structure]{Un restaurant ?}
+        \chatRecv[color=alert]  {Un petit resto ?}
+      }
+      \onlyb<4>{
+        \chatSend{On se fait un resto ?}
+      }
+      \onlyb<5>{
+        \chatSend{On se fait un ciné ?}
+      }
+      \only<6-8>{
+        \chatSend{On se fait un ciné ?}
+        \chatRecv[color=alert]  {Un petit resto ?}
+      }
+      \onlyb<9>{
+        \chatSend{On se fait un ciné ?}
+        \chatRecv[color=alert]  {Un petit ciné ?}
+      }
+    \end{chat}
+  }
+  
+  \on[x=\paperwidth/3, y=15mm]{
+    \begin{chat}[color=alert]{Alice, Bob}
+      \chatRecv[color=structure]{On fait quoi ce soir ?}
+      \onlyb<2>{
+        \chatSend{Un petit resto ?}
+      }
+      \onlyb<3>{
+        \chatSend{Un petit resto ?}
+        \chatRecv[color=structure]{Un restaurant ?}
+        \chatRecv[color=example]{On se fait un resto ?}
+      }
+      \onlyb<4-5>{
+        \chatSend{Un petit resto ?}
+        \chatRecv[color=structure]{Un restaurant ?}
+      }
+      \only<6-8>{
+        \chatSend{Un petit resto ?}
+        \chatRecv[color=example]{On se fait un ciné ?}
+      }
+      \onlyb<9>{
+        \chatSend{Un petit ciné ?}
+      }
+    \end{chat}
+  }
+  
+  \ob<1>[x=-\paperwidth/3, y=-15mm]{
+    \chatBubble[color=structure]{On fait quoi ce soir ?}
+  }
+  
+  \ob<2>[x=-\paperwidth/3, y=-15mm]{
+    \chatBubble[color=structure]{Un restaurant ?}
+  }
+  \ob<2>[y=-15mm]{
+    \chatBubble[color=example]{On se fait un resto ?}
+  }
+  \ob<2>[x=\paperwidth/3, y=-15mm]{
+    \chatBubble[color=alert]{Un petit resto ?}
+  }
+  
+  \ob<3>[x=-\paperwidth/3, y=-15mm]{
+    \chatBubble[color=structure]{Restaurant !\\\small (Validité)}
+  }
+  \ob<3>[y=-15mm]{
+    \chatBubble[color=example]{Restaurant !\\\small (Validité)}
+  }
+  \ob<3>[x=\paperwidth/3, y=-15mm]{
+    \chatBubble[color=alert]{Restaurant !\\\small (Validité)}
+  }
+  
+  \ob<4>[x=-\paperwidth/3, y=-15mm]{
+    \chatBubble[color=structure]{Restaurant !\\\small (Tolérance aux fautes)}
+  }
+  \ob<4>[x=\paperwidth/3, y=-15mm]{
+    \chatBubble[color=alert]{Restaurant !\\\small (Tolérance aux fautes)}
+  }
+  
+  \on<5-6>[x=-\paperwidth/3, y=-15mm]{
+    \chatBubble[color=structure]{Restaurant !\\\small (Indistinguabilité)}
+  }
+  \ob<5>[y=-15mm]{
+    \chatBubble[color=example]{On se fait un ciné ?}
+  }
+  \ob<5>[x=\paperwidth/3, y=-15mm]{
+    \chatBubble[color=alert]{Restaurant !\\\small (Indistinguabilité)}
+  }
+  \on<6>[y=-15mm]{
+    \chatBubble[color=example]{Restaurant !\\\small (Accord)}
+  }
+  \on<6>[x=\paperwidth/3, y=-15mm]{
+    \chatBubble[color=alert]{Restaurant !\\\small (Accord)}
+  }
+
+  \ob<7>[x=-\paperwidth/3, y=-15mm]{
+    \chatBubble[color=structure]{Un cinéma ?}
+  }
+  \ob<8>[x=-\paperwidth/3, y=-15mm]{
+    \chatBubble[color=structure]{Restaurant !\\\small (Accord)}
+  }
+  \ob<7-8>[y=-15mm]{
+    \chatBubble[color=example]{Restaurant !\\\small (Indistinguabilité)}
+  }
+  \ob<7-8>[x=\paperwidth/3, y=-15mm]{
+    \chatBubble[color=alert]{Restaurant !\\\small (Indistinguabilité)}
+  }
+
+  \ob<9>[x=-\paperwidth/3, y=-15mm]{
+    \chatBubble[color=structure]{Restaurant !\\\small (Indistinguabilité)}
+  }
+  \ob<9>[y=-15mm]{
+    \chatBubble[color=example]{Restaurant !\\\small (Accord)}
+  }
+  \ob<9>[x=\paperwidth/3, y=-15mm]{
+    \chatBubble[color=alert]{Un petit ciné ?}
+  }
+  
+\end{frame}
+
+\endgroup
+\endinput

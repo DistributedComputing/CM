@@ -1,0 +1,47 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Multi-decree Paxos en pratique}
+
+  Machine à états répliquée, pertes de messages...
+
+  \begin{block}{Optimisations possibles}
+    \begin{itemize}
+    \item Message $\textsc{begin}$ mutualisé entre plusieurs rondes
+    \item Message $\textsc{msg}$ envoyé au leader seulement dans Multi-decree Paxos
+    \item Pas d'abstraction intermédiaire
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Rôles des processus}
+    Les processus ne jouent pas tous le même rôle :
+    \begin{description}
+    \item[Proposer :] autorisé à proposer une valeur
+      \begin{itemize}
+      \item \vspace{-1mm} Serveur en contact des clients
+      \end{itemize}
+    \item[Leader :] Coordonne les \emph{proposers}
+      \begin{itemize}
+      \item \vspace{-1mm} Idéalement, un seul processus, correct. 
+      \end{itemize}
+    \item[Acceptor :] Participent au quorum du \Broadcast{mutual}
+      \begin{itemize}
+      \item \vspace{-1mm} Une majorité doit être correcte
+      \end{itemize}
+    \item[Learner :] Destinataire du message $\textsc{decide}(v)$ final
+      \begin{itemize}
+      \item \vspace{-1mm} processus sur lequel est stocké un réplica
+      \end{itemize}
+    \end{description}
+  \end{block}
+
+\end{frame}
+
+\endgroup
+\endinput

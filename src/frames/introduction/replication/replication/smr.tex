@@ -1,0 +1,74 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwFunction{Acheter}{acheter}
+\SetKwFunction{Vendre}{vendre}
+\SetKwFunction{Consulter}{consulter}
+\SetKwFunction{Apply}{apply}
+
+\begin{frame}{Machine à états répliquée}
+
+  \vspace{-1mm}
+  \begin{block}{Définition -- Machine à états répliquée}
+    Algorithme \structure{universel} qui simule une machine à états $\langle C,R,Q,q_0,\tau,\rho\rangle$
+
+    \vspace{2mm}
+    \begin{algorithm}[H]
+      \Interface{$\mathit{SMR}$<$C,R,Q,q_0,\tau,\rho$>}{
+        \lMethod{$\Apply(c \in C) \in R$ }{\tcp*[f]{exécute la commande $c$}}
+      }
+    \end{algorithm}
+  \end{block}
+
+  \vspace{-1mm}
+  \begin{exampleblock}{Utilisation pour un site Web}
+  \begin{tikzpicture}[y=8mm, x=9mm]
+    \draw[fade on=<2>, process] (0,3) node[left]{$\mathit{Client}_1$}  to (10,3);
+    \draw[             process] (0,2) node[left]{$\mathit{Serveur}_1$} to (10,2);
+    \draw[             process] (0,1) node[left]{$\mathit{Serveur}_2$} to (10,1);
+    \draw[fade on=<2>, process] (0,0) node[left]{$\mathit{Client}_2$}  to (10,0);
+
+    \begin{scope}[structure]
+      \node[fade on=<2>, operation] (o1) at (2.5,3) {\scriptsize\hspace{7mm}$\Consulter() \rightarrow \{a, b\}$\hspace{7mm}};
+      \node[             operation] (s1) at (2.5,2) {\scriptsize$\Apply(\Consulter()) \rightarrow \{a, b\}$};
+      \draw[fade on=<2>, message]   (o1.west) -- (s1.west);
+      \draw[fade on=<2>, message]   (s1.east) -- (o1.east);
+    \end{scope}
+    
+    \begin{scope}[alert]
+      \node[fade on=<2>, operation] (o1) at (7.5,3) {\scriptsize\hspace{7mm}$\Consulter() \rightarrow \{b\}$\hspace{7mm}};
+      \node[             operation] (s1) at (7.5,2) {\scriptsize$\Apply(\Consulter()) \rightarrow \{b\}$};
+      \draw[fade on=<2>, message]   (o1.west) -- (s1.west);
+      \draw[fade on=<2>, message]   (s1.east) -- (o1.east);
+    \end{scope}
+
+    \begin{scope}[example]
+      \node[fade on=<2>, operation] (o2) at (5,0) {\scriptsize\hspace{7mm}$\Acheter(a) \rightarrow \cmark$\hspace{7mm}};
+      \node[             operation] (s2) at (5,1) {\scriptsize$\Apply(\Acheter(a)) \rightarrow \cmark$};
+      \draw[fade on=<2>, message]   (o2.west) -- (s2.west);
+      \draw[fade on=<2>, message]   (s2.east) -- (o2.east);
+    \end{scope}
+  \end{tikzpicture}
+  \end{exampleblock}
+
+  \vspace{-1mm}
+  \begin{block}{But}
+    \centering
+    \vspace{-3mm}
+    \alert{Comment mettre en place la réplication \\ de manière transparente pour les clients ?}
+  \end{block}
+  
+  \begin{citing}
+  \item L. Lamport. \emph{The Implementation of Reliable Distributed Multiprocess Systems.} Computer Networks (1978)
+  \end{citing}
+
+\end{frame}
+
+\endgroup
+\endinput

@@ -1,0 +1,52 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Vitesse de convergence : Facebook Messenger}
+
+  \on[y=-5mm]{
+    \begin{tikzpicture}
+      \node[faded background picture=Seine,  text width=\paperwidth/2] (A) at (-\paperwidth/4,0) {};
+      \node[faded background picture=Rue, text width=\paperwidth/2] (B) at ( \paperwidth/4,0) {};
+      \node[anchor=south, nosep] at (A.south) {\includegraphics[height=22mm]{Alice}};
+      \node[anchor=south, nosep] at (B.south) {\includegraphics[height=22mm]{Bob}};
+      
+      \node at (0,2.5) {\includegraphics[width=8mm]{Facebook}};
+      \draw<2->[fill=white] (0,0.5) circle(0.5);
+      \onlyb<2>{
+        \node at (0,0.5) {\LARGE \showclock{4}{0}};
+      }
+      \only<3>{
+        \node at (0,0.5) {\LARGE \showclock{8}{0}};
+      }
+    \end{tikzpicture}
+  }
+
+  \on[x=-.25\paperwidth, y=10mm]{
+    \begin{chat}[color=structure]{Bob}
+      \only{\chatSend{Pause café ?}}
+      \only<3>{\chatRecv[color=example]{Évidemment !}}
+      \only{\chatSend{Tu n'as pas répondu. \\ Tu m'en veux ?}}
+      \onlyb<2>{\chatRecv[color=example]{Évidemment !}}
+      \onlyb<1>{\node at (0,-25mm) {\Large ?};}
+    \end{chat}
+  }
+
+  \on[x=.25\paperwidth, y=10mm]{
+    \begin{chat}[color=example]{Alice}
+      \only{\chatRecv[color=structure]{Pause café ?}}
+      \only{\chatSend{Évidemment !}}
+      \only<2->{\chatRecv[color=structure]{Tu n'as pas répondu. \\ Tu m'en veux ?}}
+      \onlyb<1>{\node at (0,-25mm) {\Large ?};}
+    \end{chat}
+  }
+
+\end{frame}
+
+\endgroup
+\endinput

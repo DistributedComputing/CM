@@ -1,0 +1,147 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwFunction{Append}{append}
+\SetKwFunction{Read}{read}
+\SetKwData{State}{state}
+
+\begin{frame}{Essai d'implémentation d'un service de messagerie}
+
+  \on[top=-2mm]{
+    \begin{algorithm}[H]
+      \LVariables{}{
+        $\State_i \leftarrow \varepsilon$\;
+      }
+
+      \Method{$\Read()$}{
+        \Return $\State_i$\;
+      }
+
+      \Method{$\Append(m)$}{
+        \For{$j$ \From $1$ \To $n$}{
+          \Send $\textsc{append}(m)$ \To $p_j$\;
+        }
+      }
+      
+      \When{\Receive $\textsc{append}(m)$ \From $p_j$}{
+        $\State_i \leftarrow \State_i \cdot m$\;
+      }
+    \end{algorithm}
+  }
+
+  \onExampleBlock[y=-14mm]{Exemples d'exécution}{}
+  
+  \ob<1>[y=-30mm]{
+    \begin{tikzpicture}[y=8mm]
+      \draw[process] (0,2) node[left]{$p_1$} node[replica below]{$\varepsilon$} to (10,2);
+      \draw[process] (0,1) node[left]{$p_2$} node[replica]      {$\varepsilon$} to (10,1);
+      \draw[process] (0,0) node[left]{$p_3$} node[replica]      {$\varepsilon$} to (10,0);
+
+      \node[alert, operation] (i1) at (3,1) {\hspace{8mm}$\Append(a)$};
+      \draw[alert, message]   ([xshift=0mm]i1.west) to             (3,2);
+      \draw[alert, message]   ([xshift=2mm]i1.west) to[bend left]  ([xshift=6mm]i1.west);
+      \draw[alert, message]   ([xshift=8mm]i1.west) to             (4,0);
+
+      \node[structure, operation] (r1) at (7,2) {$\Read() \rightarrow \alert{a}$};
+      \node[structure, operation] (r2) at (7,1) {$\Read() \rightarrow \alert{a}$};
+      \node[structure, operation] (r3) at (7,0) {$\Read() \rightarrow \alert{a}$};
+    \end{tikzpicture}
+  }
+
+  \ob<2>[y=-30mm]{
+    \begin{tikzpicture}[y=8mm]
+      \draw[process] (0,2) node[left]{$p_1$} node[replica below]{$\varepsilon$} to (10,2);
+      \draw[process] (0,1) node[left]{$p_2$} node[replica]      {$\varepsilon$} to (10,1);
+      \draw[process] (0,0) node[left]{$p_3$} node[replica]      {$\varepsilon$} to (10,0);
+
+      \node[alert, operation] (i1) at (2,2) {\hspace{8mm}$\Append(a)$};
+      \draw[alert, message]   ([xshift=0mm]i1.west) to[bend left]  ([xshift=4mm]i1.west);
+      \draw[alert, message]   ([xshift=6mm]i1.west) to             (1.3,1);
+      \draw[alert, message]   ([xshift=8mm]i1.west) to[bend below] (6.5,0);
+
+      \node[example, operation] (i2) at (2,0) {\hspace{8mm}$\Append(b)$};
+      \draw[example, message]   ([xshift=0mm]i2.west) to[bend above]    (6.5,2);   
+      \draw[example, message]   ([xshift=2mm]i2.west) to                (1.7,1); 
+      \draw[example, message]   ([xshift=4mm]i2.west) to[bend right=15] ([xshift=8mm]i2.west); 
+      
+      \node[structure, operation] (r1) at (5,2) {$\Read() \rightarrow \alert{a}$};
+      \node[structure, operation] (r2) at (8,2) {$\Read() \rightarrow \alert{a} \cdot \example{b}$};
+      \node[structure, operation] (r3) at (5,0) {$\Read() \rightarrow \example{b}$};
+      \node[structure, operation] (r4) at (8,0) {$\Read() \rightarrow \example{b} \cdot \alert{a}$};
+    \end{tikzpicture}
+  }
+
+  \on<3>[y=-30mm]{
+    \begin{tikzpicture}[y=8mm]
+      \draw[process] (0,2) node[left]{$p_1$} node[replica below]{$\varepsilon$} to (10,2);
+      \draw[crashed] (0,1) node[left]{$p_2$} node[replica]      {$\varepsilon$} to (2,1);
+      \draw[process] (0,0) node[left]{$p_3$} node[replica]      {$\varepsilon$} to (10,0);
+      
+      \begin{scope}[background]
+        \node[alert, operation] (i1) at (2.5,1) {\hspace{8mm}$\Append(a)$};
+        \draw[alert, message]   ([xshift=0mm]i1.west) to             (3,2);
+        \draw[alert, message]   ([xshift=2mm]i1.west) to[bend left]  ([xshift=6mm]i1.west);
+      \end{scope}
+
+      \node[structure, operation] (r1) at (7.5,2) {$\Read() \rightarrow \alert{a}$};
+      \node[structure, operation] (r2) at (7.5,0) {$\Read() \rightarrow \varepsilon$};
+    \end{tikzpicture}
+  }
+
+  \onAlertBlock<2->[top, right=.49\textwidth]{Problèmes de cohérence}{
+    Désaccord possible sur :
+    \begin{itemize}
+    \item<2-> l'ordre des commandes
+    \item<3-> l'ensemble de commandes
+    \end{itemize}
+  }
+  
+\end{frame}
+
+\endgroup
+\endinput
+
+
+  \ob<2>[y=-30mm]{
+    \begin{tikzpicture}[y=8mm]
+      \draw[process] (0,2) node[left]{$p_1$} node[replica below]{$\varepsilon$} to (10,2);
+      \draw[process] (0,1) node[left]{$p_2$} node[replica]      {$\varepsilon$} to (10,1);
+      \draw[process] (0,0) node[left]{$p_3$} node[replica]      {$\varepsilon$} to (10,0);
+
+      \node[alert, operation] (i1) at (3,1) {\hspace{8mm}$\Append(a)$};
+      \draw[alert, message]   ([xshift=0mm]i1.west) to             (3,2);
+      \draw[alert, message]   ([xshift=2mm]i1.west) to[bend left]  ([xshift=6mm]i1.west);
+      \draw[alert, message]   ([xshift=8mm]i1.west) to[bend below] (7.5,0);
+
+      \node[structure, operation] (r1) at (7,2) {$\Read() \rightarrow \alert{a}$};
+      \node[structure, operation] (r3) at (6,0) {$\Read() \rightarrow \varepsilon$};
+    \end{tikzpicture}
+  }
+
+  \ob<4>[y=-30mm]{
+    \begin{tikzpicture}[y=8mm]
+      \draw[process] (0,2) node[left]{$p_1$} node[replica below]{$\varepsilon$} to (10,2);
+      \draw[process] (0,1) node[left]{$p_2$} node[replica]      {$\varepsilon$} to (10,1);
+      \draw[process] (0,0) node[left]{$p_3$} node[replica]      {$\varepsilon$} to (10,0);
+
+      \node[alert, operation] (i1) at (2,1) {\hspace{8mm}$\Append(a)$};
+      \draw[alert, message]   ([xshift=0mm]i1.west) to[bend above] (6.7,2);
+      \draw[alert, message]   ([xshift=2mm]i1.west) to[bend left]  ([xshift=6mm]i1.west);
+      \draw[alert, message]   ([xshift=8mm]i1.west) to             (2,0);
+
+      \node[example, operation] (i2) at (5,1) {\hspace{8mm}$\Append(b)$};
+      \draw[example, message]   ([xshift=0mm]i2.west) to             (3.9,2);   
+      \draw[example, message]   ([xshift=2mm]i2.west) to[bend left]  ([xshift=6mm]i2.west); 
+      \draw[example, message]   ([xshift=8mm]i2.west) to             (5,0);   
+      
+      \node[structure, operation] (r1) at (7  ,0) {$\Read() \rightarrow \alert{a} \cdot \example{b}$};
+      \node[structure, operation] (r2) at (5.2,2) {$\Read() \rightarrow \example{b}$};
+      \node[structure, operation] (r3) at (8.2,2) {$\Read() \rightarrow \example{b} \cdot \alert{a}$};
+    \end{tikzpicture}
+  }

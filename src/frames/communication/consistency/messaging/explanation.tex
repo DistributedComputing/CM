@@ -1,0 +1,79 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Critères de cohérence faibles}
+
+  \onBlock[left=.6\textwidth, top=-1mm]{Eventual Consistency}{
+    \begin{itemize}
+    \item Tous les processus finissent dans le même état
+    \item \example{Contre-exemple : WhatsApp}
+    \end{itemize}
+  }
+  
+  \onBlock[left=.6\textwidth, y=-3mm]{Validity}{
+    \begin{itemize}
+    \item Chaque processus finit dans un état qui reflète toutes les écritures
+    \item \example{Contre-exemple : Hangouts}
+    \end{itemize}
+  }
+  
+  \onBlock[left=.6\textwidth, bottom]{State locality}{
+    \begin{itemize}
+    \item Tout changement d'état vient de l'exécution d'une écriture
+    \item \example{Contre-exemple : Skype}
+    \end{itemize}
+  }
+
+  \on[x=35mm, y=20mm]{
+    \scalebox{.7}{
+      \begin{chat}[color=structure, height=3cm]{Bob}
+        \chatSend{Pause café ?}
+        \chatSend{Tu n'as pas répondu. \\ Tu m'en veux ?}
+        \chatRecv[color=example]{Évidemment !}
+      \end{chat}
+      \begin{chat}[color=example, height=3cm]{Alice}
+        \chatRecv[color=structure]{Pause café ?}
+        \chatSend{Évidemment !}
+        \chatRecv[color=structure]{Tu n'as pas répondu. \\ Tu m'en veux ?}
+      \end{chat}
+    }
+  }
+
+  \on[x=35mm, y=-5mm]{
+    \scalebox{.7}{
+      \begin{chat}[color=structure, height=3cm]{Bob}
+        \chatSend{Pause café ?}
+        \chatSend{Tu n'as pas répondu. \\ Tu m'en veux ?}
+      \end{chat}
+      \begin{chat}[color=example, height=3cm]{Alice}
+        \chatRecv[color=structure]{Pause café ?}
+        \chatErr{Évidemment !}
+        \chatRecv[color=structure]{Tu n'as pas répondu. \\ Tu m'en veux ?}
+      \end{chat}
+    }
+  }
+
+  \on[x=35mm, y=-30mm]{
+    \scalebox{.7}{
+      \begin{chat}[color=structure, height=3cm]{Bob}
+        \chatSend{Pause café ?}
+        \chatSend{Tu n'as pas répondu. \\ Tu m'en veux ?}
+      \end{chat}
+      \begin{chat}[color=structure, height=3cm]{Bob}
+        \chatSend{Pause café ?}
+        \chatRecv[color=example]{Évidemment !}
+        \chatSend{Tu n'as pas répondu. \\ Tu m'en veux ?}
+      \end{chat}
+    }
+  }
+  
+\end{frame}
+
+\endgroup
+\endinput

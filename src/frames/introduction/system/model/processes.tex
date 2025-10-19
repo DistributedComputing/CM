@@ -1,0 +1,41 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Processus}
+
+  \begin{block}{Système réparti fermé}
+    \begin{itemize}
+    \item Ensemble fixe et connu de $n$ processus \structure{$p_1$, ..., $p_n$}
+    \item Chaque $p_i$ connaît son \structure{identifiant} $i$ (et $n$ si besoin)
+    \item Mémoire locale \structure{privée} pour chaque processus
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Processus séquentiel, asynchrone}
+    \begin{itemize}
+      \item \structure{Séquentiel} : une seule action à la fois (pas de threads internes)
+      \item \structure{Moniteur} : \Wait{condition} bloque jusqu'à \textit{condition}
+      \item \structure{Asynchrone} : vitesses arbitraires, pas d’horloge globale
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Pannes (\textit{crash-stop})}
+    \begin{itemize}
+      \item \structure{En panne} : le processus s’arrête définitivement
+      \item \structure{Correct} : ne crash pas (prend une infinité d’étapes)
+      \item Au plus \structure{$t$} pannes dans une exécution
+    \end{itemize}
+  \end{block}
+
+\end{frame}
+
+\endgroup
+\endinput
+
+

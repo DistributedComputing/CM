@@ -1,0 +1,239 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwFunction{Read}{read}
+\SetKwFunction{Write}{write}
+\SetKwData{Value}{value}
+\SetKwData{Time}{time}
+\SetKwData{Writer}{writer}
+
+\begin{frame}{Implémentation d'un registre linéarisable}
+
+  \on[top=-3mm]{
+    \begin{algorithm}[H]
+      \lLVariables{}{
+        $\Value_i  \leftarrow \bot$; $\Time_i \leftarrow 0$; $\Writer_i \leftarrow 0$;
+      }
+      \Method{$\Read()$}{
+        \uncover<3->{\Alert<3-4,8>{\textsc{mb}.\SBroadcast $\textsc{synch}()$;}\tcp*[f]{Barrière \Read $\rightarrow$ \Write}}\\
+        \Alert<-2>{\Let $v \leftarrow \Value_i$;}\\
+        \uncover<8->{\Structure<8>{\textsc{mb}.\SBroadcast $\textsc{w}(v, \Time_i, \Writer_i)$;}\tcp*[f]{Barrière \Read $\rightarrow$ \Read}}\\
+        \Alert<-2>{\Return $v$;}
+      }
+      \Method{$\Write(v)$}{
+        \uncover<6->{\Structure<6>{\textsc{mb}.\SBroadcast $\textsc{synch}()$;}\tcp*[f]{Barrière \Write $\rightarrow$ \Write}}\\
+        \Example<-6>{\textsc{mb}.\SBroadcast $\textsc{w}(v, \Time_i+1, i)$;}\tcp*[f]{Last-Writer-Wins register}
+      }
+      \When{\textsc{mb}.\Deliver $\textsc{w}(v, t, w)$ \From $p_j$}{
+        \Example<-2,6>{\lIf{$\langle \Time_i, \Writer_i \rangle <_{lex} \langle t, w \rangle$}{
+            $\Value_i  \leftarrow v$; $\Time_i \leftarrow t$; $\Writer_i \leftarrow w$;
+        }}
+      }
+    \end{algorithm}
+  }
+
+  \ob<1,2>[y=-25mm]{
+    \begin{tikzpicture}[y=7mm]
+      \draw[process] (0,2) node[left]{$p_1$} to (10,2);
+      \draw[process] (0,1) node[left]{$p_2$} to (10,1);
+      \draw[process] (0,0) node[left]{$p_3$} to (10,0);
+      
+      \node[example, operation] (w1) at (2,0) {$\Write(1)$};
+      \path[example, message]   (w1.west) edge (2.5,2);
+      \path[example, message]   (w1.west) edge (1.5,1);
+      \path[example, message]   (w1.west) edge[bend left] (w1.east);
+
+      \node[example, operation] (w2) at (5,2) {$\Write(2)$};
+      \path[example, message]   (w2.west) edge [bend right] (w2.east);
+      \path<1>[example, message]   (w2.west) edge (4.5,1);
+      \path<2>[example, message]   (w2.west) edge[bend below] (9.5,1);
+      \path[example, message]   (w2.west) edge (5.5,0);
+
+      \node[alert,   operation] (r)  at (8,1) {$\Read() \rightarrow \alt<1>{2}{1}$};
+    \end{tikzpicture}
+  }
+  
+  \ob<3,4>[y=-25mm]{
+    \begin{tikzpicture}[y=7mm]
+      \draw[process] (0,2) node[left]{$p_1$} to (10,2);
+      \draw[process] (0,1) node[left]{$p_2$} to (10,1);
+      \draw[process] (0,0) node[left]{$p_3$} to (10,0);
+      
+      \node[fade, operation]         (w1) at (2,0) {$\Write(1)$};
+      \path[fade, message]           (w1.west) edge (2.5,2);
+      \path[fade, message]           (w1.west) edge (1.5,1);
+      \path[fade, message]           (w1.west) edge[bend left] (w1.east);
+      
+      \node[alert,   operation]      (r)  at (8,1) {$\Read() \rightarrow 1$};
+      \path[alert,   message, thick] (r.west) edge (8,2);
+      \path[alert,   message]        (r.west) edge[bend left] (r.east);
+      \path[alert,   message]        (r.west) edge (8,0);
+      
+      \node[example, operation]      (w2) at (5,2) {$\Write(2)$};
+      \path[example, message]        (w2.west) edge[bend right] (w2.east);
+      \path<3>[example, message, thick] (w2.west) edge[bend below] (9.5,1);
+      \path<4>[example, message, thick] (w2.west) edge[bend below] (r.center);
+      \path[example, message]        (w2.west) edge (5.5,0);
+      
+      \node<3>[alert] at (6,0.5) {MP1};
+    \end{tikzpicture}
+  }
+
+  \ob<5>[y=-25mm]{
+    \begin{tikzpicture}[y=7mm]
+      \draw[process] (0,2) node[left]{$p_1$} to (10,2);
+      \draw[process] (0,1) node[left]{$p_2$} to (10,1);
+      \draw[process] (0,0) node[left]{$p_3$} to (10,0);
+
+      \node[example, operation]      (w2)      at             (5,2) {$\Write(2)$};
+      \draw[example, message]        (w2.west) to[bend right] (w2.east);
+      \draw[example, message]        (w2.west) to             (4.5,1) node[below]{\small $\langle 1,1 \rangle$};
+      \draw[example, message]        (w2.west) to             (5.5,0);
+      
+      \node[example, operation]      (w1)      at             (2,0) {$\Write(1)$};
+      \draw[example, message, thick] (w1.west) to[bend above] (w2.center);
+      \draw[example, message]        (w1.west) to             (1.5,1) node[above]{\small $\langle 1,3 \rangle$};
+      \draw[example, message]        (w1.west) to[bend left]  (w1.east);
+      
+      \node[alert,   operation]      (r)       at             (8,1) {$\Read() \rightarrow 1$};
+      \draw[alert,   message]        (r.west)  to             (8,2);
+      \draw[alert,   message]        (r.west)  to[bend left]  (r.east);
+      \draw[alert,   message]        (r.west)  to             (8,0);
+    \end{tikzpicture}
+  }
+
+  \ob<6>[y=-25mm]{
+    \begin{tikzpicture}[y=7mm]
+      \draw[process] (0,2) node[left]{$p_1$} to (10,2);
+      \draw[process] (0,1) node[left]{$p_2$} to (10,1);
+      \draw[process] (0,0) node[left]{$p_3$} to (10,0);
+
+      \node[example, operation]        (w2)        at             (5,2)         {$\Write(2)$};
+      \draw[structure, message]        (w2.west)   to[bend right] (w2.center);
+      \draw[structure, message]        (w2.west)   to             (4.5,1);
+      \draw[structure, message, thick] (w2.west)   to             (5.5,0);
+      \draw[example, message]          (w2.center) to[bend right] (w2.east);
+      \draw[example, message]          (w2.center) to             (5.5,1)       node[below]{\small $\langle 2,1 \rangle$};
+      \draw[example, message]          (w2.center) to             (6.5,0);
+      
+      \node[example, operation]        (w1)        at             (2,0)         {$\Write(1)$};
+      \draw[structure, message]        (w1.west)   to             (2.5,2);
+      \draw[structure, message]        (w1.west)   to             (1.5,1);
+      \draw[structure, message]        (w1.west)   to[bend left]  (w1.center);
+      \draw[example, message, thick]   (w1.center) to[bend above] (4.5,2);
+      \draw[example, message]          (w1.center) to             (2.5,1)       node[above]{\small $\langle 1,3 \rangle$};
+      \draw[example, message]          (w1.center) to[bend left]  (w1.east);
+      
+      \node[alert,   operation]        (r)         at             (8,1)         {$\Read() \rightarrow 2$};
+      \draw[alert,   message]          (r.west)    to             (8,2);
+      \draw[alert,   message]          (r.west)    to[bend left]  (r.east);
+      \draw[alert,   message]          (r.west)    to             (8,0);
+    \end{tikzpicture}
+  }
+
+  \ob<7>[y=-25mm]{
+    \begin{tikzpicture}[y=7mm]
+      \draw[process] (0,2) node[left]{$p_1$} to (10,2);
+      \draw[process] (0,1) node[left]{$p_2$} to (10,1);
+      \draw[process] (0,0) node[left]{$p_3$} to (10,0);
+
+      \node[fade, operation]                     (w1)        at               (2,0)         {$\Write(1)$};
+      \draw[fade, message]                       (w1.west)   to               (2.0,2);
+      \draw[fade, message]                       (w1.west)   to               (1.5,1);
+      \draw[fade, message]                       (w1.west)   to[bend left]    (w1.center);
+      \draw[fade, message]                       (w1.center) to               (2.8,2);
+      \draw[fade, message]                       (w1.center) to               (2.3,1);
+      \draw[fade, message]                       (w1.center) to[bend left]    (w1.east);
+      
+      \node[example, operation, text width=55mm] (w2)        at               (6,2)         {$\Write(2)$};
+      \coordinate                                (w2middle)  at               ([xshift=5mm]w2.west);
+      \draw[structure, message]                  (w2.west)   to[bend right]   (w2middle);
+      \draw[structure, message]                  (w2.west)   to               (3.5,1);
+      \draw[structure, message]                  (w2.west)   to               (3.5,0);
+      \draw[example, message]                    (w2middle)  to[bend right=8] (w2.east);
+      \draw[example, message]                    (w2middle)  to[bend below]   (9.5,1);
+      \draw[example, message]                    (w2middle)  to               (4,0);
+      
+      \node[alert,   operation]                  (r2)        at               (5.5,0)       {$\Read() \rightarrow 2$};
+      \draw[alert,   message]                    (r2.west)   to               (5,2);
+      \draw[alert,   message]                    (r2.west)   to               (5,1);
+      \draw[alert,   message]                    (r2.west)   to[bend left]    (r2.east);
+      
+      \node[alert,   operation]                  (r1)        at               (8,1)         {$\Read() \rightarrow 1$};
+      \draw[alert,   message]                    (r1.west)   to               (8,2);
+      \draw[alert,   message]                    (r1.west)   to[bend left]    (r1.east);
+      \draw[alert,   message]                    (r1.west)   to               (8,0);
+    \end{tikzpicture}
+  }
+
+  \on<8>[y=-25mm]{
+    \begin{tikzpicture}[y=7mm]
+
+      \node[fade, operation]                     (w1)        at               (2,0)         {$\Write(1)$};
+      \draw[fade, message]                       (w1.west)   to               (2.0,2);
+      \draw[fade, message]                       (w1.west)   to               (1.5,1);
+      \draw[fade, message]                       (w1.west)   to[bend left]    (w1.center);
+      \draw[fade, message]                       (w1.center) to               (2.8,2);
+      \draw[fade, message]                       (w1.center) to               (2.3,1);
+      \draw[fade, message]                       (w1.center) to[bend left]    (w1.east);
+      
+      \node[example, operation, text width=55mm] (w2)        at               (6,2)         {$\Write(2)$};
+      \coordinate                                (w2middle)  at               ([xshift=5mm]w2.west);
+      \draw[structure, message]                  (w2.west)   to[bend right]   (w2middle);
+      \draw[structure, message]                  (w2.west)   to               (3.5,1);
+      \draw[structure, message]                  (w2.west)   to               (3.5,0);
+      \draw[example, message]                    (w2middle)  to[bend right=8] (w2.east);
+      \draw[example, message]                    (w2middle)  to[bend below]   (9.5,1);
+      \draw[example, message]                    (w2middle)  to               (4,0);
+      
+      \node[alert,     operation]                (r1)        at               (8,1)         {$\Read() \rightarrow 2$};
+      \draw[alert,     message]                  (r1.west)   to               (8,2);
+      \draw[alert,     message]                  (r1.west)   to[bend left]    (r1.center);
+      \draw[alert,     message, thick]           (r1.west)   to               (8,0);
+      \draw[structure, message]                  (r1.center) to               (8.5,2);
+      \draw[structure, message]                  (r1.center) to[bend left]    (r1.east);
+      \draw[structure, message]                  (r1.center) to               (8.5,0);
+
+      \node[alert,     operation]                (r2)        at               (5.5,0)       {$\Read() \rightarrow 2$};
+      \draw[alert,     message]                  (r2.west)   to               (5,2);
+      \draw[alert,     message]                  (r2.west)   to               (5,1);
+      \draw[alert,     message]                  (r2.west)   to[bend left]    (r2.center);
+      \draw[structure, message]                  (r2.center) to               (6,2);
+      \draw[structure, message, thick]           (r2.center) to[bend above]   (7.5,1);
+      \draw[structure, message]                  (r2.center) to[bend left]    (r2.east);
+
+      \draw[process] (0,2) node[left]{$p_1$} to (10,2);
+      \draw[process] (0,1) node[left]{$p_2$} to (10,1);
+      \draw[process] (0,0) node[left]{$p_3$} to (10,0);
+
+    \end{tikzpicture}
+  }
+
+  \obBlock<9>[y=-23mm]{Théorème -- L'algorithme est linéarisable}{\small
+    \begin{itemize}
+    \item\vspace{-1mm} Posons $\structure{\mathit{ts}(o) = \langle t, w\rangle}$ de son message \textsc{w}, et $\structure{o_1\;\mathcal{R}\;o_2}$ si : 
+    \begin{itemize}
+    \item $o_1$ se termine avant le début de $o_2$,
+    \item $\mathit{ts}(o_1) <_{lex} \mathit{ts}(o_2)$,
+    \item ou $\mathit{ts}(o_1) = \mathit{ts}(o_2)$, $o_1$ est une écriture et $o_2$ est une lecture.
+    \end{itemize}
+    \item\vspace{-1mm} \alert{$\mathcal{R}$ est acyclique}, et peut être étendu en un ordre total de linéarisation
+    \end{itemize}
+  }
+
+  \on[bottom=-1mm]{
+    \begin{citing}
+    \item[ABD95] H. Attiya, A. Bar-Noy, D. Dolev. \emph{Sharing memory robustly in message-passing systems}. JACM, 1995
+    \end{citing}
+  }
+  
+\end{frame}
+
+\endgroup
+\endinput

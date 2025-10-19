@@ -1,0 +1,57 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Différentes stratégies de réplication}
+
+  \vspace{-3mm}
+  \uncover{\hfill\alert{Ce cours :}}
+  \begin{itemize}
+  \item \structure{Placement}  \hfill\alert{pas de différence algorithmique}
+    \begin{description}[mono-cloud :]
+    \item[intra-site :] entre n\oe uds d'un même site
+    \item[géo :] data centers de sites/régions différentes
+    \end{description}
+
+  \item<2->\vspace{1mm} \structure{Contrôle}  \hfill\alert{pas de différence algorithmique}
+    \begin{description}[mono-cloud :]
+    \item[mono-cloud :] un fournisseur, même écosystème
+    \item[multi-cloud :] plusieurs fournisseurs, interopérabilité à gérer
+    \end{description}
+
+  \item<3->\vspace{1mm} \structure{Mode} \hfill\alert{réplication active car plus sûre}
+    \begin{description}[mono-cloud :]
+    \item[active :] toutes les répliques traitent les requêtes
+    \item[passive :] un \structure{primaire} traite, des \structure{secondaires} recopient
+    \end{description}
+
+  \item<4->\vspace{1mm} \structure{Couverture} \hfill\alert{réplication totale car plus simple}
+    \begin{description}[mono-cloud :]
+    \item[totale :] chaque réplique stocke tout l’état
+    \item[partielle :] données découpées en fragments (shards)
+    \end{description}
+
+  \item<5->\vspace{1mm} \structure{Cohérence}  \hfill\alert{progression par étapes : faible puis forte}
+    \begin{description}[mono-cloud :]
+    \item[forte :] sûreté équivalente à un serveur unique
+    \item[faible :] convergence, vues temporaires divergentes
+    \end{description}
+
+  \item<6->\vspace{1mm} \structure{Tolérance aux fautes} \hfill\alert{crash car plus simple}
+    \begin{description}[mono-cloud :]
+    \item[crash :] un processus s'arrête, ne répond plus
+    \item[byzantin :] un processus agit arbitrairement (erreurs ou malveillance)
+    \end{description}
+  \end{itemize}
+
+\end{frame}
+
+\endgroup
+\endinput
+
+

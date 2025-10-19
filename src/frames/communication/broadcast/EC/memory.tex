@@ -1,0 +1,47 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: Communication
+% Section: Cohérence faible
+% Frame: Eventual Consistency
+
+\begingroup
+
+\SetKwFunction{Read}{read}
+\SetKwFunction{Write}{write}
+
+\begin{frame}{Implémentation d'une mémoire partagée}
+  
+  \onBlock[top=-1mm]{Spécification d'une mémoire}{
+    On cherche à implémenter une \structure{mémoire} constituée de \structure{registres}
+    \begin{algorithm}[H]
+      \Interface{\textsc{Register}<$\mathcal{V}$>}{
+        \Method{$\Read() \in \mathcal{V}$}{\tcp*[h]{\Return $q$}}
+        \Method{$\Write(v \in \mathcal{V})$}{\tcp*[h]{$q \leftarrow v$}}
+      }
+    \end{algorithm}
+  }
+  
+  \onAlertBlock[y=-10mm, anchor=north]{Problème : $\Write(v_1)$ et $\Write(v_2)$ ne commutent pas}{
+    \vspace{2mm}
+    \centering
+    \begin{tikzpicture}[y=10mm, anchor=center]
+      \draw[process] (0,1) node[left]{$p_1$} to (10,1);
+      \draw[process] (0,0) node[left]{$p_2$} to (10,0);
+
+      \node[alert,     operation] (i1) at (2,1) {$\Write(1)$};
+      \path[alert, message]       (i1.west) edge[bend left]  (i1.east);
+      \path[alert, message]       (i1.west) edge             (4,0);
+
+      \node[example, operation] (d2) at (2,0) {$\Write(2)$};
+      \path[example, message]   (d2.west) edge             (4,1);
+      \path[example, message]   (d2.west) edge[bend right] (d2.east);
+
+      \node[structure, operation] (r1) at (6,1) {$\Read() \rightarrow 2$};
+      \node[structure, operation] (r2) at (6,0) {$\Read() \rightarrow 1$};
+    \end{tikzpicture}
+  }
+
+\end{frame}
+
+\endgroup
+\endinput

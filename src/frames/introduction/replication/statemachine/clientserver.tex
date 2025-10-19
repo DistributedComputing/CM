@@ -1,0 +1,64 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwFunction{Acheter}{acheter}
+\SetKwFunction{Vendre}{vendre}
+\SetKwFunction{Consulter}{consulter}
+
+\begin{frame}{Modèle clients/serveur}
+
+  \onBlock[top=-2mm]{Exemple --  Site de vente en ligne}{
+    On veut implémenter \example{AlmaZone}, qui permet de :
+    \begin{itemize}
+    \item \structure{\Consulter} les articles en vente
+    \item \structure{\Vendre} un article (le mettre en vente)
+    \item \structure{\Acheter} un article en vente
+    \end{itemize}
+  }
+
+  \onBlock<2->[y=-2mm]{Solution clients/serveur}{
+    \begin{itemize}
+    \item \structure{Un serveur :} maintient l'état (ensemble d'articles)
+    \item \structure{Plusieurs clients :} interagissent par messages (requête / réponse)
+    \end{itemize}
+  }
+
+  \on<2->[y=-27mm]{
+    \begin{tikzpicture}[y=8mm]
+      \draw[process] (.5,2) node[left]{$\mathit{Client}_1$} to (9.5,2);
+      \draw[process] (.5,1) node[left]{$\mathit{Serveur}$} node[replica]{$\{a,b\}$} to (9.5,1) node[replica, above left]{$\{b\}$};
+      \draw[process] (.5,0) node[left]{$\mathit{Client}_2$} to (9.5,0);
+
+      \begin{scope}[alert]
+        \node[operation] (o1) at (3,0) {$\Consulter() \rightarrow \{a, b\}$};
+        \node[event]     (s1) at (3,1) {};
+        \draw[message]   (o1.west) -- (s1.west);
+        \draw[message]   (s1.east) -- (o1.east);
+      \end{scope}
+
+      \begin{scope}[structure]
+        \node[operation] (o2) at (5,2) {$\Acheter(a) \rightarrow \cmark$};
+        \node[event]     (s2) at (5,1) {};
+        \draw[message]   (o2.west) -- (s2.west);
+        \draw[message]   (s2.east) -- (o2.east);
+      \end{scope}
+
+      \begin{scope}[example]
+        \node[operation] (o3) at (7,0) {$\Consulter() \rightarrow \{b\}$};
+        \node[event]     (s3) at (7,1) {};
+        \draw[message]   (o3.west) -- (s3.west);
+        \draw[message]   (s3.east) -- (o3.east);
+      \end{scope}
+    \end{tikzpicture}
+  }
+  
+\end{frame}
+
+\endgroup
+\endinput

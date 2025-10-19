@@ -1,0 +1,78 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{La relation ``happened before'' (ordre causal)}
+
+  \begin{block}{Définition -- Happened before}
+    Soient $a$ et $a'$ deux pas. 
+    \begin{itemize}
+    \item $a\hb a'$ si l'une des trois conditions s'applique :    
+      \begin{itemize}
+      \item \structure{Ordre de processus :} $a$ précède $a'$ dans l'ordre local d'un processus
+      \item \structure{Ordre de messages :} $a$ est l'envoi et $a'$ la réception d'un même message
+      \item \structure{Transitivité :} $\exists a''~ a\hb a'' \land a'' \hb a'$
+      \end{itemize}
+    \item $a$ et $a'$ sont \structure{concurrents} $(a || a')$ si $a\not\hb a'$ et $a'\not\hb a$.
+    \item Une \structure{exécution causale} est une classe d'équivalence d'exécutions concrètes induisant le même ordre $\hb$.
+    \end{itemize}
+    \alert{Attention :} $\hb$ est seulement un ordre \alert{partiel} !
+  \end{block}
+
+  \begin{exampleblock}{Programme d'exemple : trois exécutions causales}
+    \centering
+    \begin{tikzpicture}[y=10mm, anchor=center, x=36mm]
+
+      \node at (0,1) {
+        $\alert{s_1 \hb r_1} ~\structure{\hb}~ \example{s_2 \hb r_2}$
+      };
+      
+      \node at (1,1) {
+        $\example{s_2 \hb r_2} ~\structure{\hb}~ \alert{s_1 \hb r_1}$
+      };
+      
+      \node at (2,1) {
+        $\alert{s_1 \hb r_1} \quad \example{s_2 \hb r_2}$
+      };
+
+      \node at (0,0) {
+        \begin{tikzpicture}[y=5mm, x=5mm]
+          \draw[process] (0,1) node[left]{$p_1$} to (5,1);
+          \draw[process] (0,0) node[left]{$p_2$} to (5,0);
+          \draw[alert, message]   (1,1) node[above]{$s_1$} -- (2,0) node[below]{$r_1$};
+          \draw[example, message] (3,0) node[below]{$s_2$} -- (4,1) node[above]{$r_2$};
+        \end{tikzpicture}
+      };
+
+      \node at (1,0) {
+        \begin{tikzpicture}[y=5mm, x=5mm]
+          \draw[process] (0,1) node[left]{$p_1$} to (5,1);
+          \draw[process] (0,0) node[left]{$p_2$} to (5,0);
+          \draw[alert, message]   (3,1) node[above]{$s_1$} -- (4,0) node[below]{$r_1$};
+          \draw[example, message] (1,0) node[below]{$s_2$} -- (2,1) node[above]{$r_2$};
+        \end{tikzpicture}
+      };
+
+      \node at (2,0) {
+        \begin{tikzpicture}[y=5mm, x=5mm]
+          \draw[process] (0,1) node[left]{$p_1$} to (5,1);
+          \draw[process] (0,0) node[left]{$p_2$} to (5,0);
+          \draw[alert, message]   (1.5,1) node[above]{$s_1$} -- (3.5,0) node[below]{$r_1$};
+          \draw[example, message] (1.5,0) node[below]{$s_2$} -- (3.5,1) node[above]{$r_2$};
+        \end{tikzpicture}
+      };
+      
+    \end{tikzpicture}
+  \end{exampleblock}
+  
+\end{frame}
+
+
+\endgroup
+\endinput
+

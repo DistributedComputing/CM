@@ -1,0 +1,121 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwFunction{Draw}{draw}
+\SetKwFunction{Rand}{random}
+\SetKwData{Count}{count}
+\SetKwData{Sum}{sum}
+
+\begin{frame}{Un common coin pour $t < \frac{n}{2}$}
+
+  \on[top=-3mm]{
+    \begin{algorithm}[H]
+      \lLVariables{}{
+        $\Count_i \leftarrow 0$; $\Sum_i \leftarrow 0$;
+      }
+      \Method{$\Draw() \in \mathbb{B}$}{
+        \While(\tcp*[f]{Récolte $n^2$ valeurs}){\Alert<1>{$\Count_i < n^2$}}{
+          \textsc{cb-mb}.\SBroadcast \Alert<2>{$\textsc{draw}(\Rand())$;} \tcp*[f]{Tirage dans $\{0, 1\}$}
+        }
+        \textsc{cb-mb}.\SBroadcast \Example<2>{$\textsc{synch}()$;} \tcp*[f]{Synchronisation : causal mutual}\\
+        \Return $\Sum_i \ge \frac{\Count_i}{2}$; \tcp*[f]{Retourne la valeur la plus reçue}
+      }
+      \When{\textsc{cb-mb}.\Deliver $\textsc{draw}(r_j)$ \From $p_j$}{
+        $\Sum_i \leftarrow \Sum_i + r_j$;
+        $\Count_i \leftarrow \Count_i + 1$;\\
+      }
+    \end{algorithm}
+  }
+
+  \ob<1>[text, y=1mm, anchor=north]{
+    \begin{itemize}
+    \item Tirer \alert{$n^2$} valeurs
+    \item Le désaccord entre deux processus doit être limitée à \alert{$n$} valeurs
+      \begin{itemize}
+      \item Synchronisation nécessaire à chaque tirage
+      \end{itemize}
+    \end{itemize}
+  }
+
+  \ob<1>[bottom=-3.5mm]{
+    \begin{tikzpicture}
+      \def\mu{0}       % moyenne
+      \def\sigma{1}    % écart-type
+      \def\A{4.5}      % facteur d'échelle vertical (optionnel)
+      
+      \draw[domain=-5:5, samples=500, smooth] plot (\x,{\A*(1/(\sigma*sqrt(2*pi)))*exp(-((\x-\mu)^2)/(2*\sigma^2))});
+      \begin{scope}[background]
+        \fill[alert!30,   domain=-4:-1, samples=150, smooth] plot (\x,{\A*(1/(\sigma*sqrt(2*pi)))*exp(-((\x-\mu)^2)/(2*\sigma^2))}) -- (-1,0) -- (-4,0) -- cycle;
+        \fill[black!20,   domain=-1:1,  samples=100, smooth] plot (\x,{\A*(1/(\sigma*sqrt(2*pi)))*exp(-((\x-\mu)^2)/(2*\sigma^2))}) -- ( 1,0) -- (-1,0) -- cycle;
+        \fill[example!30, domain=1:4,   samples=150, smooth] plot (\x,{\A*(1/(\sigma*sqrt(2*pi)))*exp(-((\x-\mu)^2)/(2*\sigma^2))}) -- ( 4,0) -- ( 1,0) -- cycle;
+      \end{scope}
+      
+      \scriptsize
+      \draw (-5,0) node[below]{$0$}; 
+      \draw ( 0,0) node[below]{$n^2/2$}; 
+      \draw ( 5,0) node[below]{$n^2$}; 
+      
+      \draw[->]             (-5,0) -- ( 5.2,0) node[right]{$s$};
+      \draw[->]             (-5,0) -- (-5  ,2) node[below left]{$\displaystyle\mathbb{P}\left(\sum_{i=1}^{n^2} r_i = s\right)$};
+      \draw[densely dotted] (-1,0) -- (-1,2);
+      \draw[densely dotted] ( 0,0) -- ( 0,2);
+      \draw[densely dotted] ( 1,0) -- ( 1,2);
+      \path[latex-latex]    (-1,2) edge node[above]{$n$} (1,2);
+      \node[right]       at ( 1,2) {$\frac{n^2+n}{2}$};
+      \node[left]        at (-1,2) {$\frac{n^2-n}{2}$};
+      
+      \footnotesize
+      \node[alert]   at (-3,1) {$\displaystyle \lim_{n \to \infty}\mathbb{P}\left( \sum_{i=1}^{n^2} r_i\leq \frac{n^2-n}{2} \right) \simeq 0.159$};
+      \node[example] at ( 3,1) {$\displaystyle \lim_{n \to \infty}\mathbb{P}\left( \sum_{i=1}^{n^2} r_i\geq \frac{n^2+n}{2} \right) \simeq 0.159$};
+    \end{tikzpicture}
+  }
+
+  \onBlock<2>[y=3mm, anchor=north]{Désaccord entre deux processus}{
+    \begin{itemize}
+    \item $p_i$ ne peut ignorer que le dernier message \alert{$\textsc{draw}$} de $p_j$ :
+      \begin{itemize}
+      \item Si $p_i$ \textsc{mb}.\Deliver \alert{$\textsc{draw}$} de $p_j$ après son propre \example{$\textsc{synch}$}, $p_j$ aussi
+      \item $p_j$ \textsc{cb}.\Deliver au moins $n^2$ messages \structure{$\textsc{draw}$} avant le \example{$\textsc{synch}$} de $p_i$
+      \end{itemize}
+    \item donc la vue de $p_i$ et $p_j$ ne peut différer que de $n$ messages
+    \end{itemize}
+  }
+
+  \on<2>[bottom=-2mm]{
+    \begin{tikzpicture}[x=8mm, y=5mm, anchor=mid]
+      \draw[process] (0,2) node[left]{$p_i$} to (10,2);
+      \draw[process] (0,1) node[left]{$p_j$} to (10,1);
+      \draw[process] (0,0) node[left]{$p_k$} to (10,0);
+
+      \draw[structure] (4,2) node{$\bullet$} node[replica, above]{$\Count_i \ge n^2$};
+      \draw[structure] (7,2) node{$\bullet$} node[replica, above]{$\Return$};
+      \draw[structure] (5,1) node{$\bullet$} node[replica, below]{$\Count_i \ge n^2$};
+
+      \path[alert!30,     message]   (1,2)  edge                (2,1);
+      \path[alert!30,     message]   (1,2)  edge                (1.5,0);
+      \path[example!30,   message]   (5,2)  edge                (6,0);
+      \path[alert!30,     message]   (3,1)  edge                (4,0);
+      \path[example!30,   message]   (8,1)  edge                (9,0);
+      \path[structure!30, message]   (2,0)  edge[bend right]    (3,0);
+      \path[example!30,   message]   (8,1)  edge                (9,2);
+      \path[alert,        message]   (1,2)  edge[bend left]     (2,2);
+      \path[example,      message]   (5,2)  edge[bend left]     (6,2);
+      \path[example,      message]   (5,2)  edge                (6,1);
+      \path[alert,        message]   (3,1)  edge[bend above=15] (8,2);
+      \path[alert,        message]   (3,1)  edge[bend left=10]  (7,1);
+      \path[example,      message]   (8,1)  edge[bend right]    (9,1);
+      \path[structure,    message]   (2,0)  edge                (3,2);
+      \path[structure,    message]   (2,0)  edge                (4,1);
+    \end{tikzpicture}
+  }
+  
+\end{frame}
+
+\endgroup
+\endinput

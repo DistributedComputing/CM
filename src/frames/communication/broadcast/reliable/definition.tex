@@ -1,0 +1,65 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Uniform Reliable Broadcast}
+
+  \begin{block}{URB-Validité}
+    \begin{center}
+      \vspace{-3mm}
+      \structure{Si $p_i$ \textsc{urb}.\Deliver $m$ de $p_j$, $p_j$ a \textsc{urb}.\Broadcast $m$}
+      \vspace{-3mm}
+    \end{center}
+    \begin{itemize}
+    \item Vérifié par \textsc{sta}, hérité de \Send/\Receive
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{URB-Intégrité}
+    \begin{center}
+      \vspace{-3mm}
+      \structure{$p_i$ \textsc{urb}.\Deliver $m$ au plus une fois}
+      \vspace{-3mm}
+    \end{center}
+    \begin{itemize}
+    \item Vérifié par \textsc{sta}, hérité de \Send/\Receive
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{URB-Terminaison}
+    \begin{center}
+      \vspace{-3mm}
+      \structure{Si un correct $p_i$ \textsc{urb}.\Broadcast $m$, $p_i$ \textsc{urb}.\Deliver $m$}
+      \vspace{-3mm}
+    \end{center}
+    \begin{itemize}
+    \item Vérifié par \textsc{sta}, hérité de \Send/\Receive
+    \end{itemize}
+  \end{block}
+
+  \begin{alertblock}{URB-Fiabilité}
+    \begin{center}
+      \vspace{-3mm}
+      \alert{Si $p_i$ \textsc{urb}.\Deliver $m$, tous les corrects \textsc{urb}.\Deliver $m$}
+      \vspace{-3mm}
+    \end{center}
+    \begin{itemize}
+    \item Non vérifié par \textsc{sta}
+    \end{itemize}
+  \end{alertblock}
+  
+  \on[bottom, text]{
+    \begin{citing}
+    \item[BJ87] K. P. Birman and T. A. Joseph. \textit{Reliable Communication in the Presence of Failures.} ACM TOCS 1987
+    \end{citing}
+  }  
+  
+\end{frame}
+
+\endgroup
+\endinput

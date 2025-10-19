@@ -1,0 +1,43 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Hypothèses supplémentaires}
+  
+  \begin{block}{Résumé -- le modèle $\mathcal{CAMP}_{n,t}[H]$}
+    \begin{description}
+    \item[$\mathcal{CAMP}$ :] Crash-prone Asynchronous Message-Passing
+    \item[$n$ :] nombre total de \structure{processus} (ensemble fixe et connu)
+    \item[$t$ :] nombre maximal de pannes \structure{crash-stop}
+    \item[$H$ :] ensemble d'\structure{hypothèses supplémentaires}. 
+    \end{description}
+  \end{block}
+  
+  Si rien n'est spécifié, on utilisera le modèle \alert{$\mathcal{CAMP}_{n,t}[\emptyset]$}.
+
+  \vspace{4mm}
+  
+  \begin{exampleblock}{Exemples d'hypothèses supplémentaires}
+    \begin{itemize}
+    \item Borne \alert{$t < \frac{n}{k}$} sur le nombre de pannes
+      \begin{itemize}
+      \item Si l'hypothèse n'est pas vérifiée, la vivacité n'est plus garantie
+      \end{itemize}
+    \item Présence d'\alert{objets déjà disponibles}
+      \begin{itemize}
+      \item Utile pour les réductions : peut-on implémenter $B$ en utilisant $A$ ? 
+      \end{itemize}
+    \item Synchronie partielle, capacités cryptographiques...
+    \end{itemize}
+  \end{exampleblock}
+
+\end{frame}
+
+\endgroup
+\endinput
+

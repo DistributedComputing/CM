@@ -1,0 +1,89 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: Communication
+% Section: Cohérence faible
+% Frame: Eventual Consistency
+
+\begingroup
+
+\SetKwData{State}{state}
+\SetKwFunction{Apply}{apply}
+\SetKwFunction{Add}{add}
+\SetKwFunction{Get}{get}
+
+\begin{frame}{Implémentation des CRDT}
+
+  \onBlock[top=-4mm]{Théorème -- Implémentation d'un CRDT $\langle C, R, Q, q_0, \tau, \rho \rangle$}{
+    L'algorithme ci-dessus implémente eventual consistency.
+    \begin{algorithm}[H]
+      \Algo{\textsc{op\_based}<$C, R, Q, q_0, \tau, \rho$>}{
+        \lLVariables{}{
+          \Structure{$\State_i \leftarrow q_0$}
+        }
+        \Command{$\Apply(c \in C) \in R$}{
+          \lIf{$c \in \mathit{Update}$}{
+            \Structure{\textsc{rb}.\Broadcast} $\textsc{update}(c)$}%
+        }
+        \Structure{\Return $\rho(\State_i, c)$}%
+      }
+      \lWhen{\textsc{rb}.\Deliver $\textsc{update}(c)$ \From $p_j$}{
+        \Structure{$\State_i \leftarrow \tau(\State_i, c)$}%
+      }
+    \end{algorithm}
+  }
+  
+  \onExampleBlock<1>[bottom=-1mm]{Exemple d'exécution}{
+    \begin{tikzpicture}[y=8mm]
+      \draw[process] (0,4) node[left]{$p_1$} node[replica below] {$0$} to (10,4) node[replica, below left] {$5$}; 
+      \draw[process] (0,3) node[left]{$p_2$} node[replica]       {$0$} to (10,3) node[replica, above left] {$5$}; 
+      \draw[process] (0,2) node[left]{$p_3$} node[replica]       {$0$} to (10,2) node[replica, above left] {$5$}; 
+      \draw[process] (0,1) node[left]{$p_4$} node[replica]       {$0$} to (10,1) node[replica, above left] {$5$}; 
+      
+      \node[alert,   operation]   (a3) at (4,3)    {$\Add(3)$};
+      \draw[alert,   message]     (a3.west) to                (4.5, 4);
+      \draw[alert,   message]     (a3.west) to[bend left=30]  (a3.east);
+      \draw[alert,   message]     (a3.west) to                (4,   2);
+      \draw[alert,   message]     (a3.west) to                (6,   1);
+      
+      \node[example, operation]   (a2) at (2,2)    {$\Add(2)$};
+      \draw[example, message]     (a2.west) to                (3,   4);
+      \draw[example, message]     (a2.west) to                (2.5, 3);
+      \draw[example, message]     (a2.west) to[bend right=30] (a2.east);
+      \draw[example, message]     (a2.west) to                (2.5, 1);
+
+      \node[structure, operation] (g2) at (6,4)    {$\Get() \rightarrow 5$};
+      \node[structure, operation] (g3) at (4,1)    {$\Get() \rightarrow 2$};
+      \node[structure, operation] (g4) at (8,1)    {$\Get() \rightarrow 5$};
+    \end{tikzpicture}
+  }
+
+  \obExampleBlock<2>[bottom=-1mm]{Exemple d'exécution}{
+    \begin{tikzpicture}[y=8mm]
+      \draw[process] (0,4) node[left]{$p_1$} node[replica below] {$0$} to (10,4) node[replica, below left] {$5$}; 
+      \draw[process] (0,3) node[left]{$p_2$} node[replica]       {$0$} to (10,3) node[replica, above left] {$5$}; 
+      \draw[process] (0,2) node[left]{$p_3$} node[replica]       {$0$} to (10,2) node[replica, above left] {$5$}; 
+      \draw[process] (0,1) node[left]{$p_4$} node[replica]       {$0$} to (10,1) node[replica, above left] {$5$}; 
+      
+      \node[alert,   operation]   (a3) at (2,3)    {$\Add(3)$};
+      \draw[alert,   message]     (a3.west) to             (2.5, 4);
+      \draw[alert,   message]     (a3.west) to[bend left=30]  (a3.east);
+      \draw[alert,   message]     (a3.west) to[bend below=20] (3, 2);
+      \draw[alert,   message]     (a3.west) to[out=-40, in=180, distance=15] (4, 2.6) to[out=0, in=90, distance=30] (6, 1);
+      
+      \node[example, operation]   (a2) at (2,2)    {$\Add(2)$};
+      \draw[example, message]     (a2.west) to[out=40, in=180, distance=15] (4, 2.4) to[out=0, in=-90, distance=30] (6, 4);
+      \draw[example, message]     (a2.west) to[bend above=20] (3, 3);
+      \draw[example, message]     (a2.west) to[bend right=30] (a2.east);
+      \draw[example, message]     (a2.west) to             (2.5, 1);
+
+      \node[structure, operation] (g1) at (4,4)    {$\Get() \rightarrow 3$};
+      \node[structure, operation] (g2) at (8,4)    {$\Get() \rightarrow 5$};
+      \node[structure, operation] (g3) at (4,1)    {$\Get() \rightarrow 2$};
+      \node[structure, operation] (g4) at (8,1)    {$\Get() \rightarrow 5$};
+    \end{tikzpicture}
+  }
+  
+\end{frame}
+
+\endgroup
+\endinput

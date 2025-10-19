@@ -1,0 +1,70 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwFunction{Acheter}{acheter}
+\SetKwFunction{Vendre}{vendre}
+\SetKwFunction{Consulter}{consulter}
+
+\begin{frame}{Nécessité de la réplication de données}
+
+  \begin{block}{Limites du modèle clients/serveur}
+    \begin{description}[Tolérance aux pannes]
+    \item[Passage à l'échelle :] un seul n\oe ud sature
+    \item[Disponibilité :] service indisponible en cas de panne
+    \item[Latence :] clients géographiquement éloignés
+    \item[Maintenance :] interruptions en cas de mises à jour 
+    \end{description}
+  \end{block}
+
+  \pause
+  
+  \begin{block}{Solution : \alert{répliquer} l’état du serveur}
+    \centering
+    \begin{tikzpicture}[y=5mm]
+      \draw[process] (.5,5) node[left]{$\mathit{Client}_1$}  to (9.5,5);
+      \draw[process] (.5,3) node[left]{$\mathit{Serveur}_1$} to (9.5,3);
+      \draw[crashed] (.5,2) node[left]{$\mathit{Serveur}_2$} to (6,2);
+      \draw[process] (.5,0) node[left]{$\mathit{Client}_2$}  to (9.5,0);
+
+      \begin{scope}[alert]
+        \node[operation] (o1) at (3,0) {$\Consulter() \rightarrow \{a, b\}$};
+        \node[event]     (s1) at (3,2) {};
+        \draw[message]   (o1.west) -- (s1.west);
+        \draw[message]   (s1.east) -- (o1.east);
+        \draw[double]    (3.5,1.75) -- (3.5,3.25);
+      \end{scope}
+
+      \begin{scope}[structure]
+        \node[operation] (o2) at (5,5) {$\Acheter(a) \rightarrow \cmark$};
+        \node[event]     (s2) at (5,3) {};
+        \draw[message]   (o2.west) -- (s2.west);
+        \draw[message]   (s2.east) -- (o2.east);
+        \draw[double]    (5.5,1.75) -- (5.5,3.25);
+      \end{scope}
+
+      \begin{scope}[example]
+        \node[operation] (o3) at (7,0) {$\Consulter() \rightarrow \{b\}$};
+        \node[event]     (s3) at (7,3) {};
+        \draw[message]   (o3.west) -- (s3.west);
+        \draw[message]   (s3.east) -- (o3.east);
+        \draw[double]    (7.5,2.75) -- (7.5,3.25);
+      \end{scope}
+      
+      \node[below] at (1,2) {$\{a,b\}$};
+      \node[above] at (1,3) {$\{a,b\}$};
+      \node[above] at (9,3) {$\{b\}$};
+    \end{tikzpicture}
+  \end{block}
+  
+\end{frame}
+
+\endgroup
+\endinput
+
+

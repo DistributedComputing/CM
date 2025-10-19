@@ -1,0 +1,51 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: Communication
+% Section: Cohérence faible
+% Frame: Eventual Consistency
+
+\begingroup
+
+\SetKwFunction{SetKey}{setKey}
+\SetKwFunction{DeleteKey}{deleteKey}
+\SetKwFunction{Get}{get}
+\SetKwFunction{GetKeys}{getKeys}
+
+\begin{frame}{Machine à états à requêtes/mises à jour}
+
+  Une machine à états $M=\langle C, R, Q, q_0, \tau, \rho \rangle$ est dite \structure{à requêtes/mises à jour} si
+  toutes ses commandes $c\in C$ sont dans l'une des deux catégories : 
+  \begin{description}
+  \item[Requête :] \alert{$c \in \mathit{Query}$} ne modifie pas l'état
+    \hfill $\alert{\forall q\in Q, \tau(q, c) = q}$\\
+  \item[Mise à jour :] \alert{$c \in \mathit{Update}$} retourne $\bot$
+    \hfill $\alert{\exists \bot\in R, \forall q\in Q, \rho(q, c) = \bot}$\\
+  \end{description}
+
+  \vspace{2mm}
+  On étend la notation aux exécutions $E$ d'une implémentation répliquée de $M$ :
+  \alert{$\mathit{Query}(E) = \{ c\rightarrow r \in E \mid c \in \mathit{Query} \}$ \hfill $\mathit{Update}(E) = \{ c\rightarrow r \in E \mid c \in \mathit{Update} \}$}
+
+  \pause
+  \vspace{2mm}
+
+  \begin{exampleblock}{Exemple -- Bases de données clé-valeur}
+    Une \example{base de données clé-valeur} sur un ensemble de clés $K$ et un ensemble de valeurs $V$
+    est une machine à états à requêtes/mises à jour avec : 
+    \begin{itemize}
+    \item Un état $q\in Q$ est une \example{fonction partielle de $K$ dans $V$}
+    \item Les mise à jour sont de la forme \example{$\SetKey(k,v)$} ou \example{$\DeleteKey(k)$}
+      \begin{center}
+        $\tau(q, \SetKey(k,v)) = q[k \mapsto v]  \quad\quad \tau(q, \DeleteKey(k)) = q \setminus (\{k\}\times V)$
+      \end{center}
+    \item Les requêtes sont de la forme \example{$\Get(k)$} ou \example{$\GetKeys()$}
+      \begin{center}
+        $\rho(q, \Get(k)) = q(k) ~~ (\text{ou } \bot \text{ si } k \notin dom(q))  \quad \rho(q, \GetKeys()) = dom(q)$
+      \end{center}
+    \end{itemize}
+  \end{exampleblock}
+
+\end{frame}
+
+\endgroup
+\endinput

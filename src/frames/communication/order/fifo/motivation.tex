@@ -1,0 +1,54 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Problème d'ordre FIFO}
+
+  \on[y=-5mm]{
+    \begin{tikzpicture}
+      \node     [faded background picture=Seine,  text width=\paperwidth/2] (A) at (-\paperwidth/4,0) {};
+      \node<1>  [faded background picture=Jardin, text width=\paperwidth/2] (B) at ( \paperwidth/4,0) {};
+      \node<2,3>[faded background picture=Metro,  text width=\paperwidth/2] (B) at ( \paperwidth/4,0) {};
+      \node<4>  [faded background picture=Rue,    text width=\paperwidth/2] (B) at ( \paperwidth/4,0) {};
+      \node[anchor=south, nosep] at (A.south) {\includegraphics[height=22mm]{Alice}};
+      \node[anchor=south, nosep] at (B.south) {\includegraphics[height=22mm]{Bob}};
+    \end{tikzpicture}
+  }
+
+  \on[x=-\paperwidth/4, y=15mm]{
+    \begin{chat}[color=structure]{Bob}
+      \chatSend{Qu'est ce que tu es musclé !}
+      \only<4->{\chatRecv[color=example]{Toi tu es très belle}}
+      \only<4->{\chatRecv[color=example]{Hélas, ça n'a pas toujours été le cas}}
+    \end{chat}
+  }
+ 
+  \on[x=\paperwidth/4, y=15mm]{
+    \begin{chat}[color=example]{Alice}
+      \chatRecv[color=structure]{Qu'est ce que tu es musclé !}
+      \only<2->{\chatSend{Hélas, ça n'a pas toujours été le cas}}
+      \only<3->{\chatSend{Toi tu es très belle}}
+    \end{chat}
+  }
+
+  \ob<1>[x=-\paperwidth/4, y=-15mm]{
+    \chatBubble[color=structure]{Qu'est ce que tu es musclé !}
+  }
+  
+  \ob<2>[x=\paperwidth/4, y=-15mm]{
+    \chatBubble[color=example]{Hélas, ça n'a pas toujours été le cas}
+  }
+ 
+  \ob<3>[x=\paperwidth/4, y=-15mm]{
+    \chatBubble[color=example]{Toi tu es très belle}
+  }
+   
+\end{frame}
+
+\endgroup
+\endinput

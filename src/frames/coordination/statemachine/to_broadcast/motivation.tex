@@ -1,0 +1,124 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwFunction{Acheter}{acheter}
+\SetKwFunction{Apply}{apply}
+\SetKwData{State}{state}
+\SetKwData{Result}{result}
+
+\begin{frame}{Mutual Broadcast ne suffit pas}
+
+  \onBlock[top=-3mm]{Trois exécutions indistinguables}{}
+
+  \on[y=19mm, left=.3\textwidth]{
+    \begin{tikzpicture}[y=8mm]
+      \draw[process] (0,1) node[left]{$p_1$} to (3,1);
+      \draw[process] (0,0) node[left]{$p_2$} to (3,0);
+
+      \footnotesize
+      \node at (0.2,.5) {$\{a\}$};
+      \node at (2.8,.5) {$\emptyset$};
+
+      \node[alert, operation]   (o1) at (1.5,1) {$Acheter(a) \rightarrow \xmark$};
+      \node[example, operation] (o2) at (1.5,0) {$Acheter(a) \rightarrow \cmark$};
+
+      \draw[alert, message]     (o1.west) to[bend left]  (o1.east);
+      \draw[alert, message]     (o1.west) to[bend below] (2.9,0);
+      \draw[example, message]   (o2.west) to             (2,1);
+      \draw[example, message]   (o2.west) to[bend right] (o2.east);
+    \end{tikzpicture}
+  }
+
+  \on[y=19mm, width=.3\textwidth]{
+    \begin{tikzpicture}[y=8mm]
+      \draw[process] (0,1) node[left]{$p_1$} to (3,1);
+      \draw[process] (0,0) node[left]{$p_2$} to (3,0);
+
+      \footnotesize
+      \node at (0.2,.5) {$\{a\}$};
+      \node at (2.8,.5) {$\emptyset$};
+
+      \node[alert, operation] (o1) at (1.5,1) {$Acheter(a) \rightarrow \xmark$};
+      \node[alert, operation] (o2) at (1.5,0) {$Acheter(a) \rightarrow \xmark$};
+
+      \draw[alert, message]   (o1.west) to[bend left]  (o1.east);
+      \draw[alert, message]   (o1.west) to             (2,0);
+      \draw[alert, message]   (o2.west) to             (2,1);
+      \draw[alert, message]   (o2.west) to[bend right] (o2.east);
+    \end{tikzpicture}
+  }
+
+  \on[y=19mm, right=.3\textwidth]{
+    \begin{tikzpicture}[y=8mm]
+      \draw[process] (0,1) node[left]{$p_1$} to (3,1);
+      \draw[process] (0,0) node[left]{$p_2$} to (3,0);
+
+      \footnotesize
+      \node at (0.2,.5) {$\{a\}$};
+      \node at (2.8,.5) {$\emptyset$};
+
+      \node[example, operation] (o1) at (1.5,1) {$Acheter(a) \rightarrow \cmark$};
+      \node[alert, operation]   (o2) at (1.5,0) {$Acheter(a) \rightarrow \xmark$};
+
+      \draw[example, message]   (o1.west) to[bend left]  (o1.east);
+      \draw[example, message]   (o1.west) to             (2,0);
+      \draw[alert, message]     (o2.west) to[bend above] (2.9,1);
+      \draw[alert, message]     (o2.west) to[bend right] (o2.east);
+    \end{tikzpicture}
+  }
+
+  \on[y=6mm, text]{
+    \begin{itemize}
+    \item $p_1$ et $p_2$ doivent se \alert{mettre d'accord} sur qui achètera $a$ : \structure{consensus}
+    \end{itemize}
+  }
+  
+  \onBlock<2->[y=-3mm]{Solution : la diffusion de messages totalement ordonnée}{}
+
+  \on<2->[y=-21mm]{
+    \begin{algorithm}[H]
+      \lLVariables{}{$\Result_i \leftarrow \bot$; $\State_i \leftarrow \varepsilon$;}
+      \Method{$\Apply(c \in C)$}{
+        \Alert{\textsc{to}.\SBroadcast} $\textsc{m}(c)$;\\
+        \Return $\Result_i$;
+      }
+      \When{\Alert{\textsc{to}.\Deliver} $\textsc{m}(c)$ \From $p_j$}{
+        \lIf{$j=i$}{$\Result_i \leftarrow \rho(\State_i, c)$;}
+        $\State_i ~\leftarrow \tau(\State_i, c)$;
+      }
+    \end{algorithm}
+  }
+  
+  \on<2->[y=-22mm, right=.45\textwidth]{
+    \begin{tikzpicture}[y=10mm]
+      \draw[process] (0,1) node[left]{$p_1$} to (4,1);
+      \draw[process] (0,0) node[left]{$p_2$} to (4,0);
+      \node at (0.2,.5) {$\{a\}$};
+      \node at (3.8,.5) {$\emptyset$};
+
+      \node[alert, operation]   (o1) at (2,1) {$Acheter(a) \rightarrow \xmark$};
+      \node[example, operation] (o2) at (2,0) {$Acheter(a) \rightarrow \cmark$};
+
+      \draw[alert, message]     (o1.west) to[bend left]  (o1.east);
+      \draw[alert, message]     (o1.west) to[bend below] (2.7,0);
+      \draw[example, message]   (o2.west) to[bend above] (3.7,1);
+      \draw[example, message]   (o2.west) to[bend right] (o2.east);
+    \end{tikzpicture}
+  }
+
+  \on<2->[bottom, text]{
+    \begin{itemize}
+    \item $p_1$ et $p_2$ doivent se \alert{mettre d'accord} sur l'ordre des messages
+    \end{itemize}
+  }
+  
+\end{frame}
+
+\endgroup
+\endinput

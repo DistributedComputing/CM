@@ -1,0 +1,65 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwFunction{Leader}{leader}
+\SetKwFunction{Propose}{propose}
+\SetKwData{Decided}{decided}
+
+\begin{frame}[fragile]{Un algorithme centralisé}
+
+  \onBlock[top=-4mm]{Le consensus sans pannes}{
+    \begin{algorithm}[H]
+      \LVariables{}{$\Decided_i \leftarrow \bot$;}
+      \Method{$\Propose(v)$}{
+        \If{\Alert{$i = \Leader()$}}{
+          \textsc{rb}.\Broadcast $\textsc{decide}(v)$;
+        }
+        \Wait $\Decided_i \neq \bot$;\\
+        \Return $\Decided_i$;\\
+      }
+      \When{\textsc{rb}.\Deliver $\textsc{decide}(v)$ \From $p_{\Leader}$}{
+        $\Decided_i \leftarrow v$;
+      }
+    \end{algorithm}
+  }
+
+  \on[x=30mm, y=15mm]{
+    \begin{tikzpicture}
+      \draw[process] (0,2) node[left]{$p_1$} to (5,2); 
+      \draw[process] (0,1) node[left]{$p_2$} to (5,1); 
+      \draw[process] (0,0) node[left]{$p_3$} to (5,0); 
+
+      \node[alert,     operation, minimum width=20mm] (p1) at (3,2)   {$\Propose(a) \rightarrow a$};
+      \node[structure, operation, minimum width=30mm] (p2) at (2,1)   {$\Propose(b) \rightarrow a$};
+      \node[structure, operation, minimum width=40mm] (p3) at (2.5,0) {$\Propose(c) \rightarrow a$};
+      \draw[alert,   message]     (p1.west) to[bend left=30] (p1.east);
+      \draw[alert,   message]     (p1.west) to[bend left=20] (p2.east);
+      \draw[alert,   message]     (p1.west) to[bend left=30] (p3.east);
+    \end{tikzpicture}
+  }
+
+  \onBlock[anchor=north, y=-7mm]{Définition -- Leader perpétuel}{
+    Une fonction $\Leader()$ qui retourne un (identifiant de) processus telle que:
+    \begin{itemize}
+    \item $\Leader()$ retourne \alert{toujours le même} processus à tous les processus
+    \item $\Leader()$ retourne un processus \alert{correct}
+    \end{itemize}
+    \alert{Problème :} Impossible de savoir que $\Leader()$ est \alert{correct} !
+  }
+
+  \on[bottom=-2mm,text]{
+    \begin{citing}
+    \item[CR79] E. Chang, R. Roberts. \textit{An improved algorithm for decentralized extrema-finding in circular configurations of processes.} CACM. 1979
+    \end{citing}
+  }
+  
+\end{frame}
+
+\endgroup
+\endinput

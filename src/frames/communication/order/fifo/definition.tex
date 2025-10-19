@@ -1,0 +1,58 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{FIFO Broadcast}
+  
+  \begin{block}{Propriétés héritées de \textsc{sta}.\Broadcast}
+    \vspace{-1mm}
+    \begin{description}[FIFO-Terminaison :]
+    \item[FIFO-Validité :]    Si $p_i$ \textsc{fifo}.\Deliver $m$ de $p_j$, $p_j$ a \textsc{fifo}.\Broadcast $m$
+    \item[FIFO-Intégrité :]   $p_i$ \textsc{fifo}.\Deliver $m$ au plus une fois
+    \item[FIFO-Terminaison :] Si un correct \textsc{fifo}.\Broadcast $m$, \\ tous les corrects \textsc{fifo}.\Deliver $m$.
+    \end{description}
+  \end{block}
+
+  \begin{alertblock}{Nouvelle propriété d'ordre}
+    \vspace{-1mm}
+    \begin{description}[FIFO-Ordering :]
+    \item[\alert{FIFO-Ordering :}] Si un processus $p_i$ \textsc{fifo}.\Broadcast $m$ avant $m'$, \\alors aucun processus $p_j$ ne \textsc{fifo}.\Deliver $m'$ avant $m$
+    \end{description}
+
+    \centering
+    \begin{tikzpicture}[y=8mm]
+      \draw[process] (0,1) node[left]{$p_1$} to (10,1);
+      \draw[process] (0,0) node[left]{$p_2$} to (10,0);
+
+      \draw[structure]          (1,1) node (m1) {} node[above] {$m$} ;
+      \draw[structure, message] (m1.center) to[bend left] (2,1) ;
+      \draw[structure, message] (m1.center) to            (5,0) ;
+
+      \draw[example]            (3,1) node (m2) {} node[above] {$m'$} ;
+      \draw[example, message]   (m2.center) to[bend left] (4,1) ;
+      \draw[example, message]   (m2.center) to            (4,0) ;
+
+      \draw[alert, thick] (6,1.25) -- (9,-.25);
+      \draw[alert, thick] (9,1.25) -- (6,-.25);
+    \end{tikzpicture}
+  \end{alertblock}
+
+  \vspace{-1mm}
+  \begin{block}{Remarque}
+    \vspace{-1mm}
+    On peut renforcer l'abstraction par des propriétés de vivacité :
+    \begin{itemize}
+    \item \textsc{rb-fifo}.\Broadcast, \textsc{urb-fifo}.\Broadcast
+    \end{itemize}
+  \end{block}
+
+  
+\end{frame}
+
+\endgroup
+\endinput

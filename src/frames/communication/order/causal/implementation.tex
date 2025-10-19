@@ -1,0 +1,112 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwData{Clock}{clock}
+\SetKwData{Delivered}{delivered}
+\SetKwData{Tick}{tick}
+\SetKwData{Now}{now}
+\SetKwData{Update}{update}
+\SetKwFunction{Time}{time}
+
+\begin{frame}{Implémentation de Causal Broadcast}
+
+  \on<-2>[top]{
+    \begin{algorithm}[H]
+      \lLVariables{}{\Example{$\Clock_i$;}\uncover<2>{\tcp*[f]{$\Delivered_i[1..n]$}}}
+      \Method{$\textsc{cb}.\Broadcast(m)$}{
+        \Alert<1>{\textsc{urb}}.\SBroadcast $\textsc{msg}(m,~\Example{\Clock_i.\Now(i)})$;\uncover<2>{\tcp*[r]{$\Delivered_i$}}
+      }
+      \When{\Alert<1>{\textsc{urb}}.\Deliver $\textsc{msg}(m, \mathit{date}_j)$ \From $p_j$}{
+        \Wait{\Example{$\mathit{date}_j \ge \Clock_i.\Now(j)$}};\uncover<2>{\tcp*[r]{$\forall k, \Delivered_i[k] \ge \mathit{date}_j[k]$}}
+        \textsc{cb}.\Deliver $m$ \From $p_j$;\\
+        \Example{$\Clock_i.\Update(j)$};\uncover<2>{\tcp*[r]{$\Delivered_i[j] \leftarrow \mathit{date}_j[j]+1$}}
+      }
+    \end{algorithm}
+  }
+
+  \ob<3->[top]{
+    \begin{algorithm}[H]
+      \lLVariables{}{$\Delivered_i \leftarrow [0, ..., 0]$;}
+      \Method{$\textsc{cb}.\Broadcast(m)$}{
+        \textsc{urb}.\SBroadcast $\textsc{msg}(m, \Delivered_i)$;
+      }
+      \When{\textsc{urb}.\Deliver $\textsc{msg}(m, \mathit{date}_j)$ \From $p_j$}{
+        \Wait{$\forall k \in \{1, ..., n\}, \Delivered_i[k] \ge \mathit{date}_j[k]$};\\
+        \textsc{cb}.\Deliver $m$ \From $p_j$;\\
+        $\Delivered_i[j] \leftarrow \mathit{date}_j[j] + 1$;
+      }
+    \end{algorithm}
+  }
+
+  \ob<1>[anchor=north, y=8mm, x=10mm]{\alert{Pourquoi utiliser \textsc{urb} ?}}
+  \ob<1>[anchor=north, y=4mm, x=10mm]{\example{Quelles horloges utiliser ?}}
+  
+  \onExampleBlock<1,3>[anchor=north]{Exemple d'exécution}{}
+
+  \ob<1>[y=-25mm]{
+    \begin{tikzpicture}[y=10mm]
+      \draw[process]   (0,2) node[left]{$p_1$} to (10,2) ;
+      \draw[process]   (0,1) node[left]{$p_2$} to (10,1) ;
+      \draw[process]   (0,0) node[left]{$p_3$} to (10,0) ;
+
+      \scriptsize
+      \draw[alert]     (2,2) node (m1) {} node[above] {$m$};
+      \draw[alert, message]       (m1.center) to[bend left] (3,2) ;
+      \draw[alert, message]       (m1.center) to node[sloped, swap] {$\mathit{date}_1$} (3,1) ;
+      \draw[alert, message]       (m1.center) to            (5.5,0) ;
+
+      \draw[structure] (4,1) node (m2) {} node[above] {$m'$} node[replica, below left] {$\Clock_2.\Now(2)$};
+      \draw[structure, message]   (m2.center) to            (5,2) ;
+      \draw[structure, message]   (m2.center) to[bend left] (5,1) ;
+      \draw[structure, message]   (m2.center) to node[sloped, swap] {$\mathit{date}_2$} (4.5,.05) node[replica, below] {$\Clock_3.\Now(2)$} to[bend left] (6,0) ;
+    \end{tikzpicture}
+  }
+
+  \ob<3>[y=-25mm]{
+    \begin{tikzpicture}[y=10mm]
+      \draw[process]   (0,2) node[left]{$p_1$} node[replica below] {$[0,0,0]$} to (10,2) ;
+      \draw[process]   (0,1) node[left]{$p_2$} node[replica below] {$[0,0,0]$} to (10,1) ;
+      \draw[process]   (0,0) node[left]{$p_3$} node[replica below] {$[0,0,0]$} to (10,0) ;
+
+      \scriptsize
+      \draw[alert]     (2,2) node (m1) {} node[above] {$m$};
+      \draw[alert, message]       (m1.center) to[bend left] (3,2) node[replica, below right] {$[1,0,0]$};
+      \draw[alert, message]       (m1.center) to node[sloped, swap] {$[0,0,0]$} (3,1) node[replica, below] {$[1,0,0]$};
+      \draw[alert, message]       (m1.center) to            (5.5,0) node[replica, below] {$[1,0,0]$};
+
+      \draw[structure] (4,1) node (m2) {} node[above] {$m'$};
+      \draw[structure, message]   (m2.center) to            (5,2) node[replica, below right] {$[1,1,0]$};
+      \draw[structure, message]   (m2.center) to[bend left] (5,1) node[replica, below right] {$[1,1,0]$};
+      \draw[structure, message]   (m2.center) to node[sloped, swap] {$[1,0,0]$} (4.5,0) node[replica, below] {$[0,0,0]$} to[bend left] (6,0) node[replica, below right] {$[1,1,0]$};
+    \end{tikzpicture}
+  }
+
+  \onBlock<2>[anchor=north]{Notion d'horloge vectorielle}{
+    \begin{description}[Horloge :]
+    \item[Date :] \alert{vecteur de version} $\mathit{cl}[1..n]$ formé d'un entier par processus
+      \begin{itemize}
+      \item Pour tout $k$, $\mathit{cl}[k]$ est le nombre de messages reçus de $p_k$
+      \item Comparaison : $\mathit{cl}_1 \le \mathit{cl}_2$ si $\forall k, \mathit{cl}_1[k] \le \mathit{cl}_2[k]$
+      \end{itemize}
+    \item[Temps :] capture \alert{exactement} la relation happens-before\\[-3mm]
+      $$\forall a, b, ~ a \hb b \Leftrightarrow \Time(a) < \Time(b)$$
+    \end{description}
+  }
+
+  \on<2>[bottom=-2mm, text]{
+    \begin{citing}
+    \item[F88]\vspace{-1mm} C. Fidge. \emph{Timestamps in Message-Passing Systems That Preserve the Partial Ordering.} ACSC. 1988
+    \item[M89] F. Mattern. \emph{Virtual Time and Global States of Distributed Systems.} JPDA. 1989
+    \end{citing}
+  }  
+  
+\end{frame}
+
+\endgroup
+\endinput

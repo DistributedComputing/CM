@@ -1,0 +1,122 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\definecolor{myRed}{RGB}{245,180,170}
+\definecolor{myGreen}{RGB}{178,238,167}
+\definecolor{myBlue}{RGB}{172,206,240}
+\definecolor{myYellow}{RGB}{245,245,202}
+\definecolor{myCyan}{RGB}{202,235,235}
+\definecolor{myMagenta}{RGB}{236,202,236}
+
+\tikzset{
+  weakerthan/.style={
+    densely dashed,
+    postaction={decorate,decoration={markings, mark=at position .65 with {\arrow{latex}}}},
+  },
+  criterion/.style={
+    draw,
+    ultra thin,
+    circle,
+    inner sep=1pt,
+    font=\footnotesize,
+    fill=white
+  },
+  criterion text/.style={
+    align=center,
+    font=\tiny,
+  },
+}
+
+\newcommand{\fillinter}[2]{%
+  \begin{scope}
+    \foreach \c in {#1} {
+      \clip \c circle (22mm);
+    }
+    \fill[#2] circle (30mm);
+    \foreach \c in {#1} {
+      \draw[black!60] \c circle (22mm);
+    }
+  \end{scope}
+}
+
+\begin{frame}{Carte des critères de cohérence faibles}
+
+  \onBlock[top]{Critères primaires}{
+    \begin{itemize}
+    \item[{\myRec[draw=black!60, fill=myBlue]}]  localité d'état
+    \item[{\myRec[draw=black!60, fill=myRed]}]   Eventual consistency
+    \item[{\myRec[draw=black!60, fill=myGreen]}] Validité
+    \end{itemize}
+  }
+
+  \onBlock[y=-7mm]{Critères secondaires}{
+    \begin{itemize}
+    \item[{\myRec[draw=black!60, fill=myYellow]}]  Cohérence d'écritures
+    \item[{\myRec[draw=black!60, fill=myCyan]}]    Cohérence PRAM
+    \item[{\myRec[draw=black!60, fill=myMagenta]}] Sérialisabilité
+    \end{itemize}
+  }
+  
+  \onBlock[bottom]{Critères forts}{
+    \begin{itemize}
+    \item[{\myRec[draw=black!60, fill=black!5]}] Cohérence séquentielle/linéarisabilité
+    \end{itemize}
+  }
+
+  \on[x=20mm]{
+    \begin{tikzpicture}
+      \clip circle (30mm);
+
+      \coordinate (EC) at ( 90:10mm);
+      \coordinate (VC) at (-30:10mm);
+      \coordinate (SL) at (210:10mm);
+
+      \fillinter{}              {black!50}
+      \fillinter{(EC)}          {myRed}
+      \fillinter{(VC)}          {myGreen}
+      \fillinter{(SL)}          {myBlue}
+      \fillinter{(SL),(VC)}     {myCyan}
+      \fillinter{(EC),(SL)}     {myMagenta}
+      \fillinter{(EC),(VC)}     {myYellow}
+      \fillinter{(EC),(SL),(VC)}{black!3}
+      
+      \node[criterion] (CSC)               {}; \node[criterion text, below left ] at (CSC) {Cohérence\\forte}; 
+      \node[criterion] (CPC) at (-90:20mm) {}; \node[criterion text, below      ] at (CPC) {Cohérence\\PRAM}; 
+      \node[criterion] (CC)  at (-90:15mm) {}; \node[criterion text, left       ] at (CC)  {Cohérence\\causale}; 
+      \node[criterion] (CUC) at ( 30:20mm) {}; \node[criterion text, above      ] at (CUC) {Cohérence\\d'écritures}; 
+      \node[criterion] (CCv) at ( 30:15mm) {}; \node[criterion text, left       ] at (CCv) {Convergence\\causale}; 
+      \node[criterion] (CSE) at (150:20mm) {}; \node[criterion text, right      ] at (CSE) {Serialisabilité}; 
+      \node[criterion] (CEC) at ( 90:25mm) {}; \node[criterion text, above      ] at (CEC) {Eventual consistency}; 
+      \node[criterion] (CVC) at (-30:25mm) {}; \node[criterion text, below      ] at (CVC) {Validité}; 
+      \node[criterion] (CCF) at (-30:20mm) {}; \node[criterion text, above left ] at (CCF) {Cohérence\\causale faible}; 
+      \node[criterion] (CSL) at (210:25mm) {}; \node[criterion text, below      ] at (CSL) {Localité\\d'état}; 
+
+      \path (CSL) edge[weakerthan] (CPC) ;
+      \path (CSL) edge[weakerthan] (CSE) ;
+      \path (CVC) edge[weakerthan] (CPC) ;
+      \path (CVC) edge[weakerthan] (CUC) ;
+      \path (CEC) edge[weakerthan] (CUC) ;
+      \path (CEC) edge[weakerthan] (CSE) ;
+      \path (CPC) edge[weakerthan] (CC)  ;
+      \path (CUC) edge[weakerthan] (CCv) ;
+      \path (CCv) edge[weakerthan] (CSC) ;
+      \path (CC)  edge[weakerthan] (CSC) ;
+      \path (CSE) edge[weakerthan] (CSC) ;
+      \path (CVC) edge[weakerthan] (CCF) ;
+      \path (CCF) edge[weakerthan] (CCv) ;
+      \path (CCF) edge[weakerthan] (CC)  ;
+
+      \node[circle, minimum size=60mm, inner sep=0, draw=black!75] {};
+    \end{tikzpicture}
+  }
+
+\end{frame}
+
+\endgroup
+\endinput
