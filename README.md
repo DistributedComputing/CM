@@ -1,12 +1,7 @@
-# Languages and Automata
+# Distributed Computing - CM 
 
-This repository contains modular and reusable teaching materials for a university-level course on distributed computing and state machine replication.
-
-
-## Latest PDFs:
-- [Slides](https://DistributedComputing.github.io/CM/SCSD.pdf): full animated version
-- [Handout](https://DistributedComputing.github.io/CM/SCSD-handout.pdf): printable version
-
+This repository contains modular and reusable teaching materials used to build the slides for the Distributed Systems course at Nantes University. 
+See the [main organization](https://github.com/DistributedComputing/) for more information on the course and additional resources.
 
 ## Structure
 
@@ -21,7 +16,6 @@ This repository contains modular and reusable teaching materials for a universit
 │   ├── frame/            # Individual slides organized by topic (one file per slide)  
 │   ├── img/              # Images used in the slides
 │   └── sty/              # Style files
-
 
 ## Compilation
 
@@ -43,6 +37,19 @@ make clean      # Remove temporary files in build/
 make cleanall   # Also remove PDFs in docs/
 ```
 
+## Customization
+
+You can create your own course variant while reusing the provided slides.
+
+- Create a new main file in `src/main/`, for example:
+   ```bash
+   cp src/main/SCSD.tex src/main/mycourse.tex
+   ```
+- Edit `src/main/mycourse.tex` to change the course metadata and the slides you want to include.
+- Then configure the Makefile to compile your own course `docs/mycourse.pdf` and `docs/mycourse-handout.pdf`
+   ```bash
+   make configure COURSE=mycourse
+   ```
 
 ## Dependencies
 
@@ -55,7 +62,6 @@ These slides rely on styles from the [latex-libs](https://github.com/MatthieuPer
 make update
 ```
 
-
 ## Licensing
 
 Content is available under the **Creative Commons Attribution-ShareAlike 4.0 International License** (CC BY-SA 4.0).
@@ -67,7 +73,6 @@ This means:
 
 See [`LICENSE.md`](LICENSE.md) for full terms.
 
-
 ## Contributions
 
 Contributions are welcome!
@@ -78,11 +83,4 @@ Each slide is in a separate file, making it easy to reuse or improve specific pa
 - Translate to other languages
 
 Use pull requests to suggest changes.
-
-
-## Related projects
-
-You may also be interested in:
-- [latex-libs](https://github.com/MatthieuPerrin/latex-libs): the graphical/style library used here
-- [Main organization](https://github.com/DistributedComputing/): additional resources for exercises and labs 
-
+For major changes, please open an issue first to discuss your ideas.
