@@ -14,8 +14,8 @@ See the [main organization](https://github.com/DistributedComputing/) for more i
 ├── src/                  # LaTeX source files  
 │   ├── main/             # Main document files for the course  
 │   ├── frame/            # Individual slides organized by topic (one file per slide)  
-│   ├── img/              # Images used in the slides
-│   └── sty/              # Style files
+│   ├── img/              # Images used in the slides  
+│   └── sty/              # Style files  
 
 ## Compilation
 
