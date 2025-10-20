@@ -1,11 +1,11 @@
 # Languages and Automata
 
-This repository contains modular and reusable teaching materials for a university-level course on formal languages and automata.
+This repository contains modular and reusable teaching materials for a university-level course on distributed computing and state machine replication.
 
 
 ## Latest PDFs:
-- [Slides](https://LangagesEtAutomates.github.io/CM/slides.pdf): full animated version
-- [Handout](https://LangagesEtAutomates.github.io/CM/handout.pdf): printable version
+- [Slides](https://DistributedComputing.github.io/CM/SCSD.pdf): full animated version
+- [Handout](https://DistributedComputing.github.io/CM/SCSD-handout.pdf): printable version
 
 
 ## Structure
@@ -14,12 +14,13 @@ This repository contains modular and reusable teaching materials for a universit
 ├── Makefile              # Automatic compilation  
 ├── README.md             # This file  
 ├── build/                # Temporary files used during compilation  
-├── latex-libs/           # Dependency from [latex-libs](https://github.com/MatthieuPerrin/latex-libs)
+├── latex-libs/           # Dependency from [latex-libs](https://github.com/MatthieuPerrin/latex-libs)  
 ├── docs/                 # Final PDF files (i.e. compiled course)  
 ├── src/                  # LaTeX source files  
-│   ├── drivers/          # Main document files for the course  
+│   ├── main/             # Main document files for the course  
 │   ├── frame/            # Individual slides organized by topic (one file per slide)  
-│   └── img/              # (shareable) images used in the slides
+│   ├── img/              # Images used in the slides
+│   └── sty/              # Style files
 
 
 ## Compilation
@@ -30,13 +31,13 @@ To build the course PDF:
 make
 ```
 
-This creates `docs/slides.pdf` and `docs/handout.pdf`.
+This creates `docs/SCSD.pdf` and `docs/SCSD-handout.pdf`.
 
 Build individually:
 
 ```bash
-make slides     # Builds docs/slides.pdf
-make handout    # Builds docs/handout.pdf
+make slides     # Builds docs/SCSD.pdf
+make handout    # Builds docs/SCSD-handout.pdf
 
 make clean      # Remove temporary files in build/
 make cleanall   # Also remove PDFs in docs/
@@ -83,6 +84,5 @@ Use pull requests to suggest changes.
 
 You may also be interested in:
 - [latex-libs](https://github.com/MatthieuPerrin/latex-libs): the graphical/style library used here
-- [Main organization](https://github.com/LangagesEtAutomates/): additional resources for exercises and labs 
-- [Calculabilité et Complexité](https://github.com/CalculabiliteEtComplexite): a course on Turing machines, computability, and complexity
+- [Main organization](https://github.com/DistributedComputing/): additional resources for exercises and labs 
 
