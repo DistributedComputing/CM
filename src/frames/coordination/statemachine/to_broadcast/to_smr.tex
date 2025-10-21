@@ -22,10 +22,10 @@
         $\State_i \leftarrow q_0$; $\Result_i \leftarrow \bot$;
       }
       \Method{$\Apply(c \in C)$}{
-        \Alert{\textsc{to}.\SBroadcast $\textsc{cmd}(c)$;}\\
+        \Alert{\textsc{rb-to}.\SBroadcast $\textsc{cmd}(c)$;}\\
         \Return $\Result_i$;
       }
-      \When{\textsc{to}.\Deliver $\textsc{cmd}(c)$ \From $p_j$}{
+      \When{\textsc{rb-to}.\Deliver $\textsc{cmd}(c)$ \From $p_j$}{
         \lIf{$j=i$}{$\Result_i \leftarrow \rho(\State_i, c)$;}
         $\State_i \leftarrow \tau(\State_i, c)$;
       }

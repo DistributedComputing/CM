@@ -70,7 +70,7 @@
       \path[fade, message]           (w1.west) edge (1.5,1);
       \path[fade, message]           (w1.west) edge[bend left] (w1.east);
       
-      \node[alert,   operation]      (r)  at (8,1) {$\Read() \rightarrow 1$};
+      \node[alert,   operation]      (r)  at (8,1) {$\Read() \rightarrow \alt<4>{2}{1}$};
       \path[alert,   message, thick] (r.west) edge (8,2);
       \path[alert,   message]        (r.west) edge[bend left] (r.east);
       \path[alert,   message]        (r.west) edge (8,0);

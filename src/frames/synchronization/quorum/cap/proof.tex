@@ -9,6 +9,8 @@
 
 \SetKwFunction{Read}{read}
 \SetKwFunction{Write}{write}
+\SetKwData{X}{x}
+\SetKwData{Y}{y}
 
 \begin{frame}{Démonstration du théorème CAP}
 
@@ -26,33 +28,33 @@
 
   \onBlock<2->[y=19mm, left=.45\textwidth, anchor=north]{Scénario S1}{
     \begin{tikzpicture}[x=10mm, y=4mm, anchor=center]
-      \draw[process] (0,3) node[left] {$x_1$} to (4,3) node (x1) {}; 
-      \draw[process] (0,2) node[left] {$x_2$} to (4,2) node (x2) {}; 
-      \draw[crashed] (0,1) node[left] {$y_1$} to (.5,1) node (y1) {}; 
-      \draw[crashed] (0,0) node[left] {$y_2$} to (.5,0) node (y2) {}; 
+      \draw[process] (0,3) node[left] {$p_1$} to (4,3) node (x1) {}; 
+      \draw[process] (0,2) node[left] {$p_2$} to (4,2) node (x2) {}; 
+      \draw[crashed] (0,1) node[left] {$p_3$} to (.5,1) node (y1) {}; 
+      \draw[crashed] (0,0) node[left] {$p_4$} to (.5,0) node (y2) {}; 
       
       \path (x1.north) edge[brace] node {$X$} (x2.south);
       \path (y1.north) edge[brace] node {$Y$} (y2.south);
       
       \scriptsize
-      \node[example,   operation] at (1.0,3) {$x.\Write(1)$};
-      \node[alert,     operation] at (2.9,3) {$y.\Read() \rightarrow 0$};
+      \node[example,   operation] at (1.0,3) {$\X.\Write(1)$};
+      \node[alert,     operation] at (2.9,3) {$\Y.\Read() \rightarrow 0$};
     \end{tikzpicture}
   }
 
   \onBlock<2->[y=19mm, right=.45\textwidth, anchor=north]{Scénario S2}{
     \begin{tikzpicture}[x=10mm, y=4mm, anchor=center]
-      \draw[crashed] (0,3) node[left] {$x_1$} to (.5,3) node (x1) {} ; 
-      \draw[crashed] (0,2) node[left] {$x_2$} to (.5,2) node (x2) {} ; 
-      \draw[process] (0,1) node[left] {$y_1$} to (4,1)  node (y1) {} ; 
-      \draw[process] (0,0) node[left] {$y_2$} to (4,0)  node (y2) {} ; 
+      \draw[crashed] (0,3) node[left] {$p_1$} to (.5,3) node (x1) {} ; 
+      \draw[crashed] (0,2) node[left] {$p_2$} to (.5,2) node (x2) {} ; 
+      \draw[process] (0,1) node[left] {$p_3$} to (4,1)  node (y1) {} ; 
+      \draw[process] (0,0) node[left] {$p_4$} to (4,0)  node (y2) {} ; 
       
       \path (x1.north) edge[brace] node {$X$} (x2.south);
       \path (y1.north) edge[brace] node {$Y$} (y2.south);
 
       \scriptsize
-      \node[alert,     operation] at (1.0,0) {$y.\Write(1)$};
-      \node[example,   operation] at (2.9,0) {$x.\Read() \rightarrow 0$};
+      \node[alert,     operation] at (1.0,0) {$\Y.\Write(1)$};
+      \node[example,   operation] at (2.9,0) {$\X.\Read() \rightarrow 0$};
     \end{tikzpicture}
   }
 
@@ -65,11 +67,11 @@
       \end{itemize}
     \item<3-> S3 est indistingable de S1 pour $X$
       \begin{itemize}
-      \item $y.\Read()$ retourne $0$
+      \item $\Y.\Read()$ retourne $0$
       \end{itemize}
     \item<3-> S3 est indistingable de S2 pour $Y$
       \begin{itemize}
-      \item $x.\Read()$ retourne $0$
+      \item $\X.\Read()$ retourne $0$
       \end{itemize}
     \item<3-> RW1 est possible : contradiction ! 
     \end{itemize}
@@ -77,10 +79,10 @@
 
   \onBlock<3->[y=-10mm, right=.45\textwidth, anchor=north]{Scénario S3}{
     \begin{tikzpicture}[x=10mm, y=4mm, anchor=center]
-      \draw[process] (0,4) node[left] {$x_1$} to (4,4) node (x1) {}; 
-      \draw[process] (0,3) node[left] {$x_2$} to (4,3) node (x2) {}; 
-      \draw[process] (0,1) node[left] {$y_1$} to (4,1) node (y1) {}; 
-      \draw[process] (0,0) node[left] {$y_2$} to (4,0) node (y2) {}; 
+      \draw[process] (0,4) node[left] {$p_1$} to (4,4) node (x1) {}; 
+      \draw[process] (0,3) node[left] {$p_2$} to (4,3) node (x2) {}; 
+      \draw[process] (0,1) node[left] {$p_3$} to (4,1) node (y1) {}; 
+      \draw[process] (0,0) node[left] {$p_4$} to (4,0) node (y2) {}; 
 
       \draw[dashed]   (0,2) -- (4,2) node[above left] {\tiny réseau lent};
 
@@ -88,10 +90,10 @@
       \path (y1.north) edge[brace] node {$Y$} (y2.south);
       
       \scriptsize
-      \node[example,   operation] at (1.0,4) {$x.\Write(1)$};
-      \node[alert,     operation] at (2.9,4) {$y.\Read() \rightarrow 0$};
-      \node[alert,     operation] at (1.0,0) {$y.\Write(1)$};
-      \node[example,   operation] at (2.9,0) {$x.\Read() \rightarrow 0$};
+      \node[example,   operation] at (1.0,4) {$\X.\Write(1)$};
+      \node[alert,     operation] at (2.9,4) {$\Y.\Read() \rightarrow 0$};
+      \node[alert,     operation] at (1.0,0) {$\Y.\Write(1)$};
+      \node[example,   operation] at (2.9,0) {$\X.\Read() \rightarrow 0$};
     \end{tikzpicture}
   }
   

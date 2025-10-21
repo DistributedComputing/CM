@@ -9,6 +9,8 @@
 
 \SetKwFunction{Read}{read}
 \SetKwFunction{Write}{write}
+\SetKwData{X}{x}
+\SetKwData{Y}{y}
 
 \begin{frame}{Motifs en messages et en mémoire}
 
@@ -19,7 +21,7 @@
   \onBlock[top=5mm]{Motifs en passage de messages}{}
 
   \on[y=5mm, x=-38mm]{
-    \begin{tikzpicture}[x=7mm, y=7mm]
+    \begin{tikzpicture}[x=8mm, y=7mm]
       \draw[process] (0,1) node[left]{$p_1$} to (4,1);
       \draw[process] (0,0) node[left]{$p_2$} to (4,0);
 
@@ -32,7 +34,7 @@
     \end{tikzpicture}
   }
   \on[y=5mm]{
-    \begin{tikzpicture}[x=7mm, y=7mm]
+    \begin{tikzpicture}[x=8mm, y=7mm]
       \draw[process] (0,1) node[left]{$p_1$} to (4,1);
       \draw[process] (0,0) node[left]{$p_2$} to (4,0);
 
@@ -45,7 +47,7 @@
     \end{tikzpicture}
   }
   \on[y=5mm, x=38mm]{
-    \begin{tikzpicture}[x=7mm, y=7mm]
+    \begin{tikzpicture}[x=8mm, y=7mm]
       \draw[process] (0,1) node[left]{$p_1$} to (4,1);
       \draw[process] (0,0) node[left]{$p_2$} to (4,0);
 
@@ -62,17 +64,17 @@
   \onBlock<2>[y=-13mm]{Motifs en mémoire partagée}{}
 
   \on<2>[y=-29mm, x=-38mm]{
-    \begin{tikzpicture}[x=7mm, y=7mm]
+    \begin{tikzpicture}[x=8mm, y=7mm]
       \draw (2,-1) node{RW1};
       
       \draw[process] (0,1) node[left]{$p_1$} to (4,1);
       \draw[process] (0,0) node[left]{$p_2$} to (4,0);
 
-      \tiny
-      \node[example,   operation, inner sep=1pt] at (1  ,1) {$x_1.\Write(1)$};
-      \node[structure, operation, inner sep=1pt] at (1  ,0) {$x_2.\Write(1)$};
-      \node[structure, operation, inner sep=1pt] at (2.8,1) {$x_2.\Read() \rightarrow 0$};
-      \node[example,   operation, inner sep=1pt] at (2.8,0) {$x_1.\Read() \rightarrow 0$};
+      \scriptsize
+      \node[example,   operation, inner sep=1pt] at (1  ,1) {$\X.\Write(1)$};
+      \node[structure, operation, inner sep=1pt] at (1  ,0) {$\Y.\Write(1)$};
+      \node[structure, operation, inner sep=1pt] at (2.8,1) {$\Y.\Read() \rightarrow 0$};
+      \node[example,   operation, inner sep=1pt] at (2.8,0) {$\X.\Read() \rightarrow 0$};
       
       \draw[alert, thick] (0,1.25) -- (4,-.25);
       \draw[alert, thick] (4,1.25) -- (0,-.25);
@@ -80,32 +82,32 @@
   }
   
   \on<2>[y=-29mm]{
-    \begin{tikzpicture}[x=7mm, y=7mm]
-      \draw (2,-1) node{RW1};
+    \begin{tikzpicture}[x=8mm, y=7mm]
+      \draw (2,-1) node{RW2};
       
       \draw[process] (0,1) node[left]{$p_1$} to (4,1);
       \draw[process] (0,0) node[left]{$p_2$} to (4,0);
 
-      \tiny
-      \node[example,   operation, inner sep=1pt] at (1  ,1) {$x_1.\Write(1)$};
-      \node[structure, operation, inner sep=1pt] at (1  ,0) {$x_2.\Write(1)$};
-      \node[structure, operation, inner sep=1pt] at (2.8,1) {$x_2.\Read() \rightarrow 0$};
-      \node[example,   operation, inner sep=1pt] at (2.8,0) {$x_1.\Read() \rightarrow 1$};
+      \scriptsize
+      \node[example,   operation, inner sep=1pt] at (1  ,1) {$\X.\Write(1)$};
+      \node[structure, operation, inner sep=1pt] at (1  ,0) {$\Y.\Write(1)$};
+      \node[structure, operation, inner sep=1pt] at (2.8,1) {$\Y.\Read() \rightarrow 0$};
+      \node[example,   operation, inner sep=1pt] at (2.8,0) {$\X.\Read() \rightarrow 1$};
     \end{tikzpicture}
   }
   
   \on<2>[y=-29mm, x=38mm]{
-    \begin{tikzpicture}[x=7mm, y=7mm]
-      \draw (2,-1) node{RW1};
+    \begin{tikzpicture}[x=8mm, y=7mm]
+      \draw (2,-1) node{RW3};
       
       \draw[process] (0,1) node[left]{$p_1$} to (4,1);
       \draw[process] (0,0) node[left]{$p_2$} to (4,0);
 
-      \tiny
-      \node[example,   operation, inner sep=1pt] at (1  ,1) {$x_1.\Write(1)$};
-      \node[structure, operation, inner sep=1pt] at (1  ,0) {$x_2.\Write(1)$};
-      \node[structure, operation, inner sep=1pt] at (2.8,1) {$x_2.\Read() \rightarrow 1$};
-      \node[example,   operation, inner sep=1pt] at (2.8,0) {$x_1.\Read() \rightarrow 1$};
+      \scriptsize
+      \node[example,   operation, inner sep=1pt] at (1  ,1) {$\X.\Write(1)$};
+      \node[structure, operation, inner sep=1pt] at (1  ,0) {$\Y.\Write(1)$};
+      \node[structure, operation, inner sep=1pt] at (2.8,1) {$\Y.\Read() \rightarrow 1$};
+      \node[example,   operation, inner sep=1pt] at (2.8,0) {$\X.\Read() \rightarrow 1$};
     \end{tikzpicture}
   }
 

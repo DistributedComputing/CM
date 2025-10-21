@@ -22,13 +22,15 @@
     \node[alert,     box] (quorum) at (0.5, 0) {Quorums     \\ $t < \frac{n}{2}$};
     \node[example,   box] (rb)     at (1.5, 0) {Reliable    \\ Broadcast};
 
-    \path[-latex]      (leader) edge (cons);
-    \path[latex-latex] (cons)   edge (tob);
-    \path[latex-latex] (tob)    edge (rsm);
-    \path[-latex]      (quorum) edge (mb);
-    \path[-latex]      (mb)     edge (cons);
-    \path[-latex]      (rb)     edge (mb);
-    \path[-latex]      (rb)     edge (tob);
+    \path[-latex] (leader) edge            (cons);
+    \path[-latex] (cons)   edge[bend left] (tob);
+    \path[-latex] (tob)    edge[bend left] (cons);
+    \path[-latex] (tob)    edge[bend left] (rsm);
+    \path[-latex] (rsm)    edge[bend left] (tob);
+    \path[-latex] (quorum) edge            (mb);
+    \path[-latex] (mb)     edge            (cons);
+    \path[-latex] (rb)     edge            (mb);
+    \path[-latex] (rb)     edge            (tob);
   \end{tikzpicture}
 
   \vspace{3mm}

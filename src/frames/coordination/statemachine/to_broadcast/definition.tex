@@ -25,16 +25,17 @@
     \end{description}
   }
 
-  \onBlock[bottom=9mm]{Remarques}{
+  \onBlock[bottom=7mm]{Remarques}{
     \vspace{-1mm}
     \begin{itemize}
-    \item Total-Ordering $\Rightarrow$ Mutual-Ordering $\Rightarrow$ Causal-Ordering $\Rightarrow$ FIFO-Ordering
+    \item Total-Ordering $\Rightarrow$ Causal-Ordering $\Rightarrow$ FIFO-Ordering
+    \item Total-Ordering $\Rightarrow$ Mutual-Ordering 
     \item \structure{Ajout de propriétés :} \textsc{rb-to}.\Broadcast, \textsc{urb-to}.\Broadcast
     \end{itemize}
   }
 
   \on[y=-10mm, x=10mm]{
-    \begin{tikzpicture}[y=4mm]
+    \begin{tikzpicture}[y=3mm]
       \draw[process]   (0,3) node[left]{$p_1$} to (6,3);
       \draw[process]   (0,2) node[left]{$p_2$} to (6,2);
       \draw[process]   (0,1) node[left]{$p_3$} to (6,1);
@@ -59,7 +60,7 @@
   
   \on[bottom=-2mm, text]{
     \begin{citing}
-    \item[BJ87] K. P. Birman, T. A. Joseph. \emph{Reliable Communication in the Presence of Failures}. TOCS, 1987.
+    \item[BJ87]  K. P. Birman, T. A. Joseph. \emph{Reliable Communication in the Presence of Failures}. TOCS, 1987. \vspace{-1mm}
     \item[DSU04] X. Défago, A. Schiper, P. Urbán. \emph{Total Order Broadcast and Multicast Algorithms: Taxonomy and Survey}. ACM CSUR, 2004.
     \end{citing}
   }  
