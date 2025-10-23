@@ -55,20 +55,20 @@
     \end{algorithm}
   }
 
-  \obAlertBlock<1>[anchor=north, y=-20mm]{Un algorithme centralisé}{
+  \obAlertBlock<1>[anchor=north, y=-18mm]{Un algorithme centralisé}{
     \begin{itemize}
     \item La valeur décidée est choisie par un leader
     \end{itemize}
   }
 
-  \obAlertBlock<2>[anchor=north, y=-20mm]{Système de rondes asynchrones}{
+  \obAlertBlock<2>[anchor=north, y=-18mm]{Système de rondes asynchrones}{
     \begin{description}[ballot number :]
     \item[ballot number :] Ordre lexicographique total sur des estampilles de Lamport
     \item[leader :] Seul $p_i$ peut être \emph{leader} pour $\langle t, i \rangle$
     \end{description}
   }
   
-  \obAlertBlock<3>[anchor=north, y=-20mm]{Chaque ronde est divisée en deux phases}{
+  \obAlertBlock<3>[anchor=north, y=-18mm]{Chaque ronde est divisée en deux phases}{
     \begin{description}[\textsc{voted} :]
     \item[\alert{\textsc{begin} :}] Arrête les rondes précédentes et récupère leur valeur
     \item[\example{\textsc{voted} :}] Transmet la valeur aux rondes suivantes
@@ -134,11 +134,7 @@
     \end{itemize}
   }
 
-  \on[bottom=-2mm, text]{
-    \begin{citing}
-    \item[L98] Leslie Lamport. \emph{The part-time parliament.} ACM TOCS (1998)
-    \end{citing}
-  }
+  \footnoteref{L. Lamport. \textit{The part-time parliament.} ACM TOCS (1998)}
   
 \end{frame}
 

@@ -221,12 +221,10 @@
     \end{tikzpicture}
   }
 
-  \on<2>[bottom=-2mm, text]{
-    \begin{citing}
-    \item[PMJ16] E. Gafni. \emph{Round-by-round fault detectors unifying synchrony and asynchrony.} PODC. 1998
-    \item[AW24] H. Attiya, J. Welch. \emph{Multi-Valued Connected Consensus: A New Perspective on Crusader Agreement and Adopt-Commit.} OPODIS. 2023
-    \end{citing}
-  }  
+  \only<2>{
+    \footnoteref{E. Gafni. \textit{Round-by-round fault detectors unifying synchrony and asynchrony.} PODC (1998)}
+    \footnoteref{H. Attiya, J. Welch. \textit{Multi-Valued Connected Consensus: A New Perspective on Crusader Agreement and Adopt-Commit.} OPODIS (2023)}
+  }
   
 \end{frame}
 

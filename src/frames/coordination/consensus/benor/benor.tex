@@ -81,15 +81,15 @@
     \end{algorithm}
   }
 
-  \obBlock<1>[anchor=north, y=7mm]{Probabilité de terminaison}{
+  \obBlock<1>[anchor=north, y=8mm]{Probabilité de terminaison}{
     \begin{itemize}
     \item\vspace{-1mm} Terminaison à la ronde suivante avec probabilité au moins $\frac{1}{2^{n-1}}$
     \item\vspace{-1mm} Complexité moyenne en $\mathcal{O}(2^n)$ rondes
     \end{itemize}
   }
   
-  \ob<1>[y=-26mm]{
-    \begin{tikzpicture}[x=8mm, y=16mm]
+  \ob<1>[y=-25mm]{
+    \begin{tikzpicture}[x=8mm, y=17mm]
       \tiny
       \node[alert,   output]         (F011) at (1,0)        {\Commit} ;
       \node[alert,   output]         (F012) at (F011.south) {\Commit} ;
@@ -183,7 +183,7 @@
     \end{tikzpicture}
   }
   
-  \onBlock<2>[anchor=north, y=7mm]{Notion de common coin}{
+  \onBlock<2>[anchor=north, y=8mm]{Notion de common coin}{
     \begin{description}[Pire cas :]
     \item[Biais :] Il existe $\rho > 0$ tel que
       \begin{itemize}
@@ -214,12 +214,8 @@
     \end{description}
   }
 
-  \on[bottom=-3mm, width=1.1\textwidth]{
-    \begin{citing}
-    \item[B83] Michael Ben-Or. \emph{Another advantage of free choice for completely asynchronous agreement protocols.} PODC 1983
-    \end{citing}  
-  }
-
+  \footnoteref{M. Ben-Or. \textit{Another advantage of free choice for completely asynchronous agreement protocols.} PODC (1983)}
+  
 \end{frame}
 
 \endgroup
