@@ -131,7 +131,7 @@ help:
 	@echo "  make                       – Build docs/\$$COURSE.pdf and docs/\$$COURSE-handout.pdf"
 	@echo "  make slides                – Build docs/\$$COURSE.pdf"
 	@echo "  make handout               – Build docs/\$$COURSE-handout.pdf"
-	@echo "  make configure COURSE=xxx  – Sets current course as src/main/xxx.tex (default: SCSD)"
+	@echo "  make configure COURSE=xxx  – Sets current \$$COURSE as src/main/xxx.tex (default: SCSD)"
 	@echo "  make list                  – Lists available courses"
 	@echo "  make update                – Update local project and LaTeX-libs (git pull)"
 	@echo "  make clean                 – Remove build artifacts"

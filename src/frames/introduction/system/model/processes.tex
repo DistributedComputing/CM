@@ -19,13 +19,16 @@
 
   \begin{block}{Processus séquentiel, asynchrone}
     \begin{itemize}
-      \item \structure{Séquentiel} : une seule action à la fois (pas de threads internes)
-      \item \structure{Moniteur} : \Wait{condition} bloque jusqu'à \textit{condition}
+      \item \structure{Séquentiel} : une seule action à la fois sur un processus donné
+        \begin{itemize}
+        \item Des événements concurrents, mais traités en exclusion mutuelle 
+        \end{itemize}
+      \item \structure{Moniteur} : \Wait{condition} suspend le traitement jusqu'à \textit{condition}
       \item \structure{Asynchrone} : vitesses arbitraires, pas d’horloge globale
     \end{itemize}
   \end{block}
 
-  \begin{block}{Pannes (\textit{crash-stop})}
+  \begin{block}{Pannes franches (\textit{crash-stop})}
     \begin{itemize}
       \item \structure{En panne} : le processus s’arrête définitivement
       \item \structure{Correct} : ne crash pas (prend une infinité d’étapes)

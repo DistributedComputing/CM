@@ -9,39 +9,42 @@
 
 \SetKwFunction{Propose}{propose}
 \SetKwData{Decided}{decided}
+\SetKwBroadcast{TO}{to}
+\SetKwMessage{Prop}{propose}
+\SetKwVariable{Val}{val}
 
-\begin{frame}{Le consensus}
+\begin{frame}{Rappel : le consensus}
 
   \on[text, top=-3mm]{
     \begin{algorithm}[H]
-      \Interface{\textsc{consensus}}{
-        \lMethod{\Propose$(v \in \mathcal{V}) \in \mathcal{V}$}{\tcp*[f]{Propose $v$, décide $v'$}}
+      \Interface{Consensus}{
+        \lMethod{$\Propose(\Val \in \mathcal{V}) \in \mathcal{V}$}{\tcp*[f]{Propose $\Val$, décide $\Val'$}}
       }
     \end{algorithm}
 
     \vspace{-1mm}
     \begin{description}[Terminaison :]
-    \item[Accord :] Au plus une valeur décidée
-    \item[Validité :] Toute valeur décidée a été proposée
-    \item[Terminaison :] Tout processus correct finit par décider une valeur
+    \item[\alert{Accord :}] Au plus une valeur décidée
+    \item[\alert{Validité :}] Toute valeur décidée a été proposée
+    \item[\alert{Terminaison :}] Tout processus correct finit par décider une valeur
     \end{description}
   }
 
-  \onAlertBlock<2->[y=-4mm]{Réduction de Total-Order Broadcast au consensus}{
+  \onBlock<2->[y=-5mm]{De Total-Order Broadcast au consensus}{
     \begin{algorithm}[H]
-      \lLVariables{}{$\Decided_i \leftarrow \bot$;}
-      \Method{\Propose$(v \in \mathcal{V}) \in \mathcal{V}$}{
-        \textsc{to}.\SBroadcast $\textsc{propose}(v)$;\\
-        \Return $\Decided_i$;
+      \lLVariables{\At $p_i$}{$\Decided_i \leftarrow \bot$}
+      \Method{$\Propose(\Val \in \mathcal{V}) \in \mathcal{V}$ \At $p_i$}{
+        \TO.\SBroadcast \alert{$\Prop(\Val)$}\\
+        \Return $\Decided_i$
       }
-      \When{\textsc{to}.\Deliver $\textsc{propose}(v)$ \From $p_j$}{
-        \lIf{$\Decided_i = \bot$}{$\Decided_i \leftarrow v$;}
+      \Upon{\TO.\Deliver \alert{$\Prop(\Val)$} \From $p_i$ \At $p_j$}{
+        \lIf{$\Decided_j = \bot$}{$\Decided_j \leftarrow \Val$}
       }
     \end{algorithm}
   }
 
-  \on<2->[y=-9mm, right=.45\textwidth]{
-    \begin{tikzpicture}[y=10mm]
+  \on<2->[y=-5mm, right=.35\textwidth]{
+    \begin{tikzpicture}[y=9mm, x=9mm]
       \draw[process] (0,1) node[left]{$p_1$} to (4,1);
       \draw[process] (0,0) node[left]{$p_2$} to (4,0);
 
@@ -55,7 +58,7 @@
     \end{tikzpicture}
   }
 
-  \onAlertBlock<3->[y=-25mm]{Théorème (FLP85)}{
+  \onAlertBlock<3->[y=-27mm]{Théorème (FLP85)}{
     Il est impossible de résoudre le consensus dans $\mathcal{CAMP}_{n, t}[t\ge 1]$
   }
 

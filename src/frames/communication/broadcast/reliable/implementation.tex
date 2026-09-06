@@ -8,29 +8,39 @@
 \begingroup
 
 \SetKwData{Delivered}{delivered}
+\SetKwData{Next}{next}
+\SetKwMessage{MSG}{msg}
+\SetKwBroadcast{URB}{urb}
+\SetKwBroadcast{STA}{sta}
+\SetKwVariable{Payload}{payload}
+\SetKwVariable{SN}{sn}
 
 \begin{frame}{Implémentation de Uniform Reliable Broadcast}
   
-  \on[y=15mm]{
+  \on[top=-3mm]{
     \begin{algorithm}[H]
-      \lLVariables{}{$\Delivered_i \leftarrow \emptyset$}
-      \Method{\textsc{urb}.\Broadcast$(m)$}{
-        \nl\textsc{sta}.\Broadcast $\textsc{msg}(m, i)$\;
+      \LVariables{\At $p_i$}{
+        $\Next_i \leftarrow 0$\tcp*[r]{Compteur pour numéroter les messages de $p_i$}
+        $\Delivered_i \leftarrow \emptyset$\tcp*[f]{Ensemble des identifiants de messages délivrés}
+      }
+      \Method{$\URB.\Broadcast(\Payload)$ \At $p_i$}{
+        \nl \STA.\Broadcast $\alert{\MSG(\Payload, \Next_i, i)}$\\
+        \nl $\Next_i \leftarrow \Next_i+1$
       }
       
-      \When{\textsc{sta}.\Deliver $\textsc{msg}(m, j)$ \From $p_k$}{
-        \nl\If{$m \notin \Delivered_i$}{
-          \nl\Alert<4-5>{\textsc{sta}.\Broadcast $\textsc{msg}(m, j)$}\;
-          \nl\Alert<4-5>{\textsc{urb}.\Deliver $m$ \From $p_j$}\;
-          \nl$\Delivered_i \leftarrow \Delivered_i \cup \{m\}$
+      \Upon{\STA.\Deliver $\alert{\MSG(\Payload, \SN, i)}$ \From $p_k$ \At $p_j$}{
+        \nl \If{$\langle \SN, i\rangle \notin \Delivered_j$}{
+          \nl \Alert<4-5,9>{\STA.\Broadcast $\alert{\MSG(\Payload, \SN, i)}$}\\
+          \nl \Trigger \Alert<4-5,9>{\URB.\Deliver $\Payload$ \From $p_i$}\\
+          \nl $\Delivered_j \leftarrow \Delivered_j \cup \{\langle \SN, i\rangle\}$
         }
       }
     \end{algorithm}
   }
 
-  \obExampleBlock<-3>[anchor=north]{Exemples d'exécution}{}
+  \obExampleBlock<-3>[anchor=north, y=-9mm]{Exemples d'exécution}{}
   
-  \ob<1>[y=-25mm]{
+  \ob<1>[y=-30mm]{
     \begin{tikzpicture}[y=8mm]
       \draw[process] (0,2) node[left]{$p_1$} to (10,2);
       \draw[process] (0,1) node[left]{$p_2$} to (10,1);
@@ -54,7 +64,7 @@
     \end{tikzpicture}
   }
 
-  \ob<2>[y=-25mm]{
+  \ob<2>[y=-30mm]{
     \begin{tikzpicture}[y=8mm]
       \draw[crashed] (0,2) node[left]{$p_1$} to (2.5,2);
       \draw[process] (0,1) node[left]{$p_2$} to (10,1);
@@ -75,7 +85,7 @@
     \end{tikzpicture}
   }
 
-  \ob<3>[y=-25mm]{
+  \ob<3>[y=-30mm]{
     \begin{tikzpicture}[y=8mm]
       \draw[crashed] (0,2) node[left]{$p_1$} to (2.5,2);
       \draw[crashed] (0,1) node[left]{$p_2$} to (4.5,1);
@@ -93,63 +103,84 @@
     \end{tikzpicture}
   }
 
-  \obBlock<4>[anchor=north]{Démonstration : URB-Validité}{
+  \obBlock<4>[anchor=north, y=-9mm]{Démonstration : Validité}{
+    \vspace{-2mm}
     \begin{center}
-      \structure{Si $p_i$ \textsc{urb}.\Deliver $m$ de $p_j$, $p_j$ a \textsc{urb}.\Broadcast $m$}
+      \structure{Si $p_j$ délivre $m$ de $p_i$, $p_i$ a diffusé $m$}
     \end{center}
+    \vspace{-2mm}
     \begin{description}[STA-Terminaison :]
-    \item[Ligne 4 :] $p_i$ \textsc{sta}.\Deliver $\textsc{msg}(m, j)$ de $p_k$
-    \item[STA-Validité :] $p_k$ \textsc{sta}.\Broadcast $\textsc{msg}(m, j)$
-    \item[HB bien-fondé :] il y a un premier \textsc{sta}.\Broadcast $\textsc{msg}(m, j)$
-    \item[Lignes 1 et 3 :] ce premier diffuseur est $p_j$ qui a donc \textsc{urb}.\Broadcast $m$
+    \item[Ligne 5 :] $p_j$ a délivré $\alert{\MSG(\Payload, \SN, i)}$ de $p_k$
+    \item[Validité :] $p_k$ a diffusé $\alert{\MSG(\Payload, \SN, i)}$
+    \item[HB bien-fondé :] il y a une première diffusion de $\alert{\MSG(\Payload, \SN, i)}$
+    \item[Lignes 1 et 4 :] ce premier diffuseur est $p_i$
     \end{description}
   }
 
-  \obBlock<5>[anchor=north]{Démonstration : URB-Intégrité}{
+  \obBlock<5>[anchor=north, y=-9mm]{Démonstration : Intégrité}{
+    \vspace{-2mm}
     \begin{center}
-      \structure{$p_i$ \textsc{urb}.\Deliver $m$ au plus une fois}
+      \structure{Un processus $p_j$ délivre un message $m$ au plus une fois}
     \end{center}
+    \vspace{-2mm}
     \begin{description}[STA-Terminaison :]
-    \item[Invariant :] $\Delivered_i$ croissant selon $\subseteq$
-    \item[Ligne 2 :] avant livraison,  $m\notin\Delivered_i$
-    \item[Ligne 5 :] après livraison, $m\in\Delivered_i$
+    \item[Invariant :] $\Delivered_j$ croissant selon $\subseteq$
+    \item[Ligne 3 :] avant livraison,  $\langle \SN, i\rangle\notin\Delivered_j$
+    \item[Ligne 6 :] après livraison, $\langle \SN, i\rangle\in\Delivered_j$
     \end{description}
   }
 
-  \obBlock<6>[anchor=north]{Démonstration : URB-Terminaison}{
+  \obBlock<6>[anchor=north, y=-9mm]{Démonstration : Terminaison}{
+    \vspace{-2mm}
     \begin{center}
-      \structure{Si un correct $p_i$ \textsc{urb}.\Broadcast $m$, $p_i$ \textsc{urb}.\Deliver $m$}
+      \structure{Tout appel de \Broadcast par un correct se termine}
     \end{center}
+    \vspace{-2mm}
     \begin{description}[STA-Terminaison :]
-    \item[Ligne 1 :] $p_i$ \textsc{sta}.\Broadcast $\textsc{msg}(m, i)$
-    \item[Fiabilité :] $p_i$ \textsc{sta}.\Deliver $\textsc{msg}(m, i)$
-    \item[HB bien-fondé :] il y a un premier \textsc{sta}.\Deliver $\textsc{msg}(m, i)$ par $p_i$
-    \item[Lignes 2-5 :] $p_i$ \textsc{urb}.\Deliver $m$
+    \item[Ligne 1 :] Par terminaison de \textsc{sta}.\Broadcast
     \end{description}
   }
 
-  \obBlock<7>[anchor=north]{Démonstration : URB-Fiabilité}{
+  \obBlock<7>[anchor=north, y=-9mm]{Démonstration : Complétion}{
+    \vspace{-3mm}
     \begin{center}
-      \structure{Si $p_i$ \textsc{urb}.\Deliver $m$, tous les corrects $p_k$ \textsc{urb}.\Deliver $m$}
+      \structure{Si un correct diffuse $m$, tous les corrects délivrent $m$}
     \end{center}
+    \vspace{-2mm}
     \begin{description}[STA-Terminaison :]
-    \item[Lignes 3 et 4 :] $p_i$ \textsc{sta}.\Broadcast $\textsc{msg}(m, j)$
-    \item[Fiabilité :] $p_k$ \textsc{sta}.\Deliver $\textsc{msg}(m, j)$
-    \item[HB bien-fondé :] il y a un premier \textsc{sta}.\Deliver $\textsc{msg}(m, j)$ par $p_k$
-    \item[Lignes 2-5 :] $p_k$ \textsc{urb}.\Deliver $m$
+    \item[Ligne 1 :] $p_i$ diffuse $\textsc{msg}(\mathit{payload}, \mathit{sn}, i)$
+    \item[Fiabilité :] $p_k$ délivre $\textsc{msg}(\mathit{payload}, \mathit{sn}, i)$
+    \item[HB bien-fondé :] $p_k$ a une première livraison de $\textsc{msg}(\mathit{payload}, \mathit{sn}, i)$
+    \item[Lignes 3 et 5 :] $p_k$ délivre $m$
     \end{description}
   }
 
-  \obAlertBlock<8>[anchor=north]{Peut-on inverser les lignes 3 et 4 ?}{
-    \alert{URB-fiabilité :} Si $p_i$ \textsc{urb}.\Deliver $m$, tous les corrects \textsc{urb}.\Deliver $m$.
+  \obBlock<8>[anchor=north, y=-9mm]{Démonstration : Uniformité}{
+    \vspace{-2mm}
+    \begin{center}
+      \structure{Si un processus délivre $m$, tous les corrects délivrent $m$}
+    \end{center}
+    \vspace{-2mm}
+    \begin{description}[STA-Terminaison :]
+    \item[Lignes 4 et 5 :] $p_i$ diffuse $\textsc{msg}(\mathit{payload}, \mathit{sn}, j)$
+    \item[Fiabilité :] $p_j$ délivre $\textsc{msg}(\mathit{payload}, \mathit{sn}, j)$
+    \item[HB bien-fondé :] $p_j$ a une première livraison de $\textsc{msg}(\mathit{payload}, \mathit{sn}, i)$
+    \item[Lignes 3 et 5 :] $p_j$ délivre $m$
+    \end{description}
   }
 
-  \onBlock<9>[anchor=north]{Spécification de Reliable Broadcast}{
-    \begin{description}[RB-Terminaison :]
-    \item[RB-Validité :]    Si $p_i$ \textsc{rb}.\Deliver $m$ de $p_j$, $p_j$ a \textsc{rb}.\Broadcast $m$
-    \item[RB-Intégrité :]   $p_i$ \textsc{rb}.\Deliver $m$ au plus une fois
-    \item[RB-Terminaison :] Si un correct $p_i$ \textsc{rb}.\Broadcast $m$, $p_i$ \textsc{rb}.\Deliver $m$.
-    \item[\alert{RB-Fiabilité :}]   Si \alert{un correct} $p_i$ \textsc{rb}.\Deliver $m$, tous les corrects \textsc{rb}.\Deliver $m$.
+  \obAlertBlock<9>[anchor=north, y=-9mm]{Peut-on inverser les lignes 3 et 4 ?}{
+    \alert{Uniformité :} Si un processus délivre $m$, tous les corrects délivrent $m$
+  }
+
+  \onBlock<10>[anchor=north, y=-9mm]{Spécification de Reliable Broadcast (\textsc{rb}-broadcast)}{
+    \vspace{-2mm}
+    \begin{description}[Terminaison :]
+    \item[Validité :] Si $p_i$ délivre $m$ de $p_j$, $p_j$ a diffusé $m$
+    \item[Intégrité :] Un processus $p_i$ délivre $m$ au plus une fois
+    \item[Terminaison :] Tout appel de \Broadcast par un correct se termine
+    \item[Complétion :] Si un correct diffuse $m$, tous les corrects délivrent $m$
+    \item[\alert{Fiabilité} : ] Si un \alert{correct} délivre $m$, tous les corrects délivrent $m$
     \end{description}
   }
   

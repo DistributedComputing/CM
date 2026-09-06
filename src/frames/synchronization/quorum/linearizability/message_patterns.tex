@@ -11,14 +11,15 @@
 \SetKwFunction{Write}{write}
 \SetKwData{X}{x}
 \SetKwData{Y}{y}
+\SetKwBroadcast{STA}{sta}
 
 \begin{frame}{Motifs en messages et en mémoire}
 
-  \on[top]{
+  \on[top, text]{
     Deux processus $p_1$ et $p_2$ partagent de l'information de manière concurrente
   }
 
-  \onBlock[top=5mm]{Motifs en passage de messages}{}
+  \onBlock[top=5mm]{Motifs en passage de messages (\STA-broadcast)}{}
 
   \on[y=5mm, x=-38mm]{
     \begin{tikzpicture}[x=8mm, y=7mm]
@@ -40,7 +41,7 @@
 
       \draw[message, example]   (1,1) node[above left]{$m_1$} to[bend left=50]  (2,1);
       \draw[message, example]   (1,1)                         --                (2,0);
-      \draw[message, structure] (1,0) node[below left]{$m_2$} to[bend right=50] (3,0);
+      \draw[message, structure] (1,0) node[below left]{$m_2$} to[bend right=30] (3,0);
       \draw[message, structure] (1,0)                         --                (3,1);
 
       \draw (2,-1) node{MP2};
@@ -51,9 +52,9 @@
       \draw[process] (0,1) node[left]{$p_1$} to (4,1);
       \draw[process] (0,0) node[left]{$p_2$} to (4,0);
 
-      \draw[message, example]   (1,1) node[above left]{$m_1$} to[bend left=50]  (3,1);
+      \draw[message, example]   (1,1) node[above left]{$m_1$} to[bend left=30]  (3,1);
       \draw[message, example]   (1,1)                         --                (2,0);
-      \draw[message, structure] (1,0) node[below left]{$m_2$} to[bend right=50] (3,0);
+      \draw[message, structure] (1,0) node[below left]{$m_2$} to[bend right=30] (3,0);
       \draw[message, structure] (1,0)                         --                (2,1);
 
       \draw (2,-1) node{MP3};
@@ -61,7 +62,7 @@
   }
 
 
-  \onBlock<2>[y=-13mm]{Motifs en mémoire partagée}{}
+  \onBlock<2>[y=-13mm]{Motifs en mémoire partagée (registres atomiques \Read/\Write)}{}
 
   \on<2>[y=-29mm, x=-38mm]{
     \begin{tikzpicture}[x=8mm, y=7mm]

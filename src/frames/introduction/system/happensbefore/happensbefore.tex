@@ -7,21 +7,21 @@
 
 \begingroup
 
-\begin{frame}{La relation ``happened before'' (ordre causal)}
+\begin{frame}{La relation \og happened before \fg (ordre causal)}
 
   \begin{block}{Définition -- Happened before}
-    Soient $a$ et $a'$ deux pas. 
+
     \begin{itemize}
-    \item $a\hb a'$ si l'une des trois conditions s'applique :    
+    \item $\hb$ est la plus petite relation telle que, pour tous pas $a$ et $a'$, \structure{$a\hb a'$} si:
       \begin{itemize}
       \item \structure{Ordre de processus :} $a$ précède $a'$ dans l'ordre local d'un processus
       \item \structure{Ordre de messages :} $a$ est l'envoi et $a'$ la réception d'un même message
-      \item \structure{Transitivité :} $\exists a''~ a\hb a'' \land a'' \hb a'$
+      \item \structure{Transitivité :} $\exists a'',~ a\hb a'' \land a'' \hb a'$
       \end{itemize}
     \item $a$ et $a'$ sont \structure{concurrents} $(a || a')$ si $a\not\hb a'$ et $a'\not\hb a$.
     \item Une \structure{exécution causale} est une classe d'équivalence d'exécutions concrètes induisant le même ordre $\hb$.
     \end{itemize}
-    \alert{Attention :} $\hb$ est seulement un ordre \alert{partiel} !
+    \alert{Attention :} $\hb$ est seulement un ordre \alert{partiel} strict !
   \end{block}
 
   \begin{exampleblock}{Programme d'exemple : trois exécutions causales}
@@ -37,7 +37,7 @@
       };
       
       \node at (2,1) {
-        $\alert{s_1 \hb r_1} \quad \example{s_2 \hb r_2}$
+        $\alert{s_1} || \example{s_2} \quad \land \quad \alert{r_1} || \example{r_2}$
       };
 
       \node at (0,0) {
@@ -71,7 +71,6 @@
   \end{exampleblock}
   
 \end{frame}
-
 
 \endgroup
 \endinput

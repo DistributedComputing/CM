@@ -10,26 +10,44 @@
 \SetKwFunction{Leader}{leader}
 \SetKwFunction{Propose}{propose}
 \SetKwData{Decided}{decided}
+\SetKwBroadcast{RB}{rb}
+\SetKwMessage{Decide}{decide}
+\SetKwVariable{Val}{val}
 
 \begin{frame}[fragile]{Un algorithme centralisé}
 
-  \onBlock[top=-4mm]{Le consensus sans pannes}{
+  \onBlock[top=-4mm]{Définition -- Leader perpétuel}{
+
+    Une fonction $\Leader()$ qui retourne un (identifiant de) processus telle que:
+    \begin{itemize}
+    \item $\Leader()$ retourne \alert{toujours le même} processus à tous les processus
+    \item $\Leader()$ retourne un processus \alert{correct}
+    \end{itemize}
+
+    \vspace{1mm}
     \begin{algorithm}[H]
-      \LVariables{}{$\Decided_i \leftarrow \bot$;}
-      \Method{$\Propose(v)$}{
-        \If{\Alert{$i = \Leader()$}}{
-          \textsc{rb}.\Broadcast $\textsc{decide}(v)$;
+      \lLVariables{\At $p_i$}{$\Decided_i \leftarrow \bot$}
+      \Method{$\Propose(\Val)$ \At $p_i$}{
+        \nl \If{\Alert{$i = \Leader()$}}{
+          \nl \RB.\Broadcast \alert{$\Decide(\Val)$}
         }
-        \Wait $\Decided_i \neq \bot$;\\
-        \Return $\Decided_i$;\\
+        \nl \Wait $\Decided_i \neq \bot$\\
+        \nl \Return $\Decided_i$
       }
-      \When{\textsc{rb}.\Deliver $\textsc{decide}(v)$ \From $p_{\Leader}$}{
-        $\Decided_i \leftarrow v$;
+      \Upon{\RB.\Deliver \alert{$\Decide(\Val)$} \From $p_i$ \At $p_j$}{
+        \nl $\Decided_j \leftarrow \Val$
       }
     \end{algorithm}
   }
 
-  \on[x=30mm, y=15mm]{
+  \onAlertBlock[bottom=-2mm]{Problème -- Le leader perpétuel n'est pas réaliste}{
+    \begin{itemize}
+    \item Si $t \ge 1$, impossible à implémenter même en synchrone !
+    \item  Comment savoir que $\Leader()$ sera toujours \alert{correct} ?
+    \end{itemize}
+  }
+
+  \on[x=30mm]{
     \begin{tikzpicture}
       \draw[process] (0,2) node[left]{$p_1$} to (5,2); 
       \draw[process] (0,1) node[left]{$p_2$} to (5,1); 
@@ -43,17 +61,6 @@
       \draw[alert,   message]     (p1.west) to[bend left=30] (p3.east);
     \end{tikzpicture}
   }
-
-  \onBlock[anchor=north, y=-7mm]{Définition -- Leader perpétuel}{
-    Une fonction $\Leader()$ qui retourne un (identifiant de) processus telle que:
-    \begin{itemize}
-    \item $\Leader()$ retourne \alert{toujours le même} processus à tous les processus
-    \item $\Leader()$ retourne un processus \alert{correct}
-    \end{itemize}
-    \alert{Problème :} Impossible de savoir que $\Leader()$ est \alert{correct} !
-  }
-
-  \footnoteref{E. Chang, R. Roberts. \textit{An improved algorithm for decentralized extrema-finding in circular configurations of processes.} CACM (1979)}
   
 \end{frame}
 

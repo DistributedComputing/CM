@@ -8,7 +8,8 @@
 \begingroup
 
 \SetKwData{Done}{done}
-\SetKwData{X}{value}
+\SetKwData{Value}{value}
+\SetKwMessage{MSG}{\alert{msg}}
 
 \begin{frame}{Un premier exemple}
 
@@ -16,21 +17,21 @@
   
   \on[y=-3mm]{
     \begin{algorithm}[H]
-      \LVariables{}{
-        $\Done_i \leftarrow \False$\;
-        $\X_i \leftarrow 0$\;
+      \LVariables{\At $p_2$}{
+        $\Done_2 \leftarrow \False$\\
+        $\Value_2 \leftarrow 0$
       }
       \Process{$p_1$}{
-        \Alert{\Send $m$ \To $p_2$}\;
+        \nl \Alertb<2>{\Send $\MSG$ \To $p_2$}
       }
       \Process{$p_2$}{
-        \Example{$\X_2 \leftarrow 1$}\;
-        \Wait{ \Structure{$\Done_2$}}\;
-        $\Print(\X_2)$\;
+        \nl \Exampleb<2>{$\Value_2 \leftarrow 1$}\\
+        \nl \Wait \Structureb<2>{$\Done_2$}\\
+        \nl $\Print(\Value_2)$
       }
-      \When{$p_2$ \Receives $m$ \From $p_1$}{
-        \Alert{$\X_2 \leftarrow 2$}\; 
-        \Structure{$\Done_2 \leftarrow \True$}\;
+      \Upon{\Receive $\MSG$ \From $p_1$ \At $p_2$}{
+        \nl \Alertb<2>{$\Value_2 \leftarrow 2$}\\ 
+        \nl \Structureb<2>{$\Done_2 \leftarrow \True$}
       }
     \end{algorithm}
   }
@@ -40,11 +41,11 @@
       \draw[process] (0,1) node[left]{$p_1$} to (5,1);
       \draw[process] (0,0) node[left]{$p_2$} to (5,0);
       \scriptsize
-      \node[example, operation] (p2) at (3.5,0) {$\X_2 \leftarrow 1$};
+      \node[example, operation] (p2) at (3.5,0) {$\Value_2 \leftarrow 1$};
       \begin{scope}[alert]
         \node[event]     (send-m) at (.5,1) {};
-        \node[operation] (rece-m) at (1.5,0) {$\X_2 \leftarrow 2$};
-        \path[message]   (send-m.center) edge node{$m$} (rece-m.west);
+        \node[operation] (rece-m) at (1.5,0) {$\Value_2 \leftarrow 2$};
+        \path[message]   (send-m.center) edge node{\MSG} (rece-m.west);
       \end{scope}
     \end{tikzpicture}
   }
@@ -54,11 +55,11 @@
       \draw[process] (0,1) node[left]{$p_1$} to (1,1);
       \draw[process] (0,0) node[left]{$p_2$} to (5,0);
       \scriptsize
-      \node[example, operation, minimum height=5mm] (p2) at (2.5,0) {$\X_2 \leftarrow 1$ \hspace{2cm}};
+      \node[example, operation, minimum height=5mm] (p2) at (2.5,0) {$\Value_2 \leftarrow 1$ \hspace{2cm}};
       \begin{scope}[alert]
         \node[event]     (send-m) at (.5,1) {};
-        \node[operation] (rece-m) at (3,0) {$\X_2 \leftarrow 2$};
-        \path[message]   (send-m.center) edge node{$m$} (rece-m.west);
+        \node[operation] (rece-m) at (3,0) {$\Value_2 \leftarrow 2$};
+        \path[message]   (send-m.center) edge node{\MSG} (rece-m.west);
       \end{scope}
     \end{tikzpicture}
   }
@@ -68,7 +69,7 @@
       \draw[crashed] (0,1) node[left]{$p_1$} to (1,1);
       \draw[process] (0,0) node[left]{$p_2$} to (5,0);
       \scriptsize
-      \node[example,   operation, minimum height=5mm] (p2) at (2.5,0) {$\X_2 \leftarrow 1$ \hspace{2.2cm}};
+      \node[example,   operation, minimum height=5mm] (p2) at (2.5,0) {$\Value_2 \leftarrow 1$ \hspace{2.2cm}};
       \node[structure, operation, minimum height=4mm] (wu) at (3.2,0) {\Wait \False...};
     \end{tikzpicture}
   }

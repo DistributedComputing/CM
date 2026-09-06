@@ -12,17 +12,16 @@
 
 \begin{frame}{Le théorème CAP}
 
-  \begin{block}{Conjecture -- Brewer}
+  \onBlock[top=-4mm]{Conjecture -- Brewer} {
     Il est impossible d'implémenter une base de données distribuée vérifiant :
     \begin{description}[Partition tolerance :]
     \item[Consistency :] toutes les répliques voient les \alert{mêmes données}
     \item[Availability :] chaque requête \alert{finit par} recevoir une réponse
     \item[Partition tolerance :] le système fonctionne même si des \alert{partitions du réseau} ne peuvent plus communiquer
     \end{description}
-  \end{block}
+  }
 
-  \uncover<2->{
-    \begin{block}{Théorème -- Attiya, Bar Noy, Dolev ; Gilbert, Lynch}
+  \onBlock<2->[y=-12mm]{Théorème -- Attiya, Bar Noy, Dolev ; Gilbert, Lynch} {
       Dans le modèle par passage de message asynchrone avec crash, \\
       il est impossible d'implémenter une mémoire lire/écrire :
       \begin{description}[Partition tolerance :]
@@ -30,7 +29,6 @@
       \item[Availability :] dont les méthodes \Read et \Write \alert{terminent}
       \item[Partition tolerance :] même si \alert{$t\ge \frac{n}{2}$} processus tombent en panne
       \end{description}
-    \end{block}
   }
 
   \only<2->{

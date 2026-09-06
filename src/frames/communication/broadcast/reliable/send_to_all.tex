@@ -7,40 +7,50 @@
 
 \begingroup
 
-\SetKwFunction{Insert}{insert}
-\SetKwFunction{Read}{read}
-\SetKwData{State}{state}
+\SetKwMessage{MSG}{msg}
+\SetKwBroadcast{STA}{sta}
+\SetKwVariable{Payload}{payload}
 
-\begin{frame}{Diffusion de message}
+\begin{frame}{Notion de diffusion de message}
 
-  \begin{block}{Notion de diffusion de message}
-    Quand $p_i$ veut exécuter une commande, il averti toutes les répliques en \structure{diffusant} la commande.
+  \on[text, top=-2mm]{
+    Quand $p_i$ veut exécuter une commande, la \structure{diffuse} à tout le système
     \begin{algorithm}[H]
       \Interface{\textsc{broadcast}}{
-        \lMethod{\Broadcast$(m)$}{\tcp*[f]{Envoie $m$ à tous les processus}}
-        \lEvent{\Deliver $m$ \From $p_j$}{\tcp*[f]{Reçoit le message $m$ de la part de $p_j$}}
-        \Method{\SBroadcast$(m)$}{
-          \Broadcast$(m)$;
-          \Wait{$m$ delivered locally}\;
+        \lMethod{$\Broadcast(\Payload)$}{\tcp*[f]{Crée un message $m$ et le diffuse}}
+        \lEvent{\Deliver $\Payload$ \From $p_j$}{\tcp*[f]{Livraison de $m$ de la part de $p_j$}}
+        \Method({\tcp*[f]{Variante synchronisée}}){$\SBroadcast(\Payload)$}{
+          \nl $\Broadcast(\Payload)$\\
+          \nl \Wait local delivery of the corresponding message
         }
       }
     \end{algorithm}
-  \end{block}
+  }
 
-  \begin{block}{L'implémentation la plus simple : Send-To-All}
+  \onBlock<2->[bottom=-3mm]{L'implémentation la plus simple : Send-To-All}{
+    \vspace{-1mm}
     \begin{algorithm}[H]
-      \Algo{\textsc{sta}}{
-        \Method{\textsc{sta}.\Broadcast$(m)$}{
-          \For{$j$ \From $1$ \To $n$}{
-            \Send $\textsc{m}(m)$ \To $p_j$\;
-          }
-        }
-        \When{\Receive $\textsc{m}(m)$ \From $p_j$}{
-          \textsc{sta}.\Deliver $m$ \From $p_j$\;
+      \Method{$\STA.\Broadcast(\Payload)$ \At $p_i$}{
+        \nl \lFor{$j$ \From $1$ \To $n$}{
+          \Send $\alert{\MSG(\Payload)}$ \To $p_j$
         }
       }
+      \Upon{\Receive $\alert{\MSG(\Payload)}$ \From $p_i$ \At $p_j$}{
+        \nl \Trigger \STA.\Deliver $\Payload$ \From $p_i$
+      }
     \end{algorithm}
-  \end{block}
+
+    \alert{Quelles propriétés sont vérifiées par \STA-broadcast ?}
+
+    \uncover<3->{
+      \begin{description}
+      \item[Validité :] Si $p_i$ délivre $m$ de $p_j$, $p_j$ a diffusé $m$
+      \item[Intégrité :] Un processus $p_i$ délivre $m$ au plus une fois
+      \item[Terminaison :] Tout appel de \Broadcast par un correct se termine
+      \item[Complétion :] Si un correct diffuse $m$, tous les corrects délivrent $m$
+      \end{description}
+    }
+  }
   
 \end{frame}
 

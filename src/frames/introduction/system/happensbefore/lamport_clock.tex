@@ -9,30 +9,28 @@
 
 \SetKwFunction{Time}{time}
 \SetKwData{TS}{ts}
+\SetKwMessage{Stamped}{stamped}
 
 \begin{frame}{Horloge logique de Lamport}
   
   \begin{algorithm}[H]
-    \lLVariables{}{
+    \lLVariables{\At $p_i$}{
       $\TS_i \leftarrow 0$\tcp*[f]{date scalaire locale (entier)}
     }
-    \When{dating an internal step $a$}{
-      $\TS_i \leftarrow \TS_i + 1$
-      \tcp*[r]{$\Time(a) = \TS_i$}
+    \When{dating an internal step $a$ \At $p_i$}{
+      \nl $\TS_i \leftarrow \TS_i + 1$ \tcp*[r]{$\Time(a) = \TS_i$}
     }
-    \When{sending $m$ \To $p_j$}{
-      $\TS_i \leftarrow \TS_i + 1$\;
-      \Send $\textsc{stamped}(m, \TS_i)$ \To $p_j$
-      \tcp*[r]{$\Time(s_m) = \TS_i$}
+    \When{$p_i$ sends a message $m$ \To $p_j$}{
+      \nl $\TS_i \leftarrow \TS_i + 1$\\
+      \nl \Send $\alert{\Stamped(m, \TS_i)}$ \To $p_j$;\tcp*[r]{$\Time(s_m) = \TS_i$}
     }
-    \When{\Receive $\textsc{stamped}(m, t_j)$ \From $p_j$}{
-      $\TS_i \leftarrow \max(\TS_i, t_j) + 1$\;
-      \KWStyle{receive} $m$
-      \tcp*[r]{$\Time(r_m) = \TS_i > t_j$}
+    \Upon{\Receive $\alert{\Stamped(m, t)}$ \From $p_j$ \At $p_i$}{
+      \nl $\TS_i \leftarrow \max(\TS_i, t) + 1$\\
+      \nl \Trigger \Receive $m$ \tcp*[r]{$\Time(r_m) = \TS_i > t$}
     }
   \end{algorithm}
 
-  \begin{exampleblock}{Exemple d'exécution \only<2>{: zones temporelles}\only<3>{: exécution indistinguable}}
+  \begin{exampleblock}{Exemple d'exécution \only<2>{: zones temporelles}\onlyb<3>{: exécution indistinguable}}
     \only<-2>{
       \begin{tikzpicture}[y=8mm, x=12mm, shorten >=2pt]
         \draw[process] (0,2) node[left]{$p_1$} to (8,2);
@@ -113,7 +111,7 @@
         \draw    (3  ,0) node[alert] (33) {$\bullet$} node[below]{3};
         \draw    (4  ,0) node[alert] (43) {$\bullet$} node[below]{4};
         \draw    (5  ,0) node[alert] (53) {$\bullet$} node[below]{5};
-        \node at (5  ,0)             (63) {};
+        \node at (6  ,0)             (63) {};
         \draw    (7  ,0) node[alert] (73) {$\bullet$} node[below]{7};
 
         \path[alert, message] (21.center) edge            (52.center);

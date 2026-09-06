@@ -17,16 +17,19 @@
   },
 }
 
+\SetKwMessage{MSG}{msg}
+
+
 \begin{frame}{Un deuxième exemple}
 
   \on[top, left=.5\textwidth]{
     \begin{algorithm}[H]
-      \lProcess{$p_1$}{\Alert{\Send $m_1$ \To $p_2$}}
+      \lProcess{$p_1$}{\Alert{\Send $\MSG_1$ \To $p_2$}}
     \end{algorithm}
   }
   \on[top, right=.5\textwidth]{
     \begin{algorithm}[H]
-      \lProcess{$p_2$}{\Example{\Send $m_2$ \To $p_1$}}
+      \lProcess{$p_2$}{\Example{\Send $\MSG_2$ \To $p_1$}}
     \end{algorithm}
   }
   
@@ -42,23 +45,22 @@
       \state[structure ob=<{3-4,8}>]          (32) at (2,1) {};
       \state[structure ob=<{3-8}>, accepting] (33) at (2,0) {};
 
-      \path[alert]   (11) edge node[left] {$p_1$ : \Send $m_1$}    (12);
-      \path[alert]   (12) edge node[left] {$p_2$ : \Receive $m_1$} (13);
-      \path[alert]   (21) edge node[left] {$p_1$ : \Send $m_1$}    (22);
-      \path[alert]   (22) edge node[right]{$p_2$ : \Receive $m_1$} (23);
-      \path[alert]   (31) edge node[right]{$p_1$ : \Send $m_1$}    (32);
-      \path[alert]   (32) edge node[right]{$p_2$ : \Receive $m_1$} (33);
-      \path[example] (11) edge node[above]{$p_2$ : \Send $m_2$}    (21);
-      \path[example] (21) edge node[above]{$p_1$ : \Receive $m_2$} (31);
-      \path[example] (12) edge node[below]{$p_2$ : \Send $m_2$}    (22);
-      \path[example] (22) edge node[above]{$p_1$ : \Receive $m_2$} (32);
-      \path[example] (13) edge node[below]{$p_2$ : \Send $m_2$}    (23);
-      \path[example] (23) edge node[below]{$p_1$ : \Receive $m_2$} (33);
+      \path[alert]   (11) edge node[left] {$p_1$ : \Send $\MSG_1$}    (12);
+      \path[alert]   (12) edge node[left] {$p_2$ : \Receive $\MSG_1$} (13);
+      \path[alert]   (21) edge node[left] {$p_1$ : \Send $\MSG_1$}    (22);
+      \path[alert]   (22) edge node[right]{$p_2$ : \Receive $\MSG_1$} (23);
+      \path[alert]   (31) edge node[right]{$p_1$ : \Send $\MSG_1$}    (32);
+      \path[alert]   (32) edge node[right]{$p_2$ : \Receive $\MSG_1$} (33);
+      \path[example] (11) edge node[above]{$p_2$ : \Send $\MSG_2$}    (21);
+      \path[example] (21) edge node[above]{$p_1$ : \Receive $\MSG_2$} (31);
+      \path[example] (12) edge node[below]{$p_2$ : \Send $\MSG_2$}    (22);
+      \path[example] (22) edge node[above]{$p_1$ : \Receive $\MSG_2$} (32);
+      \path[example] (13) edge node[below]{$p_2$ : \Send $\MSG_2$}    (23);
+      \path[example] (23) edge node[below]{$p_1$ : \Receive $\MSG_2$} (33);
     \end{tikzpicture}
   }
 
-  \onBlock<3->[bottom]{6 exécutions concrètes possibles}{
-    \centering
+  \onBlock<3->[bottom]{6 exécutions concrètes possibles (sans crash)}{
     \begin{tikzpicture}[y=13mm, anchor=center, x=36mm]
 
       \uncover<3-> {

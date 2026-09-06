@@ -55,6 +55,7 @@ DALL·E output is not subject to any additional copyright or usage restrictions 
 - `Rue.JPG`
 - `Salon.jpg`
 - `Seine.jpg`
+- `Bakery.jpg`
 
 ### Third-party trademarks (logos)
 

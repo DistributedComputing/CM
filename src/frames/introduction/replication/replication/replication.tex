@@ -26,7 +26,7 @@
 
   \item<3->\vspace{1mm} \structure{Mode} \hfill\alert{réplication active car plus sûre}
     \begin{description}[mono-cloud :]
-    \item[active :] toutes les répliques traitent les requêtes
+    \item[active :] toutes les répliques traitent des requêtes
     \item[passive :] un \structure{primaire} traite, des \structure{secondaires} recopient
     \end{description}
 
@@ -36,7 +36,7 @@
     \item[partielle :] données découpées en fragments (shards)
     \end{description}
 
-  \item<5->\vspace{1mm} \structure{Cohérence}  \hfill\alert{progression par étapes : faible puis forte}
+  \item<5->\vspace{1mm} \structure{Cohérence}  \hfill\alert{surtout forte en CM}
     \begin{description}[mono-cloud :]
     \item[forte :] sûreté équivalente à un serveur unique
     \item[faible :] convergence, vues temporaires divergentes

@@ -7,53 +7,23 @@
 
 \begingroup
 
+
+
 \begin{frame}{Uniform Reliable Broadcast}
 
-  \begin{block}{URB-Validité}
-    \begin{center}
-      \vspace{-3mm}
-      \structure{Si $p_i$ \textsc{urb}.\Deliver $m$ de $p_j$, $p_j$ a \textsc{urb}.\Broadcast $m$}
-      \vspace{-3mm}
-    \end{center}
-    \begin{itemize}
-    \item Vérifié par \textsc{sta}, hérité de \Send/\Receive
-    \end{itemize}
+  \begin{block}{Notion de diffusion de message}
+    Quand $p_i$ veut exécuter une commande, il averti toutes les répliques en \structure{diffusant} la commande.
+    \begin{algorithm}[H]
+      \Interface{\textsc{broadcast}}{
+        \lMethod{\Broadcast$(m)$}{\tcp*[f]{Envoie $m$ à tous les processus}}
+        \lEvent{\Deliver $m$ \From $p_j$}{\tcp*[f]{Reçoit le message $m$ de la part de $p_j$}}
+        \Method{\SBroadcast$(m)$}{
+          \Broadcast$(m)$;
+          \Wait{$m$ delivered locally}\;
+        }
+      }
+    \end{algorithm}
   \end{block}
-
-  \begin{block}{URB-Intégrité}
-    \begin{center}
-      \vspace{-3mm}
-      \structure{$p_i$ \textsc{urb}.\Deliver $m$ au plus une fois}
-      \vspace{-3mm}
-    \end{center}
-    \begin{itemize}
-    \item Vérifié par \textsc{sta}, hérité de \Send/\Receive
-    \end{itemize}
-  \end{block}
-
-  \begin{block}{URB-Terminaison}
-    \begin{center}
-      \vspace{-3mm}
-      \structure{Si un correct $p_i$ \textsc{urb}.\Broadcast $m$, $p_i$ \textsc{urb}.\Deliver $m$}
-      \vspace{-3mm}
-    \end{center}
-    \begin{itemize}
-    \item Vérifié par \textsc{sta}, hérité de \Send/\Receive
-    \end{itemize}
-  \end{block}
-
-  \begin{alertblock}{URB-Fiabilité}
-    \begin{center}
-      \vspace{-3mm}
-      \alert{Si $p_i$ \textsc{urb}.\Deliver $m$, tous les corrects \textsc{urb}.\Deliver $m$}
-      \vspace{-3mm}
-    \end{center}
-    \begin{itemize}
-    \item Non vérifié par \textsc{sta}
-    \end{itemize}
-  \end{alertblock}
-
-  \footnoteref{K. P. Birman and T. A. Joseph. \textit{Reliable Communication in the Presence of Failures.} ACM TOCS (1987)}
   
 \end{frame}
 

@@ -14,11 +14,10 @@
 \begin{frame}{Abstraction du serveur Web}
 
   \begin{block}{Définition -- Machine à états}
-    \vspace{3mm}
     Une \structure{machine à états} est un sextuplet \alert{$\langle C, R, Q, q_0, \tau, \rho \rangle$} tel que :
-    \begin{description}[xxxxx]
+    \begin{description}[xxx]
     \item[\alert{$C$}] : ensemble de \structure{commandes} 
-      \hfill {\footnotesize \example{$C =\{\Acheter(x), \Vendre(x), \Consulter \mid x \in X\}$}}
+      \hfill {\footnotesize \example{$C =\{\Acheter(x), \Vendre(x), \Consulter() \mid x \in X\}$}}
     \item[\alert{$R$}] : ensemble de \structure{réponses} possibles
       \hfill {\footnotesize \example{$R = \mathcal{P}(X) \cup \{\cmark, \xmark\}$}}
     \item[\alert{$Q$}] : ensemble d'\structure{états} (fini ou infini)
@@ -28,7 +27,7 @@
     \item[\alert{$\tau$}] $: Q \times C \rightarrow Q$ : la \structure{fonction de transition}
       \hfill {\footnotesize\example{$\tau(q, \Acheter(x)) = q \setminus \{x\}$, ...}}
     \item[\alert{$\rho$}] $: Q \times C \rightarrow R$ : la \structure{fonction de réponse}
-      \hfill {\footnotesize\example{$\rho(q, \Consulter) = q$, ...}}
+      \hfill {\footnotesize\example{$\rho(q, \Consulter()) = q$, ...}}
     \end{description}
   \end{block}
 
@@ -36,12 +35,12 @@
     \begin{itemize}
     \item Une commande de $C$ est formée d'une \structure{méthode} et d'\structure{arguments}
     \item Les ensembles $C$, $R$ et $Q$ peuvent être finis ou infinis
-    \item On appelle \structure{opération} un couple $o = \langle c, r\rangle \in C \times R$, noté $c \rightarrow r$
+    \item Une \structure{opération} est étiquetée par un couple $o = \langle c, r\rangle \in C \times R$, noté $\alert{c \rightarrow r}$
     \item Les machines à états sont complètes et déterministes
     \end{itemize}
   \end{block}
   
-  \on[y=-15mm, x=00mm]{
+  \on[y=-12mm, x=5mm]{
     \begin{tikzpicture}[automaton, x=25mm]
       \state            (q)  at (0,0) {$q$}; 
       \state[rectangle] (q1) at (1,0) {$\tau(q, c)$}; 

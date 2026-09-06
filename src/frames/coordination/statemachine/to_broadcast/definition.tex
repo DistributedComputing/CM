@@ -7,35 +7,31 @@
 
 \begingroup
 
+\SetKwBroadcast{TO}{to}
+\SetKwBroadcast{RBTO}{rb-to}
+\SetKwBroadcast{TOCB}{to-cb}
+
 \begin{frame}{Total-Order Broadcast (Atomic Broadcast)}
 
-  \onBlock[top=-5mm]{Propriétés héritées de \textsc{sta}.\Broadcast}{
-    \vspace{-1mm}
-    \begin{description}[Total-ordering :]
-    \item[TO-Validité :]    Si $p_i$ \textsc{to}.\Deliver $m$ de $p_j$, $p_j$ a \textsc{to}.\Broadcast $m$
-    \item[TO-Intégrité :]   $p_i$ \textsc{to}.\Deliver $m$ au plus une fois
-    \item[TO-Terminaison :] \textsc{to}.\Broadcast par correct $\Rightarrow$ \textsc{to}.\Deliver par corrects.
+  \onBlock[top=-4mm]{Propriétés de \TO-broadcast}{
+    \begin{description}
+    \item[Validité :]\vspace{-1mm} Si $p_i$ délivre $m$ de $p_j$, $p_j$ a diffusé $m$
+    \item[Intégrité :] Un processus $p_i$ délivre $m$ au plus une fois
+    \item[Terminaison :] Tout appel de \Broadcast par un correct se termine
+    \item[Complétion :] Si un correct diffuse $m$, tous les corrects délivrent $m$
+    \item[\alert{Ordonnancement total :}] Si un processus délivre $m$ avant $m'$, \\aucun processus ne délivre $m'$ avant $m$.
     \end{description}
   }
 
-  \onAlertBlock[y=8mm]{Nouvelle propriété d'ordre}{
-    \vspace{-1mm}
-    \begin{description}[Total-ordering :]
-    \item[Total-ordering :] Si un processus \textsc{to}.\Deliver $m$ avant $m'$, \\aucun processus ne \textsc{to}.\Deliver $m'$ avant $m$. 
-    \end{description}
-  }
-
-  \onBlock[bottom=7mm]{Remarques}{
-    \vspace{-1mm}
+  \onBlock[bottom=5mm]{Remarques}{
     \begin{itemize}
-    \item Total-Ordering $\Rightarrow$ Causal-Ordering $\Rightarrow$ FIFO-Ordering
-    \item Total-Ordering $\Rightarrow$ Mutual-Ordering 
-    \item \structure{Ajout de propriétés :} \textsc{rb-to}.\Broadcast, \textsc{urb-to}.\Broadcast
+    \item \vspace{-1mm} Total-Ordering $\Rightarrow$ Mutual-Ordering 
+    \item \structure{Ajout de propriétés :} \RBTO-broadcast, \TOCB-broadcast
     \end{itemize}
   }
 
-  \on[y=-10mm, x=10mm]{
-    \begin{tikzpicture}[y=3mm]
+  \on[y=-13mm, x=10mm]{
+    \begin{tikzpicture}[y=5mm]
       \draw[process]   (0,3) node[left]{$p_1$} to (6,3);
       \draw[process]   (0,2) node[left]{$p_2$} to (6,2);
       \draw[process]   (0,1) node[left]{$p_3$} to (6,1);
@@ -59,7 +55,7 @@
   }
   
   \footnoteref{K. P. Birman, T. A. Joseph. \textit{Reliable Communication in the Presence of Failures}. TOCS (1987)}
-  \footnoteref{X. Défago, A. Schiper, P. Urbán. \textit{Total Order Broadcast and Multicast Algorithms: Taxonomy and Survey}. ACM CSUR (2004)}
+  \footnoteref{X. Défago, et al. \textit{Total Order Broadcast and Multicast Algorithms: Taxonomy and Survey}. ACM CSUR (2004)}
   
 \end{frame}
 

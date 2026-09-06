@@ -7,44 +7,57 @@
 
 \begingroup
 
+\SetKwBroadcast{STA}{sta}
+\SetKwBroadcast{RB}{rb}
+\SetKwBroadcast{URB}{urb}
+\SetKwBroadcast{FIFO}{fifo}
+\SetKwMessage{MSG}{msg}
 \SetKwData{Clock}{clock}
 \SetKwData{Delivered}{delivered}
 \SetKwData{Tick}{tick}
 \SetKwData{Now}{now}
 \SetKwData{Update}{update}
+\SetKwVariable{Payload}{payload}
+\SetKwVariable{Date}{date}
+\SetKwVariable{SN}{sn}
 
 \begin{frame}{Implémentation de FIFO Broadcast}
 
   \ob<-2>[top]{
     \begin{algorithm}[H]
-      \lLVariables{}{$\Delivered_i \leftarrow [0, ..., 0]$}
-      \Method{$\textsc{fifo}.\Broadcast(m)$}{
-        \textsc{sta}.\SBroadcast $\textsc{msg}(m, \Delivered_i[i])$;
+      \LVariables{\At $p_i$}{
+        $\Delivered_i \leftarrow [0, ..., 0]$ \tcp*[f]{Compteurs des messages délivrés}
       }
-      \When{\textsc{sta}.\Deliver $\textsc{msg}(m, \mathit{sn}_j)$ \From $p_j$}{
-        \Wait{$\Delivered_i[j] = \mathit{sn}_j$};\\
-        \textsc{fifo}.\Deliver $m$ \From $p_j$;\\
-        $\Delivered_i[j] \leftarrow \mathit{sn}_j+1$;
+      \Method{$\FIFO.\Broadcast(\Payload)$ \At $p_i$}{
+        \nl \STA.\SBroadcast $\alert{\MSG(\Payload, \Delivered_i[i])}$\\
+      }
+      
+      \Upon{\STA.\Deliver $\alert{\MSG(\Payload, \SN)}$ \From $p_j$ \At $p_i$}{
+        \nl \Wait $\Delivered_j[i] = \SN$\\
+        \nl $\Delivered_j[i] \leftarrow \SN+1$\\
+        \nl \Trigger \FIFO.\Deliver $\Payload$ \From $p_i$
       }
     \end{algorithm}
   }
 
   \on<3>[top]{
     \begin{algorithm}[H]
-      \lLVariables{}{\Example{$\Clock_i$;}\tcp*[f]{$\Delivered_i[1..n]$}}
-      \Method{$\textsc{fifo}.\Broadcast(m)$}{
-        \textsc{sta}.\SBroadcast $\textsc{msg}(m,~\Example{\Clock_i.\Now(i)})$;\tcp*[r]{$\Delivered_i[i]$}
+      \LVariables{\At $p_i$}{
+        \Example{$\Clock_i[0, ..., 0]$} \tcp*[f]{$\Delivered_i[1..n]$}
       }
-      \When{\textsc{sta}.\Deliver $\textsc{msg}(m, \mathit{date}_j)$ \From $p_j$}{
-        \Wait{\Example{$\mathit{date}_j \ge \Clock_i.\Now(j)$}};\tcp*[r]{$\Delivered_i[j]$}
-        \textsc{fifo}.\Deliver $m$ \From $p_j$;\\
-        \Example{$\Clock_i.\Update(j)$};\tcp*[r]{$\Delivered_i[j] \leftarrow \mathit{sn}+1$}
+      \Method{$\FIFO.\Broadcast(\Payload)$ \At $p_i$}{
+        \nl\STA.\SBroadcast $\alert{\MSG(\Payload, \Example{\Clock_i[i].\Now()})}$ \tcp*[r]{$\Delivered_i[i]$}
+      }
+      \Upon{\STA.\Deliver $\alert{\MSG(\Payload, \Date)}$ \From $p_i$ \At $p_j$}{
+        \nl \Wait $\Example{\Clock_j[i].\Now() \ge \Date}$ \tcp*[r]{$\Delivered_j[i]$}
+        \nl \Example{$\Clock_j[i].\Update()$} \tcp*[r]{$\Delivered_j[i] \leftarrow \SN+1$}
+        \nl \Trigger \FIFO.\Deliver $\Payload$ \From $p_i$
       }
     \end{algorithm}
   }
 
-  \obExampleBlock<1>[anchor=north]{Exemple d'exécution}{}
-  \ob<1>[y=-25mm]{
+  \obExampleBlock<1>[anchor=north, y=-2mm]{Exemple d'exécution}{}
+  \ob<1>[y=-27mm]{
     \begin{tikzpicture}[y=12mm]
       \draw[process] (0,1) node[left]{$p_1$}                                            to (10,1);
       \draw[process] (0,0) node[left]{$p_2$} node[replica below]{$\Delivered_2[1] = 0$} to (10,0);
@@ -59,12 +72,12 @@
     \end{tikzpicture}
   }
 
-  \onBlock<2->[anchor=north]{Remarques}{
+  \onBlock<2->[anchor=north, y=-2mm]{Remarques}{
     \begin{itemize}
     \item FIFO-Ordering : pour tout $j$, $\Delivered_i[j]$ = prochain $sn$ attendu de $p_j$.
-    \item On peut renforcer les propriétés en remplaçant \textsc{sta} par \textsc{rb} ou \textsc{urb}
+    \item On peut renforcer les propriétés en remplaçant $\STA$ par $\RB$ ou $\URB$
     \item En pratique, \Wait est implémenté par des buffers
-    \item<3> Pour tout processus $p_j$, $\Delivered_i[j]$ implémente une horloge logique
+    \item<3> Pour tout processus $p_j$, \example{$\Delivered_i[j]$} implémente une horloge logique
       \begin{itemize}
       \item Le temps logique est l'ordre de processus
       \item Les dates sont des entiers (horloge scalaire)

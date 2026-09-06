@@ -7,39 +7,61 @@
 
 \begingroup
 
-\begin{frame}{Exemple}
+\SetKwBroadcast{MB}{mb}
 
-  \on{
-    \begin{tikzpicture}[y=20mm]
-
-      \uncoverb<2,4>{
-        \draw (4.5, -1) node{Motif de messages MP2};
-      }
-      \uncoverb<3>{
-        \draw (4.5, -1) node{Motif de messages MP3};
-      }
-      
+\begin{frame}{Exécutions de Mutual Broadcast}
+  
+  \onExampleBlock[top=-2mm]{Exemple -- Désaccord sur l'ordre des messages}{}
+  
+  \on[y=9mm]{
+    \begin{tikzpicture}[y=10mm]
       \draw[process, fade ob=<4>] (0,2) node[left]{$p_1$} to (10,2);
       \draw[process, fade ob=<3>] (0,1) node[left]{$p_2$} to (10,1);
       \draw[process, fade ob=<2>] (0,0) node[left]{$p_3$} to (10,0);
       
       \draw[alert, fade ob=<4>] (1,2) node (m1) {} node[below left]{$m_1$};
-      \path[message, alert,     fade ob=<{3,4}>, thick] (m1.center) edge             (6,1); 
-      \path[message, alert,     fade ob=<{2,4}>, thick] (m1.center) edge             (5,0); 
-      \path[message, alert,     fade ob=<{4}>  , thick] (m1.center) edge[bend left]  (7,2); 
+      \path[alert, message,     fade ob=<{3,4}>, thick] (m1.center) edge             (6,1); 
+      \path[alert, message,     fade ob=<{2,4}>, thick] (m1.center) edge             (5,0); 
+      \path[alert, message,     fade ob=<{4}>  , thick] (m1.center) edge[bend left=13]  (7,2); 
 
       \draw[example, fade ob=<3>] (1,1) node (m2) {} node[below left]{$m_2$};
-      \path[message, example,   fade ob=<{3,4}>, thick] (m2.center) edge             (3,2); 
-      \path[message, example,   fade ob=<{2,3}>, thick] (m2.center) edge             (7,0); 
-      \path[message, example,   fade ob=<{3}>  , thick] (m2.center) edge[bend left]  (4,1); 
+      \path[example, message,   fade ob=<{3,4}>, thick] (m2.center) edge             (3,2); 
+      \path[example, message,   fade ob=<{2,3}>, thick] (m2.center) edge             (7,0); 
+      \path[example, message,   fade ob=<{3}>  , thick] (m2.center) edge[bend left]  (4,1); 
 
       \draw[structure, fade ob=<2>] (1,0) node (m3) {} node[above left]{$m_3$};
-      \path[message, structure, fade ob=<{2,4}>, thick] (m3.center) edge             (5,2); 
-      \path[message, structure, fade ob=<{2,3}>, thick] (m3.center) edge             (8,1); 
-      \path[message, structure, fade ob=<{2}>  , thick] (m3.center) edge[bend right] (9,0); 
+      \path[structure, message, fade ob=<{2,4}>, thick] (m3.center) edge             (5,2); 
+      \path[structure, message, fade ob=<{2,3}>, thick] (m3.center) edge             (8,1); 
+      \path[structure, message, fade ob=<{2}>  , thick] (m3.center) edge[bend right=13] (9,0); 
     \end{tikzpicture}
   }
 
+  \ob<2,4>[y=-12mm]{
+    Motif de messages MP2
+  }
+  \ob<3>[y=-12mm]{
+    Motif de messages MP3
+  }
+
+  \onExampleBlock<5->[y=-13mm]{Exemple -- \SBroadcast et le temps réel}{}
+
+  \on<5->[y=-29mm]{
+    \begin{tikzpicture}[y=10mm]
+      \draw[process, fade ob=<3>] (0,1) node[left]{$p_1$} to (10,1);
+      \draw[process, fade ob=<2>] (0,0) node[left]{$p_2$} to (10,0);
+      
+      \node[alert, operation] (o1) at (2.7,1) {$\MB.\SBroadcast~m_1$};
+      \path[alert, message] (o1.west) edge[bend left]  (o1.east); 
+      \path[alert, message] (o1.west) edge[bend below] (9.75,0); 
+
+      \node[structure, operation] (o2) at (7.3,0) {$\MB.\SBroadcast~m_2$};
+      \path[structure, message]   (o2.west) edge             (8,1); 
+      \path[structure, message]   (o2.west) edge[bend right]  (o2.east); 
+
+      \node[example] at (9,0.75) {MP1 !};
+    \end{tikzpicture}
+  }
+  
 \end{frame}
 
 \endgroup

@@ -22,14 +22,14 @@
     \vspace{-2mm} telle que :
     \begin{description}
     \item[Sémantique :] pour tout $i\ge 1$, $\tau(q_{i-1}, c_{i}) = q_{i}$ et $\rho(q_{i-1}, c_{i}) = r_{i}$.
-    \item[Opérations :] $H$ et $H_S$ contiennent les mêmes opérations $o_i = c_i \rightarrow r_i$ ;
+    \item[Opérations :] $H$ et $H_S$ contiennent les mêmes opérations $o_i$ ;
     \item[Temps réel :] si l'opération $o_i$ se termine avant que $o_j$ ne commence dans $H$,\\
       alors $o_i$ précède $o_j$ dans $H_S$ ;
     \end{description}
     
     \centering
     \begin{tikzpicture}[x=10mm,y=7mm]
-      \draw[densely dotted] (0,3) node[left]{$Q$}   -- (9,3);
+      \draw[densely dotted] (0,3) node[left]{$H_S$} -- (9,3);
       \draw[process]        (0,2) node[left]{$p_1$} to (9,2);
       \draw[process]        (0,1) node[left]{$p_2$} to (9,1);
       \draw[process]        (0,0) node[left]{$p_3$} to (9,0);

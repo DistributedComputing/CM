@@ -7,40 +7,43 @@
 
 \begingroup
 
-\begin{frame}{Causal Broadcast}
+\SetKwBroadcast{CB}{cb}
+\SetKwBroadcast{RBCB}{rb-cb}
+\SetKwBroadcast{URBCB}{urb-cb}
 
-  \onBlock[top=-5mm]{Propriétés héritées de \textsc{sta}.\Broadcast}{
-    \vspace{-1mm}
-    \begin{description}[Causal-Ordering :]
-    \item[CB-Validité :]    Si $p_i$ \textsc{cb}.\Deliver $m$ de $p_j$, $p_j$ a \textsc{cb}.\Broadcast $m$
-    \item[CB-Intégrité :]   $p_i$ \textsc{cb}.\Deliver $m$ au plus une fois
-    \item[CB-Terminaison :] \textsc{cb}.\Broadcast par correct $\Rightarrow$ \textsc{cb}.\Deliver par corrects.
+\begin{frame}{Définition de Causal Broadcast}
+
+  \onBlock[top=-5mm]{Propriétés de \CB-broadcast}{
+    \begin{description}
+    \item[Validité :]\vspace{-2mm} Si $p_i$ délivre $m$ de $p_j$, $p_j$ a diffusé $m$
+    \item[Intégrité :] Un processus $p_i$ délivre $m$ au plus une fois
+    \item[Terminaison :] Tout appel de \Broadcast par un correct se termine
+    \item[Complétion :] Si un correct diffuse $m$, tous les corrects délivrent $m$
+    \item[Ordonnancement FIFO :]
+      Si un processus diffuse $m$ avant $m'$, \\
+      alors aucun processus ne délivre $m'$ avant $m$
+    \item[\alert{Ordonnancement causal :}]
+      Si un processus délivre $m$ avant de diffuser $m'$, \\
+      alors aucun processus ne délivre $m'$ avant $m$
     \end{description}
   }
-
-  \onAlertBlock[y=8mm]{Nouvelle propriété d'ordre}{
-    \vspace{-1mm}
-    \begin{description}[Causal-Ordering :]
-    \item[Causal-Ordering :] Si un processus $p_i$ \textsc{cb}.\Deliver $m$ puis \textsc{cb}.\Broadcast $m'$, \\
-      alors aucun processus $p_j$ ne \textsc{cb}.\Deliver $m'$ avant $m$
-    \end{description}
-  }
-
 
   \onBlock[bottom=1mm]{Remarques}{
     \vspace{-1mm}
     \begin{itemize}
-    \item\vspace{-1mm} \structure{Autre formulation :} $\text{\textsc{cb}.\Broadcast~} m \hb \text{ \textsc{cb}.\Broadcast~} m
-      \Rightarrow
-      \text{ \textsc{cb}.\Deliver~} m \text{ par } p_i  \hb \text{ \textsc{cb}.\Deliver~} m \text{ par } p_i$
-    \item Causal-Ordering $\Rightarrow$ FIFO-Ordering
-    \item \structure{Ajout de propriétés :} \textsc{rb-cb}.\Broadcast, \textsc{urb-cb}.\Broadcast
+    \item\vspace{-1mm} Les livraisons respectent l'ordre \emph{happened before} des diffusions\\
+      \begin{center}
+        \footnotesize
+        $\structure{\Broadcast(m)} \alert{~\hb~} \structure{\Broadcast(m')}
+        \quad \Rightarrow \quad
+        \structure{\Deliver~m} \text{ at } p_i \alert{~\hb~} \structure{\Deliver~m'} \text{ at } p_i$
+      \end{center}
+    \item \structure{Ajout de propriétés :} \RBCB-broadcast, \URBCB-broadcast, ...
     \end{itemize}
   }
 
-
-  \on[y=-10mm, x=10mm]{
-    \begin{tikzpicture}[y=4mm]
+  \on[y=-15mm, x=10mm]{
+    \begin{tikzpicture}[y=5mm]
       \draw[process]   (0,2) node[left]{$p_1$} to (7,2);
       \draw[process]   (0,1) node[left]{$p_2$} to (7,1);
       \draw[process]   (0,0) node[left]{$p_3$} to (7,0);
@@ -59,7 +62,7 @@
       \draw[alert, thick] (6.5,2.25) -- (4.5,-.25);
     \end{tikzpicture}
   }
-
+  
   \footnoteref{V. Hadzilacos, S. Toueg. \textit{A modular approach to fault-tolerant broadcasts and related problems.} DIST (1994)}
 
 \end{frame}

@@ -20,14 +20,15 @@
         \lLVariables{}{
           \Structure{$\State_i \leftarrow q_0$}
         }
-        \Command{$\Apply(c \in C) \in R$}{
+        \Method{$\Apply(c \in C) \in R$}{
           \lIf{$c \in \mathit{Update}$}{
-            \Structure{\textsc{rb}.\Broadcast} $\textsc{update}(c)$}%
+            \Structure{\textsc{rb}.\Broadcast} $\textsc{update}(c)$%
+          }
+          \Structure{\Return $\rho(\State_i, c)$}%
         }
-        \Structure{\Return $\rho(\State_i, c)$}%
-      }
-      \lWhen{\textsc{rb}.\Deliver $\textsc{update}(c)$ \From $p_j$}{
-        \Structure{$\State_i \leftarrow \tau(\State_i, c)$}%
+        \lWhen{\textsc{rb}.\Deliver $\textsc{update}(c)$ \From $p_j$}{
+          \Structure{$\State_i \leftarrow \tau(\State_i, c)$}%
+        }
       }
     \end{algorithm}
   }

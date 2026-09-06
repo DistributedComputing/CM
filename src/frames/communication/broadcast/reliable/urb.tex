@@ -1,0 +1,53 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwFunction{Insert}{insert}
+\SetKwFunction{Read}{read}
+\SetKwBroadcast{URB}{urb}
+
+\begin{frame}{Définition de Uniform Reliable Broadcast}
+  
+  \on[top, text]{
+    L'abstraction \structure{Uniform Reliable Broadcast} assure que les processus corrects délivrent les mêmes messages
+  }
+  
+  \onBlock[top=7mm]{Propriétés de \URB-broadcast}{
+    \begin{description}
+    \item[Validité :] Si $p_i$ délivre $m$ de $p_j$, $p_j$ a diffusé $m$
+    \item[Intégrité :] Un processus $p_i$ délivre $m$ au plus une fois
+    \item[Terminaison :] Tout appel de \Broadcast par un correct se termine
+    \item[Complétion :] Si un correct diffuse $m$, tous les corrects délivrent $m$
+    \item[\alert{Uniformité} : ] Si un processus délivre $m$, tous les corrects délivrent $m$
+    \end{description}
+  }
+
+  \on[bottom=4mm]{
+    \begin{tikzpicture}[y=10mm]
+      \draw[process] (0,2) node[left]{$p_1$} node[replica below]{$\emptyset$} to (9,2) node[replica, below left] {$\{a\}$} ;
+      \draw[crashed] (0,1) node[left]{$p_2$} node[replica]      {$\emptyset$} to (5,1) ;
+      \draw[process] (0,0) node[left]{$p_3$} node[replica]      {$\emptyset$} to (9,0) node[replica, above left] {$\{a\}$} ;
+
+      \begin{scope}
+        \clip (0,0) rectangle (5,2);
+        \node[alert, operation] (i1) at (3.5,1) {$\Insert(a)$\hspace{30mm}};
+      \end{scope}
+      \draw[alert, message]   (i1.center) to            (4.5,2);
+      \draw[alert, message]   (i1.center) to[bend left] ([xshift=12mm]i1.center);
+      \draw[alert, message]   (i1.center) to            (4.5,0);
+
+      \node[structure, operation] (r1) at (7,2) {$\Read() \rightarrow \{a\}$};
+      \node[example, operation]   (r2) at (7,0) {$\Read() \rightarrow \{a\}$};
+    \end{tikzpicture}
+  }
+  
+  \footnoteref{K. P. Birman and T. A. Joseph. \textit{Reliable Communication in the Presence of Failures.} ACM TOCS (1987)}
+\end{frame}
+
+\endgroup
+\endinput

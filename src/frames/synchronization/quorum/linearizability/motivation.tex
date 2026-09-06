@@ -1,0 +1,60 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwFunction{Insert}{insert}
+\SetKwFunction{Read}{read}
+\SetKwData{State}{state}
+\SetKwMessage{INSERT}{insert}
+\SetKwBroadcast{URBCB}{urb-cb}
+
+\begin{frame}{Ancrage dans le temps réel}
+
+  \onBlock[top=-5mm]{Deuxième essai d'implémentation d'un ensemble partagé}{
+
+    \vspace{-1mm}
+    \begin{algorithm}[H]
+      \LVariables{}{
+        $\State_i \leftarrow \emptyset$\tcp*[r]{Set of values for which $p_i$ received a message \alert{$\INSERT$}}
+      }
+      \Method{$\Read()$}{
+        \nl \Return $\State_i$
+      }
+      \Method{$\Insert(v)$}{
+        \nl \URBCB.\SBroadcast \alert{$\INSERT(v)$}
+      }
+      \Upon{\URBCB.\Deliver \alert{$\INSERT(v)$} \From $p_j$}{
+        \nl $\State_i \leftarrow \State_i \cup \{ v \}$
+      }
+    \end{algorithm}
+  }
+  
+  \onAlertBlock[bottom]{Problème -- Temps réel dans un système asynchrone ?}{
+    \centering
+    \begin{tikzpicture}[y=8mm]
+      \draw[process] (0,2) node[left]{$p_1$} node[replica below]{$\emptyset$} to (9,2);
+      \draw[process] (0,1) node[left]{$p_2$} node[replica]      {$\emptyset$} to (9,1);
+
+      \node[alert, operation] (i1) at (3,1) {$\Insert(a)$};
+      \draw[alert, message]   (i1.west) to[bend above] (8,2);
+      \draw[alert, message]   (i1.west) to[bend left]  (i1.east);
+      \node[structure, operation] (r1) at (6,2) {$\Read() \rightarrow \emptyset$};
+    \end{tikzpicture}
+    \vspace{2mm}
+    
+    \alert{
+      Comment simuler \\
+      une mémoire partagée linéarisable \\
+      dans un système à passage de messages ?
+    }
+  }
+
+\end{frame}
+
+\endgroup
+\endinput

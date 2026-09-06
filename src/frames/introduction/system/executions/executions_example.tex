@@ -20,62 +20,65 @@
   \begin{tabular}{@{}r@{}c@{~}l@{}}
     \tiny $p_1$  & \tiny : & \tiny \texttt{#1} \\[-.5mm]
     \tiny $p_2$  & \tiny : & \tiny \texttt{#2} \\[-.5mm]
-    \tiny $\X_2$ & \tiny : & \tiny \texttt{#3} \\[-.5mm]
+    \tiny vars   & \tiny : & \tiny \texttt{#3} \\[-.5mm]
     \tiny $M$    & \tiny : & \tiny \texttt{#4}
   \end{tabular}
 }
 
 \SetKwData{Done}{done}
-\SetKwData{X}{value}
+\SetKwData{Value}{value}
+\SetKwMessage{MSG}{\alert{msg}}
 
 \begin{frame}{Système de transitions}
 
   \on[top]{
     \begin{algorithm}[H]
-      \LVariables{}{
-        $\Done_i \leftarrow \False$\;
-        $\X_i \leftarrow 0$\;
+      \LVariables{\At $p_2$}{
+        $\Done_2 \leftarrow \False$\\
+        $\Value_2 \leftarrow 0$
       }
       \Process{$p_1$}{
-        \nl \Send $m$ \To $p_2$\;
+        \nl \Send $\MSG$ \To $p_2$
       }
       \Process{$p_2$}{
-        \nl $\X_2 \leftarrow 1$\;
-        \nl \Wait $\Done_2$\;
-        \nl$\Print(\X_2)$\;
+        \nl $\Value_2 \leftarrow 1$\\
+        \nl \Wait $\Done_2$\\
+        \nl $\Print(\Value_2)$
       }
-      \When{$p_2$ \Receives $m$ \From $p_1$}{
-        $\X_2 \leftarrow 2$\; 
-        $\Done_2 \leftarrow \True$\;
+      \Upon{\Receive $\MSG$ \From $p_1$ \At $p_2$}{
+        \nl $\Value_2 \leftarrow 2$\\ 
+        \nl $\Done_2 \leftarrow \True$
       }
     \end{algorithm}
   }
   
   \on[x=.25\textwidth]{
     \begin{tikzpicture}[automaton, x=15mm, y=17mm]
-      \state[structure on=<2->,  sshape, initial]   (00) at (1,4) {\scontent{\texttt{start}} {\texttt{start}} {0} {$\emptyset$}};
-
-      \state[structure on=<2>,   sshape]            (11) at (0,3) {\scontent{\texttt{term}}  {\texttt{start}} {0} {$\{\langle p_1, p_2, m \rangle\}$}};
-      \state[structure on=<2>,   sshape]            (12) at (0,2) {\scontent{\texttt{term}}  {\texttt{start}} {2} {$\emptyset$}};
-      \state[structure on=<2>,   sshape]            (13) at (0,1) {\scontent{\texttt{term}}  {\texttt{L3}}    {1} {$\emptyset$}};
-      \state[structure on=<2>,   sshape, accepting] (14) at (0,0) {\scontent{\texttt{term}}  {\texttt{term}}  {1} {$\emptyset$}};
-
-      \state[structure ob=<3-4>, sshape]            (21) at (2,3) {\scontent{\texttt{start}} {\texttt{L3}}    {1} {$\emptyset$}};
-      \state[structure ob=<3>,   sshape]            (22) at (2,2) {\scontent{\texttt{term}}  {\texttt{L3}}    {1} {$\{\langle p_1, p_2, m \rangle\}$}};
-      \state[structure ob=<3>,   sshape]            (23) at (2,1) {\scontent{\texttt{term}}  {\texttt{L3}}    {2} {$\emptyset$}};
-      \state[structure ob=<3>,   sshape, accepting] (24) at (2,0) {\scontent{\texttt{term}}  {\texttt{term}}  {2} {$\emptyset$}};
+      \state[structure on=<2->,  sshape, initial]   (00) at (1,4) {\scontent{\texttt{start}} {\texttt{start}} {$\langle 0, \False\rangle$} {$\emptyset$}};
+      \state[structure on=<2>,   sshape]            (11) at (0,3) {\scontent{\texttt{term}}  {\texttt{start}} {$\langle 0, \False\rangle$} {$\{\langle p_1, p_2, \MSG \rangle\}$}};
+      \state[structure on=<2>,   sshape]            (12) at (0,2) {\scontent{\texttt{term}}  {\texttt{start}} {$\langle 2, \True\rangle$}  {$\emptyset$}};
+      \state[structure on=<2>,   sshape]            (13) at (0,1) {\scontent{\texttt{term}}  {\texttt{L3}}    {$\langle 1, \True\rangle$}  {$\emptyset$}};
+      \state[structure on=<2>,   sshape, accepting] (14) at (0,0) {\scontent{\texttt{term}}  {\texttt{term}}  {$\langle 1, \True\rangle$}  {$\emptyset$}};
+      \state[structure ob=<3-4>, sshape]            (21) at (2,3) {\scontent{\texttt{start}} {\texttt{L3}}    {$\langle 1, \False\rangle$} {$\emptyset$}};
+      \state[structure ob=<3>,   sshape]            (22) at (2,2) {\scontent{\texttt{term}}  {\texttt{L3}}    {$\langle 1, \False\rangle$} {$\{\langle p_1, p_2, \MSG \rangle\}$}};
+      \state[structure ob=<3>,   sshape]            (23) at (2,1) {\scontent{\texttt{term}}  {\texttt{L3}}    {$\langle 2, \True\rangle$}  {$\emptyset$}};
+      \state[structure ob=<3>,   sshape, accepting] (24) at (2,0) {\scontent{\texttt{term}}  {\texttt{term}}  {$\langle 2, \True\rangle$}  {$\emptyset$}};
       
-      \path[alert]     (00) edge node[left]{$p_1$ : \Send $m$}     (11);
-      \path[structure] (11) edge node[left]{$p_2$ : \Receive $m$}  (12);
+      \path[alert]     (00) edge node[left]{$p_1$ : \Send $\MSG$}     (11);
+      \path[structure] (11) edge node[left]{$p_2$ : \Receive $\MSG$}  (12);
       \path[structure] (12) edge node[left]{$p_2$ : \texttt{L2}}   (13);
-      \path[structure] (13) edge node[left]{$p_2$ : $\Print(1)$} (14);
+      \path[structure] (13) edge node[left]{$p_2$ : $\Print(1)$}   (14);
 
-      \path[structure] (00) edge node[right]{~$p_2$ : \texttt{L2}}   (21);
-      \path[alert]     (21) edge node[right]{$p_1$ : \Send $m$}     (22);
-      \path[structure] (22) edge node[right]{$p_2$ : \Receive $m$}  (23);
-      \path[structure] (23) edge node[right]{$p_2$ : $\Print(2)$} (24);
+      \path[structure] (11) edge node[sloped]{$p_2$ : \texttt{L2}}   (22);
+
+      
+      \path[structure] (00) edge node[right]{~$p_2$ : \texttt{L2}}  (21);
+      \path[alert]     (21) edge node[right]{$p_1$ : \Send $\MSG$}     (22);
+      \path[structure] (22) edge node[right]{$p_2$ : \Receive $\MSG$}  (23);
+      \path[structure] (23) edge node[right]{$p_2$ : $\Print(2)$}   (24);
 
       \path[structure] (21) edge[loop right, looseness=2] node[right]{$p_2$ : \texttt{L3}} (21);
+      \path[structure] (22) edge[loop right, looseness=2] node[right]{$p_2$ : \texttt{L3}} (22);
     \end{tikzpicture}
   }
 
@@ -84,11 +87,11 @@
       \draw[process] (0,1) node[left]{$p_1$} to (5,1);
       \draw[process] (0,0) node[left]{$p_2$} to (5,0);
       \scriptsize
-      \node[example, operation,minimum height=5mm] (p2) at (3.5,0) {$\X_2 \leftarrow 1$};
+      \node[example, operation,minimum height=5mm] (p2) at (3.5,0) {$\Value_2 \leftarrow 1$};
       \begin{scope}[alert]
         \node[event]     (send-m) at (.5,1) {};
-        \node[operation,minimum height=5mm] (rece-m) at (1.5,0) {$\X_2 \leftarrow 2$};
-        \path[message]   (send-m.center) edge node{$m$} (rece-m.west);
+        \node[operation,minimum height=5mm] (rece-m) at (1.5,0) {$\Value_2 \leftarrow 2$};
+        \path[message]   (send-m.center) edge node{\MSG} (rece-m.west);
       \end{scope}
     \end{tikzpicture}
   }
@@ -98,11 +101,11 @@
       \draw[process] (0,1) node[left]{$p_1$} to (5,1);
       \draw[process] (0,0) node[left]{$p_2$} to (5,0);
       \scriptsize
-      \node[example, operation, minimum height=5mm] (p2) at (2.5,0) {$\X_2 \leftarrow 1$ \hspace{2cm}};
+      \node[example, operation, minimum height=5mm] (p2) at (2.5,0) {$\Value_2 \leftarrow 1$ \hspace{2cm}};
       \begin{scope}[alert]
         \node[event]     (send-m) at (.5,1) {};
-        \node[operation] (rece-m) at (3,0) {$\X_2 \leftarrow 2$};
-        \path[message]   (send-m.center) edge node{$m$} (rece-m.west);
+        \node[operation] (rece-m) at (3,0) {$\Value_2 \leftarrow 2$};
+        \path[message]   (send-m.center) edge node{\MSG} (rece-m.west);
       \end{scope}
     \end{tikzpicture}
   }
@@ -112,7 +115,7 @@
       \draw[crashed] (0,1) node[left]{$p_1$} to (1,1);
       \draw[process] (0,0) node[left]{$p_2$} to (5,0);
       \scriptsize
-      \node[example,   operation, minimum height=5mm] (p2) at (2.5,0) {$\X_2 \leftarrow 1$ \hspace{2.2cm}};
+      \node[example,   operation, minimum height=5mm] (p2) at (2.5,0) {$\Value_2 \leftarrow 1$ \hspace{2.2cm}};
       \node[structure, operation, minimum height=4mm] (wu) at (3.2,0) {\Wait \False...};
     \end{tikzpicture}
   }

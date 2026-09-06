@@ -7,13 +7,15 @@
 
 \begingroup
 
+\SetKwBroadcast{TO}{to}
+
 \tikzset{
-  box/.style={draw, rounded corners, text width=20mm, minimum height=10mm, align=center, draw highlighted, fill highlighted, text highlighted},
+  box/.style={draw, rounded corners, text width=20mm, minimum height=9mm, align=center, draw highlighted, fill highlighted, text highlighted},
 }
 
 \begin{frame}{Réductions à explorer}
   
-  \begin{tikzpicture}[x=28mm, y=17mm, font=\scriptsize]
+  \begin{tikzpicture}[x=28mm, y=15mm, font=\scriptsize]
     \node[alert,     box] (leader) at (0  , 2) {Élection    \\ de leader};
     \node[structure, box] (cons)   at (1  , 2) {Consensus};
     \node[structure, box] (tob)    at (2  , 2) {Total-order \\ Broadcast};
@@ -36,12 +38,13 @@
   \vspace{3mm}
   \begin{block}{Comment implémenter Total-order Broadcast ?}
     \begin{itemize}
-    \item \structure{\textsc{to}.\Broadcast} est équivalent au \structure{consensus} en calculabilité
+    \item \structure{\TO-broadcast} est équivalent au \structure{consensus} en calculabilité
     \item Les deux ont besoin d'hypothèses sur le système $\mathcal{CAMP}_{n,t}$
       \begin{itemize}
       \item Des quorums pour empêcher les partitions \alert{$t < \frac{n}{2}$}
-      \item Des périodes assez stables pour implémenter un \alert{leader}
+      \item Des périodes assez stables pour choisir un \alert{leader}
       \end{itemize}
+    \item On implémente le consensus pour implémenter \TO-broadcast
     \end{itemize}
   \end{block}
   

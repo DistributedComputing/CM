@@ -11,9 +11,9 @@
 \SetKwFunction{Vendre}{vendre}
 \SetKwFunction{Consulter}{consulter}
 
-\begin{frame}{Modèle clients/serveur}
+\begin{frame}{Modèle client-serveur}
 
-  \onBlock[top=-2mm]{Exemple --  Site de vente en ligne}{
+  \onBlock[top=-4mm]{Cas d'usage --  Site de vente en ligne}{
     On veut implémenter \example{AlmaZone}, qui permet de :
     \begin{itemize}
     \item \structure{\Consulter} les articles en vente
@@ -22,14 +22,15 @@
     \end{itemize}
   }
 
-  \onBlock<2->[y=-2mm]{Solution clients/serveur}{
+  \onBlock<2->[y=-2mm]{Solution client-serveur}{
     \begin{itemize}
     \item \structure{Un serveur :} maintient l'état (ensemble d'articles)
-    \item \structure{Plusieurs clients :} interagissent par messages (requête / réponse)
+    \item \structure{Plusieurs clients :} messages avec le serveur (requête / réponse)
+    \item \structure{Ordre séquentiel unique :} traitement des messages par le serveur
     \end{itemize}
   }
 
-  \on<2->[y=-27mm]{
+  \on<2->[y=-28mm]{
     \begin{tikzpicture}[y=8mm]
       \draw[process] (.5,2) node[left]{$\mathit{Client}_1$} to (9.5,2);
       \draw[process] (.5,1) node[left]{$\mathit{Serveur}$} node[replica]{$\{a,b\}$} to (9.5,1) node[replica, above left]{$\{b\}$};

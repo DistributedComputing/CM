@@ -7,14 +7,19 @@
 
 \begingroup
 
+\SetKwMessage{BeginM}{begin}
+\SetKwMessage{Decide}{decide}
+\SetKwMessage{MSG}{smg}
+\SetKwBroadcast{MB}{mb}
+
 \begin{frame}{Multi-decree Paxos en pratique}
 
   Machine à états répliquée, pertes de messages...
 
   \begin{block}{Optimisations possibles}
     \begin{itemize}
-    \item Message $\textsc{begin}$ mutualisé entre plusieurs rondes
-    \item Message $\textsc{msg}$ envoyé au leader seulement dans Multi-decree Paxos
+    \item Message $\BeginM$ mutualisé entre plusieurs rondes
+    \item Message $\MSG$ envoyé au leader seulement dans Multi-decree Paxos
     \item Pas d'abstraction intermédiaire
     \end{itemize}
   \end{block}
@@ -30,11 +35,11 @@
       \begin{itemize}
       \item \vspace{-1mm} Idéalement, un seul processus, correct. 
       \end{itemize}
-    \item[Acceptor :] Participent au quorum du \textsc{mb}.\Broadcast
+    \item[Acceptor :] Participent au quorum de \MB-broadcast
       \begin{itemize}
       \item \vspace{-1mm} Une majorité doit être correcte
       \end{itemize}
-    \item[Learner :] Destinataire du message $\textsc{decide}(v)$ final
+    \item[Learner :] Destinataire du message $\Decide(v)$ final
       \begin{itemize}
       \item \vspace{-1mm} processus sur lequel est stocké un réplica
       \end{itemize}
