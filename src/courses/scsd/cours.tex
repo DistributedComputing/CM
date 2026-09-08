@@ -1,20 +1,17 @@
 % SPDX-License-Identifier: CC-BY-SA-4.0
 % Author: Matthieu Perrin
 
-\ifdefined\HANDOUT
-\documentclass[9pt, handout]{beamer}
-\usetheme{Nantes}
-\else
 \documentclass[9pt]{beamer}
-\usetheme[sectionpage]{Nantes}
-\fi
+\mode<beamer>{\PassOptionsToPackage{sectionpage}{beamerthemeNantes}}
+\usetheme{Nantes}
 
 \usepackage{src/sty/config}
 
 \title[Services de communication et systèmes distribués]{Services de communication \\et systèmes distribués}
 
 \author[Matthieu Perrin]{
-  Matthieu Perrin\\
+  \structure{Matthieu \textsc{Perrin}}\\[2mm]
+  Nantes Université\\
   Laboratoire des Sciences du Numérique de Nantes \\
   UMR CNRS 6004\\
   Bureau 410, bâtiment 34 \\
@@ -22,12 +19,10 @@
 }
 
 \date{
-  Nantes Université\\
   Master en Informatique, deuxième année\\
   Parcours ALMA\\
-  2024-2025
+  2026-2027
 }
-
 
 \hypersetup{
   pdftitle  = {\insertshorttitle},
