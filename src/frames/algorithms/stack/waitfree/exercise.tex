@@ -1,0 +1,42 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Exercice}
+
+  \begin{lstlisting}[numbers=left, gobble=4]
+    public class WaitFreeStack<T> {
+      private final AtomicInteger range = new AtomicInteger(0);
+      private final AtomicReferenceArray<T> items = (*\Alert{???;}*)
+
+      public void push(T value) {
+        int i = range.getAndIncrement();
+        items.set(i, value);
+      }
+
+      public T pop() {
+        for(int i = range.get()-1; i>=0; i--) {
+          T value = items.getAndSet(i, null);
+          if(value != null) return value;
+        }
+        return null;
+      }
+    }
+  \end{lstlisting}
+
+  \begin{exampleblock}{Réécrire l'algorithme de pile wait-free en Java}
+    \begin{enumerate}
+    \item Remplacer le tableau infini \lstinline{items} par une liste chaînée
+    \item Réduire la complexité spatiale au maximum
+    \end{enumerate}
+  \end{exampleblock}
+
+\end{frame}
+
+\endgroup
+\endinput

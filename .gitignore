@@ -35,3 +35,7 @@
 *.swp
 .DS_Store
 Thumbs.db
+
+# Non-free images
+src/img/Herlihy.jpg
+src/img/time.png

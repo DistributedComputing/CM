@@ -1,0 +1,53 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Problème en algorithmique du réparti}
+
+  \begin{block}{Hypothèses sur le système}
+    \begin{itemize}
+    \item On se donne autant de variables lire/écrire que nécessaire
+    \item On ajoute éventuellement
+      \begin{itemize}
+      \item Des instructions spéciales : \lstinline{getAndIncrement}, \lstinline{compareAndSet}...
+      \item Des objets de synchronisation : files, compteurs, verrous...
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+
+  \pause
+
+  \begin{block}{Problème}
+    \begin{itemize}
+    \item On cherche à implémenter un objet défini par :
+      \begin{itemize}
+      \item Spécification séquentielle
+      \item Critère de cohérence (ici : linéarisabilité)
+      \item Condition de progression (ici : wait-freedom)
+      \end{itemize}
+    \end{itemize}
+    
+  \end{block}
+
+  \pause
+  
+  \begin{description}[Calculabilité :]
+  \item[Calculabilité :] \emph{Est-ce possible ?}\\
+  \end{description}
+  \begin{itemize}
+  \item Quelles sont les hypothèses minimales pour que ce le soit ?\\
+  \item Quel est la plus forte condition de progression possible ?
+  \end{itemize}
+  \begin{description}[Calculabilité :]
+  \item[Complexité :] Quel sera le coût ?
+  \end{description}
+
+\end{frame}
+
+\endgroup
+\endinput

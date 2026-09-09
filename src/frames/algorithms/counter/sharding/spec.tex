@@ -1,0 +1,43 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Spécification du compteur partagé}
+
+  \begin{description}
+  \item[Spécification séquentielle :] Un compteur
+  \end{description}
+
+  \begin{lstlisting}[gobble=4]
+    interface Counter {
+    //    int value = 0; 
+    int get(); // {
+    //       return value;
+    //    }
+    void add(int delta); // {
+    //       value+=delta;
+    //    }
+    }
+  \end{lstlisting}
+
+  \begin{description}
+  \item[Critère de cohérence :] Linéarisabilité
+  \item[Condition de progression :] Wait-free
+  \end{description}
+
+  \begin{center}
+    \alert{Peut-on implémenter le compteur sans utiliser d'instructions spéciales \\
+      (seulement lire/écrire) ?}
+  \end{center}
+
+  \footnoterefjava{java.util.concurrent.LongAdder}
+  
+\end{frame}
+
+\endgroup
+\endinput

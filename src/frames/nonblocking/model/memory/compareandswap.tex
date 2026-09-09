@@ -1,0 +1,50 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{L'instruction compare\_and\_swap}
+
+  \begin{block}{Spécification}
+    \vspace{3mm}
+    \begin{lstlisting}[gobble=6]
+      if (get() == expect) {
+        set(update);
+        return true;
+      }
+      return false;
+    \end{lstlisting}
+  \end{block}
+
+  \begin{exampleblock}{Exemple : compteur non-bloquant}
+    \begin{lstlisting}[gobble=6]
+      class Counter {
+        private AtomicInteger value = new AtomicInteger(0); 
+        public int getAndIncrement() {
+          for (;;) {
+            int current = value.get();
+            int next = current + 1;
+            if (value.compareAndSet(current, next))
+            return current;
+          }
+        }
+      }
+    \end{lstlisting}
+  \end{exampleblock}
+
+  \on[top=0mm, right=.7\textwidth]{
+    \begin{description}[Java :]
+    \item [Java :] \lstinline{boolean compareAndSet(T expect, T update)}
+    \item [C++ :] \lstinline{bool compare_exchange_strong (T& expected, T val)}
+    \end{description}
+  }
+
+\end{frame}
+
+\endgroup
+\endinput
+

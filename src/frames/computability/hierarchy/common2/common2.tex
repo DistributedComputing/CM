@@ -1,0 +1,40 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{L'ensemble Common2}
+  \begin{block}{Spécification séquentielle}
+    \begin{itemize}
+    \item Toutes les opérations sont de la forme :
+      \begin{lstlisting}
+        T getAndF(int i) {
+          T old = get();
+          set(f[i](old));
+          return old;
+        }
+      \end{lstlisting}
+    \item Pour tout $i$ et $j$, pour tout $t\in T$, on a au choix : 
+      \begin{description}
+      \item[commutativité:] $f_i(f_j(t)) = f_j(f_i(t))$
+      \item[écrasement:] $f_i(f_j(t)) = f_i(x)$ ou $f_j(f_i(t)) = f_j(t)$
+      \end{description}
+    \end{itemize}
+  \end{block}
+  %  \pause
+  \begin{exampleblock}{Exemples}
+    \begin{itemize}
+    \item \lstinline{int AtomicInteger.getAndAdd(int)}
+    \item \lstinline{int AtomicInteger.getAndIncrement()}
+    \item \lstinline{int AtomicInteger.getAndSet(int)}
+    \item \lstinline{int AtomicInteger.get()} (opération ``triviale'' : $\mathcal{F} = \{v\mapsto v\}$)
+    \end{itemize}
+  \end{exampleblock}
+\end{frame}
+
+\endgroup
+\endinput

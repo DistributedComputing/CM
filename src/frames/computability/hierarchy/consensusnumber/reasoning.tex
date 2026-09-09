@@ -1,0 +1,44 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Raisonnement avec le consensus number}
+  
+  \begin{block}{Théorème}
+    Soient $S$ et $T$ deux structures de données telles que $\structure{CN(S) < CN(T)}$.\\
+
+    Il est \alert{impossible} d'implémenter $T$ en utilisant seulement :
+    \begin{itemize}
+    \item des instances de $S$.
+    \item des registres lire/écrire.
+    \end{itemize}
+  \end{block}
+
+  \begin{exampleblock}{Exemples}
+    \begin{itemize}
+    \item $CN(\text{lire/écrire}) = 1 < 2 = CN(\text{pile})$
+      \begin{itemize}
+      \item impossible d'implémenter une pile en n'utilisant que lire/écrire 
+      \end{itemize}
+    \item $CN(\text{file}) = 2 < \infty = CN(\text{\lstinline{compareAndSet}})$
+      \begin{itemize}
+      \item impossible d'implémenter \lstinline{compareAndSet} avec que lire/écrire et des files
+      \end{itemize}
+    \end{itemize}
+  \end{exampleblock}
+  
+  \begin{alertblock}{Attention : la réciproque est fausse !}
+    Même si $\structure{CN(S) \ge CN(T)}$, \\
+    on n'a \alert{aucune garantie}
+    sur la possibilité d'implémenter $T$ à partir de $S$.
+  \end{alertblock}
+
+\end{frame}
+
+\endgroup
+\endinput

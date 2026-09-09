@@ -1,0 +1,43 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Un premier exemple}
+
+  \begin{lstlisting}[gobble=4]
+    public static void main (String[] args) throws InterruptedException {
+      var t1 = new Thread(() -> {
+        System.out.print("Hello ");
+        System.out.print("World ");
+      });
+      var t2 = new Thread(() -> {
+        System.out.print("Multithreaded ");
+      });
+      
+      t1.start();
+      t2.start();
+
+      t1.join();
+      t2.join();
+
+      System.out.print("!");
+    }
+  \end{lstlisting}
+
+  \begin{block}{Expérience}
+    \begin{itemize}
+    \item Lancer le programme plusieurs fois. Qu'observe-t-on ? 
+    \end{itemize}
+  \end{block}
+
+  \footnoterefgithub{introduction}{HappensBefore}
+  
+\end{frame}
+
+\endgroup
+\endinput

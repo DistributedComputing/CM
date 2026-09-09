@@ -1,0 +1,170 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\tikzset{
+  inout/.style={
+    draw,
+    structure,
+    fill=structure!30,
+    circle,
+    text width=3.5mm,
+    inner sep=0pt,
+    align=center,
+    font=\tiny,
+  },
+  procs/.style={
+    draw,
+    alert,
+    fill=alert!30,
+    rounded corners,
+    minimum width=10mm,
+    text height=2mm,
+    inner sep=3pt,
+    align=center,
+    font=\small,
+  },
+  nopro/.style={
+    draw=none,
+    fill=none,
+    minimum width=10mm,
+    text height=2mm,
+    inner sep=3pt,
+  },
+  back/.style={
+    draw,
+    fill=black!40,
+    rounded corners,
+    fit=(p1)(p2)(p3),
+    inner sep=5pt,
+  },
+  arrow/.style={
+    -latex,
+  },
+}
+
+\begin{frame}{Point vocabulaire}
+
+  \begin{tikzpicture}[x=48mm, y=35mm]
+
+    \node[align=center] at (2,2.6) {Une seule \\ unité d'exécution}; 
+    \node[align=center] at (3,2.6) {Plusieurs \\ unités d'exécution}; 
+    \node[align=center] at (1.3,2) {Problème  \\ séquentiel}; 
+    \node[align=center] at (1.3,1) {Problème  \\ de \\ concurrence}; 
+
+    \node[anchor=base] at (2,2) {
+      \begin{tikzpicture}[x=15mm, y=7mm, baseline=(p2)]
+        \node        (tl) at (2, 0) {Séquentiel};
+        \node[inout] (i2) at (1, 2) {$I$};
+        \node[nopro] (p1) at (2, 3) {};
+        \node[procs] (p2) at (2, 2) {$p$};
+        \node[nopro] (p3) at (2, 1) {};
+        \node[inout] (o2) at (3, 2) {$O$};
+        
+        \path[arrow] (i2) edge (p2.west);
+        \path[arrow] (p2.east) edge (o2);
+        \begin{scope}[background]
+          \node[back] {};
+        \end{scope}
+      \end{tikzpicture}
+    };
+
+    \node[anchor=base] at (3,2) {
+      \begin{tikzpicture}[x=15mm, y=7mm, baseline=(p2)]
+        \node        (tl) at (2, 0) {Parallèle};
+        \node[inout] (i2) at (1, 2) {$I$};
+        \node[procs] (p1) at (2, 3) {$p_1$};
+        \node[procs] (p2) at (2, 2) {$p_2$};
+        \node[procs] (p3) at (2, 1) {$p_3$};
+        \node[inout] (o2) at (3, 2) {$O$};
+        
+        \path[arrow] (i2) edge (p1.west);
+        \path[arrow] (i2) edge (p2.west);
+        \path[arrow] (i2) edge (p3.west);
+        
+        \path[arrow] (p1.east) edge (o2);
+        \path[arrow] (p2.east) edge (o2);
+        \path[arrow] (p3.east) edge (o2);
+        
+        \begin{scope}[background]
+          \node[back] {};
+        \end{scope}
+      \end{tikzpicture}
+    };
+    
+    \node[anchor=base] at (2,1) {
+      \begin{tikzpicture}[x=15mm, y=7mm, baseline=(p2)]
+        \node        (tl) at (2, 0) {Centralisé};
+        \node[inout] (i1) at (1, 3) {$I_1$};
+        \node[inout] (i2) at (1, 2) {$I_2$};
+        \node[inout] (i3) at (1, 1) {$I_3$};
+        \node[nopro] (p1) at (2, 3) {};
+        \node[procs] (p2) at (2, 2) {$p$};
+        \node[nopro] (p3) at (2, 1) {};
+        \node[inout] (o1) at (3, 3) {$O_1$};
+        \node[inout] (o2) at (3, 2) {$O_2$};
+        \node[inout] (o3) at (3, 1) {$O_3$};
+        
+        \path[arrow] (i1) edge (p2.west);
+        \path[arrow] (i2) edge (p2.west);
+        \path[arrow] (i3) edge (p2.west);
+        
+        \path[arrow] (p2.east) edge (o1);
+        \path[arrow] (p2.east) edge (o2);
+        \path[arrow] (p2.east) edge (o3);
+        \begin{scope}[background]
+          \node[back] {};
+        \end{scope}
+      \end{tikzpicture}
+    }; 
+
+    \node[anchor=base] at (3,1) {
+      \begin{tikzpicture}[x=15mm, y=7mm, baseline=(p2)]
+        \node        (tl) at (2, 0) {Réparti (distributed)};
+        \node[inout] (i1) at (1, 3) {$I_1$};
+        \node[inout] (i2) at (1, 2) {$I_2$};
+        \node[inout] (i3) at (1, 1) {$I_3$};
+        \node[procs] (p1) at (2, 3) {$p_1$};
+        \node[procs] (p2) at (2, 2) {$p_2$};
+        \node[procs] (p3) at (2, 1) {$p_3$};
+        \node[inout] (o1) at (3, 3) {$O_1$};
+        \node[inout] (o2) at (3, 2) {$O_2$};
+        \node[inout] (o3) at (3, 1) {$O_3$};
+        
+        \path[arrow] (i1) edge (p1.west);
+        \path[arrow] (i1) edge (p2.west);
+        \path[arrow] (i1) edge (p3.west);
+        \path[arrow] (i2) edge (p1.west);
+        \path[arrow] (i2) edge (p2.west);
+        \path[arrow] (i2) edge (p3.west);
+        \path[arrow] (i3) edge (p1.west);
+        \path[arrow] (i3) edge (p2.west);
+        \path[arrow] (i3) edge (p3.west);
+        
+        \path[arrow] (p1.east) edge (o1);
+        \path[arrow] (p1.east) edge (o2);
+        \path[arrow] (p1.east) edge (o3);
+        \path[arrow] (p2.east) edge (o1);
+        \path[arrow] (p2.east) edge (o2);
+        \path[arrow] (p2.east) edge (o3);
+        \path[arrow] (p3.east) edge (o1);
+        \path[arrow] (p3.east) edge (o2);
+        \path[arrow] (p3.east) edge (o3);
+        
+        \begin{scope}[background]
+          \node[back] {};
+        \end{scope}
+      \end{tikzpicture}
+    };
+    
+  \end{tikzpicture}
+
+\end{frame}
+
+\endgroup
+\endinput

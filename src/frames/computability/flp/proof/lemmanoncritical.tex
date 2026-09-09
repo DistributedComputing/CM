@@ -1,0 +1,162 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Lemme 2 : $A$ ne possède pas de configuration critique}
+
+  \onExampleBlock[top=-3mm]{Démonstration}{
+    \begin{itemize}
+    \item Supposons (absurde), que $A$ possède une configuration critique $C$.
+    \item Quelles sont les prochains pas de $T_0$ et $T_1$ ?
+      \begin{enumerate}
+      \item<2-> Des opérations sur des variables différentes ? {\color{exampleColor}Impossible !}
+      \item<3-> Des lectures sur la même variables ? {\color{exampleColor}Impossible !}
+      \item<4-> Une lecture et une écriture ? \only<5->{\color{exampleColor}Impossible !}
+      \item<6-> Deux écritures ? {\color{exampleColor}Impossible !}
+      \end{enumerate}
+    \item<6-> Aucun cas n'est possible : {\color{exampleColor}absurde !}
+    \end{itemize}
+  }
+
+  \on[y=-20mm]{
+    \begin{tikzpicture}
+      \draw[white] (3.5,3.4) rectangle (15,7.1);
+      \draw[-latex, rounded corners, structure, thick ] (9  ,6.15) -- (9  ,5.45) -- (8,5.45);
+      \draw[-latex, rounded corners, alertColor, thick] (9.5,6.15) -- (9.5,5.45) -- (10.5,5.45);
+      \draw<2-3>  [-latex, rounded corners, alertColor] (7.5,4.85) -- (7.5,4.15) -- (8.5,4.15);
+      \draw<2-3,6>[-latex, rounded corners, structure]  (11  ,4.85) -- (11  ,4.15) -- (10,4.15);
+      \draw<4->   [-latex, rounded corners, structure]  (7  ,4.85) -- (7  ,4.15) -- (6,4.15);
+      \draw<4-5>  [-latex, rounded corners, alertColor] (11.5,4.85) -- (11.5,4.15) -- (12.5,4.15);
+      \draw<5>    [-latex, rounded corners, structure]  (6,3.85) -- (8.5,3.85);
+      \draw<6>    [-latex, rounded corners, alertColor] (6,3.85) -- (8.5,3.85);
+      \draw<5>    [-latex, rounded corners, structure]  (12.5,3.85) -- (10,3.85);
+
+      \draw<1>[fill=exampleColor!20, thick, rounded corners] (9,6.5)
+      +(-.5,-.35) rectangle +(1,.55)
+      +(0,.2)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny ?}
+      +(0,0)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny ?};
+      \draw<2>[fill=exampleColor!20, thick, rounded corners] (9,6.5)
+      +(-.5,-.35) rectangle +(1,.55)
+      +(0,.4)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$x.set(\bullet)$}
+      +(0,.2)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$y.set(\bullet)$}
+      +(0,0)     node[left]{\tiny$x$} node {\tiny=} node[right]{\tiny$?$}
+      +(0,-.2)   node[left]{\tiny$y$} node {\tiny=} node[right]{\tiny$?$};
+      \draw<3>[fill=exampleColor!20, thick, rounded corners] (9,6.5)
+      +(-.5,-.35) rectangle +(1,.55)
+      +(0,.3)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$x.get()$}
+      +(0,.1)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$x.get()$}
+      +(0,-.1)   node[left]{\tiny$x$} node {\tiny=} node[right, exampleColor]{\tiny$\bullet$};
+      \draw<4-5>[fill=exampleColor!20, thick, rounded corners] (9,6.5)
+      +(-.5,-.35) rectangle +(1,.55)
+      +(0,.3)     node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$x.get()$}
+      +(0,.1)     node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$x.set(\bullet)$}
+      +(0,-.1)    node[left]{\tiny$x$} node {\tiny=} node[right, exampleColor]{\tiny$\bullet$};
+      \draw<6>[fill=exampleColor!20, thick, rounded corners] (9,6.5)
+      +(-.5,-.35) rectangle +(1,.55)
+      +(0,.3)     node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$x.set(\bullet)$}
+      +(0,.1)     node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$x.set(\bullet)$}
+      +(0,-.1)    node[left]{\tiny$x$} node {\tiny=} node[right]{\tiny$?$};
+
+      \draw<1>[fill=structure!20, ultra thin, rounded corners] (7,5.2)
+      +(-.5,-.35) rectangle +(1,.55)
+      +(0,.2)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$...$}
+      +(0,.0)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny ?};
+      \draw<2>[fill=structure!20, ultra thin, rounded corners] (7,5.2)
+      +(-.5,-.35) rectangle +(1,.55)
+      +(0,.4)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$...$}
+      +(0,.2)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$y.set(\bullet)$}
+      +(0,0)     node[left]{\tiny$x$} node {\tiny=} node[right]{\tiny$\structure{\bullet}$}
+      +(0,-.2)   node[left]{\tiny$y$} node {\tiny=} node[right]{\tiny$?$};
+      \draw<3>[fill=structure!20, ultra thin, rounded corners] (7,5.2)
+      +(-.5,-.35) rectangle +(1,.55)
+      +(0,.3)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$f({\color{exampleColor}{\bullet}})$}
+      +(0,.1)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$x.get()$}
+      +(0,-.1)   node[left]{\tiny$x$} node {\tiny=} node[right, exampleColor]{\tiny$\bullet$};
+      \draw<4-5>[fill=structure!20, ultra thin, rounded corners] (7,5.2)
+      +(-.5,-.35) rectangle +(1,.55)
+      +(0,.3)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$f({\color{exampleColor}{\bullet}})$}
+      +(0,.1)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$x.set(\bullet)$}
+      +(0,-.1)   node[left]{\tiny$x$} node {\tiny=} node[right, exampleColor]{\tiny$\bullet$};
+      \draw<6>[fill=structure!20, ultra thin, rounded corners] (7,5.2)
+      +(-.5,-.35) rectangle +(1,.55)
+      +(0,.3)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$...$}
+      +(0,.1)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$x.set(\bullet)$}
+      +(0,-.1)   node[left]{\tiny$x$} node {\tiny=} node[right, structure]{\tiny$\bullet$};
+
+      \draw<1>[fill=alertColor!20, ultra thin, rounded corners] (11,5.2)
+      +(-.5,-.35) rectangle +(1,.55)
+      +(0,.2)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny ?}
+      +(0,.0)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$...$};
+      \draw<2>[fill=alertColor!20, ultra thin, rounded corners] (11,5.2)
+      +(-.5,-.35) rectangle +(1,.55)
+      +(0,.4)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$x.set(\bullet)$}
+      +(0,.2)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$...$}
+      +(0,0)     node[left]{\tiny$x$} node {\tiny=} node[right]{\tiny$?$}
+      +(0,-.2)   node[left]{\tiny$y$} node {\tiny=} node[right]{\tiny$\alert{\bullet}$};
+      \draw<3>[fill=alertColor!20, ultra thin, rounded corners] (11,5.2)
+      +(-.5,-.35) rectangle +(1,.55)
+      +(0,.3)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$x.get()$}
+      +(0,.1)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$g({\color{exampleColor}{\bullet}})$}
+      +(0,-.1)   node[left]{\tiny$x$} node {\tiny=} node[right, exampleColor]{\tiny$\bullet$};
+      \draw<4-5>[fill=alertColor!20, ultra thin, rounded corners] (11,5.2)
+      +(-.5,-.35) rectangle +(1,.55)
+      +(0,.3)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$x.get()$}
+      +(0,.1)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$...$}
+      +(0,-.1)   node[left]{\tiny$x$} node {\tiny=} node[right, alertColor]{\tiny$\bullet$};
+      \draw<6>[fill=alertColor!20, ultra thin, rounded corners] (11,5.2)
+      +(-.5,-.35) rectangle +(1,.55)
+      +(0,.3)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$x.set(\bullet)$}
+      +(0,.1)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$...$}
+      +(0,-.1)   node[left]{\tiny$x$} node {\tiny=} node[right, alertColor]{\tiny$\bullet$};
+
+      \draw<4-5>[fill=structure!20, ultra thin, rounded corners] (5,3.9)
+      +(-.5,-.35) rectangle +(1,.55)
+      +(0,.3)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$f({\color{exampleColor}{\bullet}})$}
+      +(0,.1)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$...$}
+      +(0,-.1)   node[left]{\tiny$x$} node {\tiny=} node[right, alertColor]{\tiny$\bullet$};
+      \draw<6>[fill=structure!20, ultra thin, rounded corners] (5,3.9)
+      +(-.5,-.35) rectangle +(1,.55)
+      +(0,.3)    node[left]  {\tiny$T_0$} node  {\tiny:} node[right]  {\tiny\textsc{crashed}}
+      +(0,.1)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$x.set(\bullet)$}
+      +(0,-.1)   node[left]{\tiny$x$} node {\tiny=} node[right]{\tiny$\structure{\bullet}$};
+
+      \draw<2>[fill=black!20, rounded corners] (9,3.9)
+      +(-.5,-.35) rectangle +(1,.55)
+      +(0,.4)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$...$}
+      +(0,.2)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$...$}
+      +(0,0)     node[left]{\tiny$x$} node {\tiny=} node[right]{\tiny$\structure{\bullet}$}
+      +(0,-.2)   node[left]{\tiny$y$} node {\tiny=} node[right]{\tiny$\alert{\bullet}$};
+      \draw<3>[fill=black!20, rounded corners] (9,3.9)
+      +(-.5,-.35) rectangle +(1,.55)
+      +(0,.3)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$f({\color{exampleColor}{\bullet}})$}
+      +(0,.1)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$g({\color{exampleColor}{\bullet}})$}
+      +(0,-.1)   node[left]{\tiny$x$} node {\tiny=} node[right, exampleColor]{\tiny$\bullet$};
+      \draw<5>[fill=black!20, rounded corners] (9,3.9)
+      +(-.5,-.35) rectangle +(1,.55)
+      +(0,.3)    node[left]  {\tiny$T_0$} node  {\tiny:} node[right]  {\tiny\textsc{crashed}}
+      +(0,.1)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$...$}
+      +(0,-.1)   node[left]{\tiny$x$} node {\tiny=} node[right, alertColor]{\tiny$\bullet$};
+      \draw<6>[fill=black!20, rounded corners] (9,3.9)
+      +(-.5,-.35) rectangle +(1,.55)
+      +(0,.3)    node[left]  {\tiny$T_0$} node  {\tiny:} node[right]  {\tiny\textsc{crashed}}
+      +(0,.1)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$...$}
+      +(0,-.1)   node[left]{\tiny$x$} node {\tiny=} node[right, alertColor]{\tiny$\bullet$};
+
+      \draw<4-5>[fill=alertColor!20, ultra thin, rounded corners] (13,3.9)
+      +(-.5,-.35) rectangle +(1,.55)
+      +(0,.3)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$f(\alert{\bullet})$}
+      +(0,.1)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$...$}
+      +(0,-.1)   node[left]{\tiny$x$} node {\tiny=} node[right, alertColor]{\tiny$\bullet$};
+      
+    \end{tikzpicture}
+  }
+
+\end{frame}
+
+\endgroup
+\endinput

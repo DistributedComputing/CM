@@ -1,0 +1,52 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Calculabilité de \lstinline{getAndSet}}
+
+  \begin{alertblock}{Théorème}
+    \begin{itemize}
+    \item \lstinline{getAndSet} résout le consensus entre 2 threads
+    \item \lstinline{getAndSet} ne résout pas le consensus entre $\ge 3$ threads
+    \end{itemize}
+  \end{alertblock}
+
+  \begin{block}{Démonstration}
+    Supposons qu'il existe un protocole pour 3 threads. Dans un état critique:
+    \begin{itemize}
+    \item si l'un d'eux lit, écrit ou accède à un registre différent : comme avant
+    \item si les trois appellent \lstinline{getAndSet}
+    \end{itemize}
+    \vspace{-3mm}
+    \begin{center}
+      \begin{tikzpicture}[automaton]
+        \state (0) at (2,4) {};
+        \state (1) at (1,3) {};
+        \state (2) at (3,3) {};
+        \state (3) at (2,2) {};
+
+        \path (0) edge node[swap]{$T_0$} (1);
+        \path (0) edge node[swap]{$T_1$} (2);
+        \path (1) edge node[swap]{$T_0$} (3);
+        \path (2) edge node[swap]{$T_1$} (3);
+
+%        \draw[-latex, dashed] (0,2) -- (0,0.2);
+%        \draw (0,1) node[left]{$T_2$};
+%        \draw[-latex] (2,2) -- (1.15,1.15);
+%        \draw (1.5,1.5) node[left]{$T_0$};
+%        
+%        \draw[-latex, dashed] (1,1) -- (1,0.2);
+%        \draw (1,0.5) node[right]{$T_2$};
+      \end{tikzpicture}
+    \end{center}
+  \end{block}
+
+\end{frame}
+
+\endgroup
+\endinput

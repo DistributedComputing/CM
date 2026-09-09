@@ -1,0 +1,41 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Consensus number}
+  \begin{block}{Consensus number d'une structure de données $T$}
+    %On s'autorise à utiliser autant d'instances de $T$ que nécessaire, et
+    %des \lstinline{RWRegister}.
+    Le consensus number de $T$ vaut :
+    \begin{itemize}
+    \item si ça existe, le nombre $n$ tel que : 
+      \begin{itemize}
+      \item $T$ est lock-free-universel quand il y a au plus $n$ threads% consensus possible entre $n$ threads
+      \item $T$ n'est pas lock-free-universel quand il y a au moins $n+1$ threads% consensus possible entre $n$ threads
+        %      \item consensus impossible entre $n+1$ threads
+      \end{itemize}
+    \item sinon, $\infty$ ($\simeq$ universel)
+    \end{itemize}
+  \end{block}
+  
+  \begin{block}{Consensus number d'une opération spéciale}
+    Le consensus number d'une opération spéciale est celui d'un registre
+    avec une opération de lecture, une opération d'écriture, et cette opération
+  \end{block}
+  
+  \begin{exampleblock}{Exemples}
+    \begin{itemize}
+    \item \lstinline{RWRegister}, Increment, Insert/Delete : $CN = 1$
+    \item \lstinline{getAndSet}, \lstinline{getAndAdd}, Pile, File : $CN \ge 2$
+    \item \lstinline{compareAndSet} Consensus: $CN = \infty$
+    \end{itemize}
+  \end{exampleblock}
+\end{frame}
+
+\endgroup
+\endinput

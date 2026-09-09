@@ -1,0 +1,43 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Algorithme de Lamport}
+
+  \begin{lstlisting}
+    class BakeryLock implements Lock {
+      private final (*\Structure{AtomicIntegerArray entering}*) = new AtomicIntegerArray(n);
+      private final (*\Example{AtomicIntegerArray priority}*) = new AtomicIntegerArray(n);
+      public void lock() {
+        int i = ThreadID.get();
+        (*\Structure{entering.set}*) (i, 1);
+        (*\Example{priority.set}*) (i, 1 + max( (*\Example{priority}*) ));
+        (*\Structure{entering.set}*) (i, 0);
+        for(int j = 0; j < n; j++) {
+          while(true) {
+            if( (*\Structure{entering.get}*) (j) == 1) continue;
+            int pI = (*\Example{priority.get}*) (i);
+            int pJ = (*\Example{priority.get}*) (j);
+            if(pJ == 0)              break;
+            if(pJ > pI)              break;
+            if(pJ == pI && j >= i)   break;
+          }
+      }
+      public void unlock() {
+        (*\Example{priority.set}*) (ThreadID.get(), 0);
+      }
+    }
+  \end{lstlisting}
+
+  \footnoteref{L. Lamport. \textit{A new solution of Dijkstra's concurrent programming problem.} CACM (1974)}
+  \footnoterefgithub{mutualexclusion}{BakeryLock}
+
+\end{frame}
+
+\endgroup
+\endinput

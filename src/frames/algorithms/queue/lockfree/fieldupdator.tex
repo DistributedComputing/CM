@@ -1,0 +1,37 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Autre possibilité}
+
+  \begin{lstlisting}[gobble=4]
+    class Node<T> {
+      
+      private (*\Structure{final static}*)  (*\Alert{AtomicReferenceFieldUpdater<Node, Node>}*) updater
+      = (*\Structure{AtomicReferenceFieldUpdater.newUpdater}*) ( (*\Example{Node.class}*), (*\Example{Node.class}*), (*\Example{"next"}*));
+      
+      private final T value;
+      private volatile Node<T> next = new Node<>(null);
+
+      public Node(T val) { value = val; }
+
+      public Node<T> getNext() { return next; }
+      
+      public T getValue() { return value; }
+
+      public boolean casNext(Node<T> expect, Node<T> update) {
+        return updater.compareAndSet(this, expect, update);
+      }
+
+    }
+  \end{lstlisting}
+
+\end{frame}
+
+\endgroup
+\endinput

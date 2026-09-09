@@ -1,0 +1,39 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Le consensus}
+
+  \begin{block}{Définition}
+    \begin{lstlisting}
+      interface Consensus<T> {
+        public T propose(T val) ;
+      }
+    \end{lstlisting}
+    Chaque thread \structure{propose} une valeur et peut en \structure{décider} une.
+    \begin{description}[Wait-freedom : ]
+    \item[Accord : ] Au plus une valeur décidée
+    \item[Validité : ] Toute valeur décidée a été proposée
+    \item[Wait-freedom : ] Tout thread correct décide
+    \end{description}
+  \end{block}
+
+  \pause
+
+  \begin{exampleblock}{Feuille de route}
+    \begin{description}[Thm1 :]
+    \item[Thm1 :] Si on pouvait implémenter une séquence, \\ \hspace{5mm} alors on pourrait résoudre le consensus {\color{exampleColor}entre deux threads}
+    \item[Thm2 :] Or, on ne peut pas résoudre le consensus entre deux threads
+    \item[Conc :] Donc on ne peut pas implémenter une séquence
+    \end{description}
+  \end{exampleblock}
+
+\end{frame}
+
+\endgroup
+\endinput

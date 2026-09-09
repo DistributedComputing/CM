@@ -1,0 +1,82 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\tikzset{
+  sshape/.style={
+    text width=20mm,
+    rectangle,
+    rounded corners,
+    fill=black!10,
+  },
+}
+
+\newcommand\scontent[3]{\begin{tabular}{@{}r@{}c@{~}l@{}}
+    \tiny \texttt{t1}     & \tiny : & \tiny \texttt{#1} \\[-.8mm]
+    \tiny \texttt{t2}     & \tiny : & \tiny \texttt{#2} \\[-.8mm]
+    \tiny \texttt{result} & \tiny = & \tiny \texttt{#3} \\[-.8mm]
+\end{tabular}}
+
+\begin{frame}[fragile]{Ce que l'on voudrait}
+
+  \begin{block}{Rappel : exécution séquentiellement cohérente}
+    Le résultat observable \alert<2>{d'une exécution} est le même que celui d'un entrelacement de l'ordre ``happened before''
+  \end{block}
+
+  \vspace{3mm}
+  \begin{lstlisting}
+    interface Counter {
+      void increment() ;
+      int get() ;
+    }
+  \end{lstlisting}
+  \vspace{3mm}
+
+  \on[y=5mm, x=.2\textwidth]{
+    \begin{tikzpicture}[automaton, x=30mm, y=12mm]
+      \state[sshape,initial]                       (01) at (0,1) {\scontent {\example{increment()}} {\alert{increment()}}  {0} };
+      \state[sshape]                               (00) at (0,0) {\scontent {\example{increment()}} {\textsc{term.}}       {1} };
+      \state[sshape]                               (11) at (1,1) {\scontent {\textsc{term.}}        {\alert{increment()}}  {1} };
+      \state[sshape, accepting, fill=structure!20] (10) at (1,0) {\scontent {\textsc{term.}}        {\textsc{term.}}       {2} };
+
+      \path[alert]   (01) edge (00);
+      \path[alert]   (11) edge (10);
+      \path[example] (01) edge (11);
+      \path[example] (00) edge (10);
+    \end{tikzpicture}
+  }
+  
+  \begin{block}{Entrelacements possibles}
+    \vspace{-2mm}
+    \begin{itemize}
+    \item ${\color{exampleColor}t_1:increment();~} {\color{alertColor}t_2:increment();~}$ \hspace{5mm} \structure{$result=2$}
+    \item ${\color{alertColor}t_2:increment();~} {\color{exampleColor}t_1:increment();~}$ \hspace{5mm} \structure{$result=2$}
+    \end{itemize}
+  \end{block}
+
+  \pause
+  \vspace{-1mm}
+
+  \begin{block}{Objet partagé séquentiellement cohérent}
+    Le résultat observable \alert{des opérations sur l'objet partagé}
+    d'une exécution est le même que celui d'un entrelacement de l'ordre ``happened before''
+  \end{block}
+
+  
+%  \begin{block}{Notion d'atomicité}
+%    \vspace{-2mm}
+%    \begin{itemize}
+%    \item À quelle granularité définit-on les \structure{événements} d'une exécution ?  
+%    \item \alert{Section critique} : portion de code qui doit être exécutée \structure{atomiquement}
+%    \end{itemize}
+%  \end{block}
+
+\end{frame}
+
+\endgroup
+\endinput

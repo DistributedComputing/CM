@@ -1,0 +1,35 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Exemple}
+
+  \begin{lstlisting}
+    class Compteur {
+      
+      private int v = 0;
+      private ReadWriteLock lock = new ReentrantReadWriteLock();
+      
+      public void increment() {
+        lock.writeLock().lock();
+        try { ++v; }
+        finally { lock.writeLock().unlock(); }
+      }
+      
+      public int get() {
+        lock.readLock().lock();
+        try { return v; }
+        finally { lock.readLock().unlock(); }
+      }
+    }
+  \end{lstlisting}
+
+\end{frame}
+
+\endgroup
+\endinput

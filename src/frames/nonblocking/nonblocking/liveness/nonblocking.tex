@@ -1,0 +1,42 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Progrès bloquant versus progrès non-bloquant}
+
+  \begin{description}[Progrès non-bloquant :]
+  \item[Progrès non-bloquant :] Les threads corrects progressent \alert{malgré les pannes}.
+    \begin{itemize}
+    \item propriété violée par l'utilisation de verrous.
+    \end{itemize}
+  \item[Progrès bloquant :] Les threads progressent \alert{s'il n'y a pas de panne}.
+    \begin{itemize}
+    \item propriété violée lors d'un interblocage circulaire.
+    \end{itemize}
+  \end{description}
+  
+  \begin{block}{Définition plus précise du progrès bloquant}
+    Un objet $O$ vérifie le progrès bloquant si,
+    pour toute exécution dans laquelle aucun processus ne tombe en panne,
+    toutes les opérations se terminent.
+  \end{block}
+
+  \begin{exampleblock}{Exemple d'algorithme bloquant}
+    \begin{lstlisting}[gobble=6]
+      int getAndIncrement() {
+        while (lock.getAndSet(true));
+        value.set(value.get()+1);
+        lock.set(false);
+      }
+    \end{lstlisting}
+  \end{exampleblock}
+
+\end{frame}
+
+\endgroup
+\endinput

@@ -1,0 +1,45 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{La méthode \lstinline{dequeue}}
+
+  \begin{lstlisting}[gobble=4]
+    public T dequeue_sequentiel() {
+      if(first == last) return null;
+      first = first.next;
+      return first.value;
+    }
+  \end{lstlisting}
+
+  \begin{lstlisting}[gobble=4]
+    public T dequeue() {
+      while (true) {
+        var f = first.get();
+        var l = last.get();
+        var n = f.next.get();
+        if (f == l) {
+          if (n == null) return null;
+          else last.compareAndSet(l, n);
+        } else if (first.compareAndSet(f, n)) {
+          return n.value;
+        }
+      }
+    }
+  \end{lstlisting}
+  
+  \begin{exampleblock}{À vous de jouer}
+    \begin{itemize}
+    \item Expliquez (avec des contre-exemples) chaque ligne de la méthode 
+    \end{itemize}
+  \end{exampleblock}
+  
+\end{frame}
+
+\endgroup
+\endinput

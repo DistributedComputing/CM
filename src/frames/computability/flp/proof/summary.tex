@@ -1,0 +1,47 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Résumé}
+
+  \begin{block}{Théorème}
+    \vspace{-3mm}
+    \begin{center}
+      Il n'existe pas d'implémentation lock-free linéarisable de la séquence\\
+      qui n'utilise que des lectures et écritures sur des variables partagées.
+    \end{center}
+    \vspace{-2mm}
+  \end{block}
+
+  \begin{exampleblock}{Démonstration}
+    \begin{itemize}
+    \item[Thm1 :] Si on pouvait implémenter une séquence, \\ \hspace{5mm} alors on pourrait résoudre le consensus {\color{exampleColor}entre deux threads}
+    \item[Thm2 :] Or, on ne peut pas résoudre le consensus entre deux threads
+      \begin{description}
+      \item[Introduction :] Supposons qu'il existe un tel algorithme $A$ ;
+      \item[Lemme 1 :] $A$ possède une configuration critique ;
+      \item[Lemme 2 :] $A$ ne possède pas de configuration critique ;
+      \item[Conclusion :] absurde : $A$ n'existe pas !
+      \end{description}
+    \item[Conc :] Donc on ne peut pas implémenter une séquence
+    \end{itemize}
+  \end{exampleblock}
+
+  \vspace{-2mm}
+  \begin{alertblock}{Solution}
+    \vspace{-1mm}
+    \begin{itemize}
+    \item Il faut ajouter de la puissance de calcul au modèle multi-threads
+    \item Toutes les instructions spéciales se valent-elles ? 
+    \end{itemize}
+  \end{alertblock}
+
+\end{frame}
+
+\endgroup
+\endinput

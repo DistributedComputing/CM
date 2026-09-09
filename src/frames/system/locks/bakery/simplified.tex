@@ -1,0 +1,73 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\SetKwFunction{Lock}{lock}
+\SetKwFunction{Unlock}{unlock}
+
+\newcommand\Frenchie[2]{
+  \begin{tikzpicture}
+    \node[anchor=south, outer sep=0pt] (img) at (0,0) {\includegraphics[height=2cm]{#2}};
+    \node[fill=white, circle, inner sep=1pt, outer sep=0pt] at ([yshift=3mm]img.south) {#1};
+  \end{tikzpicture}
+}
+
+\newcommand\FrenchieStructure[1]{\Frenchie{#1}{frenchieBleu} {structure}}
+\newcommand\FrenchieAlert[1]    {\Frenchie{#1}{frenchieRouge}{alert}}
+\newcommand\FrenchieExample[1]  {\Frenchie{#1}{frenchieVert} {example}}
+\newcommand\FrenchieRight[1]    {\Frenchie{#1}{frenchieDroit}{structure}}
+
+\begin{frame}[fragile]{Algorithme simplifié}
+
+  \on[text,top]{
+    \begin{algorithm}[H]
+      \SVariables{}{
+        \Structure<2>{$tickets[n] \leftarrow [\infty, ..., \infty]$}\;
+      }
+      \Operation{$\Lock()$}{
+        \nl \Example<6>{\Structure<3>{$tickets[i] \leftarrow 0$}}\;
+        \nl \Structure<4>{\Let $t_i$ \St $\displaystyle \left\langle t_i,i \right\rangle > \max_{j : tickets[j] < \infty} \Alert<6>{\left\langle tickets[j], j\right\rangle}$}\;
+        \nl \Alert<6>{\Structure<4>{$tickets[i] \leftarrow t_i$}}\;
+        \nl \Structure<5>{\Wait $\displaystyle \left\langle t_i,i \right\rangle = \min_j \Example<6>{\left\langle tickets[j], j \right\rangle}$}.
+      }
+      \Operation{$\Unlock()$}{
+        \Structure<2>{$tickets[i] \leftarrow \infty$}.
+      }
+    \end{algorithm}
+  }
+
+  \onBlock<6>[bottom]{Exclusion mutuelle:}{
+    Soient $p_i$ et $p_j$ en section critique, avec $\left\langle t_i,i \right\rangle < \left\langle t_j,j \right\rangle$
+
+    \vspace{3mm}
+    \begin{tikzpicture}[y=7mm, anchor=mid]
+      \draw[->] (0,0) node[left]{$p_i$} -- (6,0) ;
+      \draw[->] (0,1) node[left]{$p_j$} -- (6,1) ;
+
+      \footnotesize
+      \node[operation, example, fill=example!20] at (1.5,1) {1: $tickets[i] \leftarrow 0$};
+      \node[operation, alert, fill=alert!20]     at (4  ,1) {2: $tickets[j] \rightarrow {<t_j}$};
+      \node[operation, alert, fill=alert!20]     at (1.5,0) {3: $tickets[j] \leftarrow t_j$};
+      \node[operation, example, fill=example!20] at (4  ,0) {4: $tickets[i] \rightarrow \infty$};
+    \end{tikzpicture}
+  }
+
+  \on     [x= 43mm,y=-28mm]  {\includegraphics[height=3.3cm]{bakery}}
+  \ob<2>  [x= 43mm,y= 10mm]  {\Frenchie{\structure{$\infty$}}{Alice}}
+  \ob<5>  [x= 33mm,y= 10mm]  {\Frenchie{\alert{$\infty$}}{Carole}}
+  \ob<5>  [x= 53mm,y= 10mm]  {\Frenchie{\example{$\infty$}}{Bob}}
+  \ob<4>  [x=-45mm,y=-34.5mm]{\Frenchie{\structure{$4$}}{Alice}}
+  \ob<2-4>[x=-25mm,y=-34.5mm]{\Frenchie{\alert{$3$}}{Carole}}
+  \ob<2-4>[x=-05mm,y=-34.5mm]{\Frenchie{\example{$2$}}{Bob}}
+  \ob<3>  [x= 15mm,y=-34.5mm]{\Frenchie{\structure{$0$}}{Alice}}
+  \ob<5>  [x= 15mm,y=-34.5mm]{\Frenchie{\structure{$4$}}{Alice}}
+  
+\end{frame}
+
+\endgroup
+\endinput

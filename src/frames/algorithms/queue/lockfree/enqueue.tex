@@ -1,0 +1,167 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{La méthode \lstinline{enqueue}}
+
+  \vspace{-20mm}
+  \begin{onlyenv}<1>
+    \begin{lstlisting}[gobble=6]
+      public void enqueue(T value) {
+
+
+
+
+
+        (*\Alert{last.next}*) = new Node(value);
+        (*\Alert{last}*) = last.next;
+
+
+
+
+      }
+    \end{lstlisting}
+  \end{onlyenv}
+  \begin{onlyenv}<2>
+    \begin{lstlisting}[gobble=6]
+      public void enqueue(T value) {
+
+
+
+
+
+        last. (*\Alert{get()}*) .next. (*\Structure{set}*) (new Node(value));
+        last. (*\Structure{set}*) (last. (*\Alert{get()}*) .next. (*\Example{get()}*));
+
+
+
+
+      }
+    \end{lstlisting}
+  \end{onlyenv}
+  \begin{onlyenv}<3>
+    \begin{lstlisting}[gobble=6]
+      public void enqueue(T value) {
+        var node = new Node(value);
+        
+        var l = last. (*\Alert{get();}*)
+
+
+        l.next. (*\Structure{set(node);}*)
+        last. (*\Structure{set(node);}*)
+
+
+
+
+      }
+    \end{lstlisting}
+  \end{onlyenv}
+  \begin{onlyenv}<4>
+    \begin{lstlisting}[gobble=6]
+      public void enqueue(T value) {
+        var node = new Node(value);
+        
+        var l = last.get();
+
+
+        l.next. (*\Structure{compareAndSet(null, node);}*)
+        last. (*\Structure{compareAndSet(l, node);}*)
+
+
+
+
+      }
+    \end{lstlisting}
+  \end{onlyenv}
+  \begin{onlyenv}<5>
+    \begin{lstlisting}[gobble=6]
+      public void enqueue(T value) {
+        var node = new Node(value);
+        (*\Structure{while (true)}*) {
+          var l = last.get();
+
+
+          (*\Structure{if (l.next.compareAndSet(null, node))}*) {
+            last.compareAndSet(l, node);
+            (*\Structure{return;}*)
+          }
+          
+        }
+      }
+    \end{lstlisting}
+  \end{onlyenv}
+  \begin{onlyenv}<6>
+    \begin{lstlisting}[gobble=6]
+      public void enqueue(T value) {
+        var node = new Node(value);
+        while (true) {
+          var l = last.get();
+          (*\Structure{var n = l.next.get();}*)
+          (*\Structure{if (n == null)}*) {
+            if (l.next.compareAndSet(n, node)){
+              last.compareAndSet(l, node);
+              return;
+            }
+          } (*\Structure{else last.compareAndSet(l, n);}*)
+        }
+      }
+    \end{lstlisting}
+  \end{onlyenv}
+
+  \onBlock<3->[right=45mm, top]{Conseils}{
+    \begin{enumerate} \setcounter{enumi}{3}
+    \item<3-> Une seule opération atomique par ligne
+    \item<4-> Protéger les écritures par des \lstinline{compareAndSet}
+    \item<5-> Retenter si échec
+      \begin{itemize}
+      \item lock-freedom
+      \end{itemize}
+    \end{enumerate}
+  }
+
+  \onAlertBlock<3-5>[y=-10mm, anchor=north]{Contre-exemple}{
+    \begin{tikzpicture}[anchor=mid, x=15mm]
+      \draw<3-4>[process] (0,1) node[left]{$T_1$} to (7,1);
+      \draw<3-5>[process] (0,0) node[left]{$T_2$} to (7,0);
+      \draw<5>  [crashed] (0,1) node[left]{$T_1$} to (2.6,1);
+      
+      \node<3>[alert, operation] (31) at (1 ,1) {$get()$};
+      \node<3>[alert, operation] (32) at (2 ,0) {$get()$};
+      \node<3>[alert, operation] (33) at (3 ,1) {$set()$};
+      \node<3>[alert, operation] (34) at (4 ,0) {$set()$};
+      \node<3>[alert, operation] (35) at (5 ,0) {$set()$};
+      \node<3>[alert, operation] (36) at (6 ,1) {$set()$};
+      \node<4>[alert, operation] (41) at (1 ,1) {$get()$};
+      \node<4>[alert, operation] (42) at (2 ,0) {$get()$};
+      \node<4>[alert, operation] (43) at (3 ,1) {$cas()$};
+      \node<4>[alert, operation] (44) at (4 ,0) {$cas()$};
+      \node<4>[alert, operation] (45) at (5 ,0) {$cas()$};
+      \node<4>[alert, operation] (46) at (6 ,1) {$cas()$};
+      \node<5>[alert, operation] (51) at (1 ,1) {$get()$};
+      \node<5>[alert, operation] (52) at (2 ,1) {$cas()$};
+      \node<5>[alert, operation] (53) at (3 ,0) {$get()$};
+      \node<5>[alert, operation] (54) at (4 ,0) {$cas()$};
+      \node<5>[alert, operation] (55) at (5 ,0) {$get()$};
+      \node<5>[alert, operation] (56) at (6 ,0) {$cas()$};
+
+      \begin{scope}[background]
+        \node<3>[structure, operation, fit=(31)(36)] {};
+        \node<3>[structure, operation, fit=(32)(35)] {};
+        \node<4>[structure, operation, fit=(41)(46)] {};
+        \node<4>[structure, operation, fit=(42)(45)] {};
+        \node<5>[structure, operation, fit=(51)(52)] {};
+        \node<5>[structure, operation, fit=(53)(56)] {};
+      \end{scope}
+      
+    \end{tikzpicture}
+  }
+  
+\end{frame}
+
+\endgroup
+\endinput

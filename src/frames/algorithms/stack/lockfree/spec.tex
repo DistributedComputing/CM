@@ -1,0 +1,40 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Spécification de la pile partagée}
+
+  \begin{description}[Condition de progression :]
+  \item[Spécification séquentielle :] Une pile
+  \end{description}
+
+  \begin{lstlisting}[gobble=4]
+    interface Stack<T> {
+      //    record Node(T value, Node next); 
+      //    Node head = null; 
+      void push(T value); // {
+        //       head = new Node(value, head);
+        //    }
+      T pop(); // {
+        //       if(head==null) return null;
+        //       T v = head.value();
+        //       head = head.next();
+        //       return v;
+        //    }
+    }
+  \end{lstlisting}
+
+  \begin{description}[Condition de progression :]
+  \item[Critère de cohérence :] Linéarisabilité
+  \item[Condition de progression :] Lock-free, puis wait-free
+  \end{description}
+
+\end{frame}
+
+\endgroup
+\endinput

@@ -1,0 +1,49 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Démonstration de la linéarisabilité}
+
+  \begin{lstlisting}[numbers=left, gobble=4]
+    public void push(T value) {
+      int i = range.getAndIncrement();
+      items.set(i, value);
+    }
+    public T pop() {
+      for(int i = range.get()-1; i>=0; i--) {
+        T value = items.getAndSet(i, null);
+        if(value != null) return value;
+      }
+      return null;
+    }
+  \end{lstlisting}
+  
+  Soit $range(v_i)$ la valeur de \lstinline{range.getAndIncrement()} lors de $push(v_i)$.
+
+  On définit une relation $\le$ sur les opérations d'une exécution :
+  \begin{itemize}
+  \item $\structure{push(v)} < \structure{pop()\rightarrow v}$
+  \item Si $\structure{range(v_1)} < \example{range(v_2)}$
+    \begin{itemize}
+    \item si $\example{pop() \rightarrow v_2}$ a lu $\structure{items[range(v_1)]}$ après qu'elle a été écrite
+      \begin{itemize}
+      \item alors $\structure{push(v_1)} < \structure{pop()\rightarrow v_1} < \example{push(v_2)} < \example{pop()\rightarrow v_2}$
+      \end{itemize}
+    \item Sinon
+      \begin{itemize}
+      \item $\structure{push(v_1)} < \example{push(v_2)} < \example{pop()\rightarrow v_2} < \structure{pop()\rightarrow v_1}$
+      \end{itemize}
+    \end{itemize}
+  \item Intercaller les opérations $pop()\rightarrow \bot$ et $push(v)$ restantes
+  \end{itemize}
+  On démontre que $\le$ est une relation d'ordre totale, qui contient le temps réel. 
+  
+\end{frame}
+
+\endgroup
+\endinput

@@ -1,0 +1,75 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Généralisation : \lstinline{java.util.concurrent.atomic.LongAdder}}
+
+  \begin{lstlisting}[gobble=4]
+    public void (*\Example{add}*) (int threadId, int (*\Example{delta}*) ) {
+      int old = (*\Alert{values.get}*) (threadId);
+      (*\Alert{values.set}*) (threadId, old + (*\Example{delta}*) );
+    }
+
+    public int (*\Structure{get()}*) {
+      int sum = 0;
+      for(int i = 0; i<values.length(); i++) {
+        sum += (*\Alert{values.get(i);}*)
+      }
+      return sum;
+    }
+  \end{lstlisting}
+
+  \pause
+
+  \begin{alertblock}{Contre-exemple à  la linéarisabilité}
+    \begin{center}
+      \scalebox{.55}{
+        \begin{tikzpicture}
+          \draw[exampleColor, fill=exampleColor!20, rounded corners] (1.8,1.6)  rectangle (4.2,2.4);
+          \draw[exampleColor, fill=exampleColor!20, rounded corners] (5.2,0.6)  rectangle (7.6,1.4);
+          \draw[structure, fill=structure!20, rounded corners] (0.6,-0.4) rectangle (10.0,0.4);
+
+          \draw[structure, -latex]  (0,3) node[left]{\scriptsize $counter$} +(.15,.12) node{\footnotesize $0$} +(0,0) -- (10.6,3);
+          \draw[-latex] (0,2) node[left]{$T_0$} -- (10.6,2);
+          \draw[-latex] (0,1) node[left]{$T_1$} -- (10.6,1);
+          \draw[-latex] (0,0) node[left]{$T_2$} -- (10.6,0);
+          \draw[alertColor, -latex] (0,-1   ) node[left]{\scriptsize $values[1]$} +(.15,.12) node{\scriptsize $0$} +(0,0) -- (10.6,-1   );
+          \draw[alertColor, -latex] (0,-1.25) node[left]{\scriptsize $values[2]$} +(.15,.12) node{\scriptsize $0$} +(0,0) -- (10.6,-1.25);
+          \draw[alertColor, -latex] (0,-1.5 ) node[left]{\scriptsize $values[3]$} +(.15,.12) node{\scriptsize $0$} +(0,0) -- (10.6,-1.5 );
+
+          \draw[exampleColor, thick, densely dotted] (2.9,2.4) node{$\bullet$} -- (2.9 ,3 ) node{$\bullet$}
+          +(0,.15) node[left]{\footnotesize $add(2)$} node[right]{\footnotesize $2$};
+          \draw[exampleColor, thick, densely dotted] (6.4,1.4) node{$\bullet$} -- (6.4 ,3 ) node{$\bullet$}
+          +(0,.15) node[left]{\footnotesize $add(3)$} node[right]{\footnotesize $5$};
+          \draw[structure, thick, densely dotted] (4.7,0.4) node{$\bullet$} -- (4.7 ,2.5 ) node[above]{$?$}
+          +(0,.15) node[left]{\footnotesize $get()$} node[right]{\footnotesize $3$};
+
+          \draw[alertColor, thick, densely dotted] (1.2 ,0) -- (1.2 ,-1   ) node{$\bullet$} +(.15,.12) node{\scriptsize $0$};
+          \draw[alertColor, thick, densely dotted] (2.4 ,2) -- (2.4 ,-1   ) node{$\bullet$} +(.15,.12) node{\scriptsize $0$};
+          \draw[alertColor, thick, densely dotted] (3.6 ,2) -- (3.6 ,-1   ) node{$\bullet$} +(.15,.12) node{\scriptsize $2$};
+          \draw[alertColor, thick, densely dotted] (5.8 ,1) -- (5.8 ,-1.25) node{$\bullet$} +(.15,.12) node{\scriptsize $0$};
+          \draw[alertColor, thick, densely dotted] (7.0 ,1) -- (7.0 ,-1.25) node{$\bullet$} +(.15,.12) node{\scriptsize $3$};
+          \draw[alertColor, thick, densely dotted] (8.2 ,0) -- (8.2 ,-1.25) node{$\bullet$} +(.15,.12) node{\scriptsize $3$};
+          \draw[alertColor, thick, densely dotted] (9.4 ,0) -- (9.4 ,-1.5 ) node{$\bullet$} +(.15,.12) node{\scriptsize $0$};
+
+          \draw[alertColor, fill=alertColor!20, rounded corners] (1.2 ,0) +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$get()$};
+          \draw[alertColor, fill=alertColor!20, rounded corners] (2.4 ,2) +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$get()$};
+          \draw[alertColor, fill=alertColor!20, rounded corners] (3.6 ,2) +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$set(2)$};
+          \draw[alertColor, fill=alertColor!20, rounded corners] (5.8 ,1) +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$get()$};
+          \draw[alertColor, fill=alertColor!20, rounded corners] (7.0,1) +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$set(3)$};
+          \draw[alertColor, fill=alertColor!20, rounded corners] (8.2  ,0) +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$get()$};
+          \draw[alertColor, fill=alertColor!20, rounded corners] (9.4,0) +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$get()$};
+        \end{tikzpicture}
+      }
+    \end{center}
+  \end{alertblock}
+
+\end{frame}
+
+\endgroup
+\endinput

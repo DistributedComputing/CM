@@ -1,0 +1,117 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{2 -- Limite de \lstinline{getAndIncrement}}
+
+    \vspace{-3mm}
+  \begin{exampleblock}{Lemme}
+    \begin{itemize}
+    \item Il est impossible de résoudre le consensus entre 3 processus à partir de \lstinline{getAndIncrement}
+    \end{itemize}
+  \end{exampleblock}
+
+    \vspace{-3mm}
+  \begin{block}{Démonstration}
+    Même structure que pour l'impossibilité du consensus à partir de lire/écrire : 
+    \begin{description}
+    \item[Introduction] Supposons qu'il existe un tel algorithme $A$ ; \structure{(idem)}
+    \item[Lemme 1] $A$ possède une configuration critique ; \structure{(idem)}
+    \item[Lemme 2] $A$ ne possède pas de configuration critique ; \structure{(à adapter)}
+      \begin{itemize}
+      \item l'un d'eux lit, écrit ou accède un autre registre \structure{(idem)}
+      \item les trois appellent \lstinline{getAndIncrement} sur le même registre
+      \end{itemize}
+    \end{description}
+    \vspace{-2mm}
+    \begin{center}
+      \scalebox{.75}{
+        \begin{tikzpicture}
+          \draw[-latex, rounded corners, structure, thick ] (8.5,6.5) -- (7.8,6.5);
+          \draw[-latex, rounded corners, structure ] (5.5,6.5) -- (4.8,6.5);
+          \draw[-latex, rounded corners, alertColor] (3.65,6.05) -- (3.65,5.75);
+          \draw[-latex, rounded corners, alertColor] (4.8,5.3) -- (8.5, 5.3);
+
+          \draw[-latex, rounded corners, alertColor, thick] (10.8,6.5) -- (11.5,6.5);
+          \draw[-latex, rounded corners, alertColor] (13.8,6.5) -- (14.5,6.5);
+          \draw[-latex, rounded corners, structure ] (15.65,6.05) -- (15.65,5.75);
+          \draw[-latex, rounded corners, structure ] (14.5,5.3) -- (10.8,5.3);
+
+          \draw[fill=exampleColor!20, thick, rounded corners] (9,6.5)
+          +(-.5,-.45) rectangle +(1.8,.45)
+          +(0,.3)     node[left, structure]    {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$x.getAndIncrement()$}
+          +(0,.1)     node[left, alertColor]   {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$x.getAndIncrement()$}
+          +(0,-.1)     node[left, exampleColor] {\tiny$T_2$} node[exampleColor] {\tiny:} node[right, exampleColor] {\tiny$x.getAndIncrement()$}
+          +(0,-.3)    node[left]{\tiny$x$} node{\tiny=} node[right]{\tiny $n$};
+
+          \draw[fill=structure!20, ultra thin, rounded corners] (6,6.5)
+          +(-.5,-.45) rectangle +(1.8,.45)
+          +(0,.3)     node[left, structure]    {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny ...}
+          +(0,.1)     node[left, alertColor]   {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$x.getAndIncrement()$}
+          +(0,-.1)     node[left, exampleColor] {\tiny$T_2$} node[exampleColor] {\tiny:} node[right, exampleColor] {\tiny$x.getAndIncrement()$}
+          +(0,-.3)    node[left]{\tiny$x$} node{\tiny=} node[right]{\tiny $n$};
+
+          \draw[fill=structure!20, ultra thin, rounded corners] (3,6.5)
+          +(-.5,-.45) rectangle +(1.8,.45)
+          +(0,.3)     node[left, structure]    {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny crashed}
+          +(0,.1)     node[left, alertColor]   {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$x.getAndIncrement()$}
+          +(0,-.1)     node[left, exampleColor] {\tiny$T_2$} node[exampleColor] {\tiny:} node[right, exampleColor] {\tiny$x.getAndIncrement()$}
+          +(0,-.3)    node[left]{\tiny$x$} node{\tiny=} node[right]{\tiny $n$};
+
+          \draw[fill=structure!20, ultra thin, rounded corners] (3,5.3)
+          +(-.5,-.45) rectangle +(1.8,.45)
+          +(0,.3)     node[left, structure]    {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny crashed}
+          +(0,.1)     node[left, alertColor]   {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny ...}
+          +(0,-.1)     node[left, exampleColor] {\tiny$T_2$} node[exampleColor] {\tiny:} node[right, exampleColor] {\tiny$x.getAndIncrement()$}
+          +(0,-.3)    node[left]{\tiny$x$} node{\tiny=} node[right]{\tiny $n$};
+
+
+
+
+          \draw[fill=alertColor!20, ultra thin, rounded corners] (12,6.5)
+          +(-.5,-.45) rectangle +(1.8,.45)
+          +(0,.3)     node[left, structure]    {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$x.getAndIncrement()$}
+          +(0,.1)     node[left, alertColor]   {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny ...}
+          +(0,-.1)     node[left, exampleColor] {\tiny$T_2$} node[exampleColor] {\tiny:} node[right, exampleColor] {\tiny$x.getAndIncrement()$}
+          +(0,-.3)    node[left]{\tiny$x$} node{\tiny=} node[right]{\tiny $n$};
+
+          \draw[fill=alertColor!20, ultra thin, rounded corners] (15,6.5)
+          +(-.5,-.45) rectangle +(1.8,.45)
+          +(0,.3)     node[left, structure]    {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$x.getAndIncrement()$}
+          +(0,.1)     node[left, alertColor]   {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny crashed}
+          +(0,-.1)     node[left, exampleColor] {\tiny$T_2$} node[exampleColor] {\tiny:} node[right, exampleColor] {\tiny$x.getAndIncrement()$}
+          +(0,-.3)    node[left]{\tiny$x$} node{\tiny=} node[right]{\tiny $n$};
+
+          \draw[fill=alertColor!20, ultra thin, rounded corners] (15,5.3)
+          +(-.5,-.45) rectangle +(1.8,.45)
+          +(0,.3)     node[left, structure]    {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny ...}
+          +(0,.1)     node[left, alertColor]   {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny crashed}
+          +(0,-.1)     node[left, exampleColor] {\tiny$T_2$} node[exampleColor] {\tiny:} node[right, exampleColor] {\tiny$x.getAndIncrement()$}
+          +(0,-.3)    node[left]{\tiny$x$} node{\tiny=} node[right]{\tiny $n$};
+          
+          
+          \draw[fill=black!20, ultra thin, rounded corners] (9,5.3)
+          +(-.5,-.45) rectangle +(1.8,.45)
+          +(0,.3)     node[left, structure]    {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny crashed}
+          +(0,.1)     node[left, alertColor]   {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny crashed}
+          +(0,-.1)     node[left, exampleColor] {\tiny$T_2$} node[exampleColor] {\tiny:} node[right, exampleColor] {\tiny $x.getAndIncrement()$}
+          +(0,-.3)    node[left]{\tiny$x$} node{\tiny=} node[right]{\tiny $n$};
+
+        \end{tikzpicture}
+      }
+    \end{center}
+    \vspace{-1mm}
+    \begin{description}
+    \item[Conclusion] absurde : $A$ n'existe pas ! \structure{(idem)}
+    \end{description}
+  \end{block}
+
+\end{frame}
+
+\endgroup
+\endinput

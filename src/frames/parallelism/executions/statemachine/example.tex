@@ -1,0 +1,70 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\tikzset{
+  sshape/.style={
+    text width=19mm,
+    rectangle,
+    rounded corners,
+    fill=black!10,
+  },
+}
+
+\newcommand\scontent[3]{\begin{tabular}{@{}r@{}c@{~}l@{}}
+    \tiny \texttt{main} & \tiny : & \tiny \texttt{#1} \\[-.8mm]
+    \tiny \texttt{t1}   & \tiny : & \tiny \texttt{#2} \\[-.8mm]
+    \tiny \texttt{t2}   & \tiny : & \tiny \texttt{#3}
+\end{tabular}}
+
+\begin{frame}{Machine à états de l'exemple}
+
+  \on[y=-3mm]{
+    \begin{tikzpicture}[automaton, x=30mm, y=6mm]
+      \state[sshape,initial below] (000) at (0,11) {\scontent {\structure{main()      }} {null                    } {null                       } };
+      \state[sshape]               (323) at (0,06) {\scontent {t1.join()               } {\alert{print(``hello'')}} {\textsc{terminated}        } };
+      \state[sshape]               (111) at (1,11) {\scontent {\structure{t1.start()  }} {\textsc{new}            } {\textsc{new}               } };
+      \state[sshape]               (221) at (1,09) {\scontent {\structure{t2.start()  }} {\alert{print(``hello'')}} {\textsc{new}               } };
+      \state[sshape]               (322) at (1,07) {\scontent {t1.join()               } {\alert{print(``hello'')}} {\example{print(``multi.'')}} };
+      \state[sshape]               (333) at (1,05) {\scontent {t1.join()               } {\alert{print(``world'')}} {\textsc{terminated}        } };
+      \state[sshape]               (231) at (2,08) {\scontent {\structure{t2.start()  }} {\alert{print(``world'')}} {\textsc{new}               } };
+      \state[sshape]               (332) at (2,06) {\scontent {t1.join()               } {\alert{print(``world'')}} {\example{print(``multi.'')}} };
+      \state[sshape]               (343) at (2,04) {\scontent {\structure{t1.join()   }} {\textsc{terminated}     } {\textsc{terminated}        } };
+      \state[sshape]               (443) at (2,02) {\scontent {\structure{t2.join()   }} {\textsc{terminated}     } {\textsc{terminated}        } };
+      \state[sshape]               (543) at (2,00) {\scontent {\structure{print(``!'')}} {\textsc{terminated}     } {\textsc{terminated}        } };
+      \state[sshape]               (241) at (3,07) {\scontent {\structure{t2.start()  }} {\textsc{terminated}     } {\textsc{new}               } };
+      \state[sshape]               (342) at (3,05) {\scontent {\structure{t1.join()   }} {\textsc{terminated}     } {\example{print(``multi.'')}} };
+      \state[sshape]               (442) at (3,03) {\scontent {t2.join()               } {\textsc{terminated}     } {\example{print(``multi.'')}} };
+      \state[sshape, accepting]    (643) at (3,00) {\scontent {\textsc{terminated}     } {\textsc{terminated}     } {\textsc{terminated}        } };
+
+      \path[structure, densely dotted] (000) edge                       (111);
+      \path[structure]                 (111) edge                       (221);
+      \path[structure]                 (221) edge                       (322);
+      \path[structure]                 (231) edge                       (332);
+      \path[structure]                 (343) edge                       (443);
+      \path[structure]                 (443) edge                       (543);
+      \path[structure]                 (241) edge                       (342);
+      \path[structure]                 (342) edge                       (442);
+      \path[structure]                 (543) edge node         {!}      (643);
+      \path[alert]                     (221) edge node[sloped] {hello}  (231);
+      \path[alert]                     (322) edge node[sloped] {hello}  (332);
+      \path[alert]                     (323) edge node[sloped] {hello}  (333);
+      \path[alert]                     (333) edge node[sloped] {world}  (343);
+      \path[alert]                     (231) edge node[sloped] {world}  (241);
+      \path[alert]                     (332) edge node[sloped] {world}  (342);
+      \path[example]                   (322) edge node[sloped] {multi.} (323);
+      \path[example]                   (332) edge node[sloped] {multi.} (333);
+      \path[example]                   (342) edge node[sloped] {multi.} (343);
+      \path[example]                   (442) edge node[sloped] {multi.} (443);
+    \end{tikzpicture}
+  }
+  
+\end{frame}
+
+\endgroup
+\endinput

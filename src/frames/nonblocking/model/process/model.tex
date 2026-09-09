@@ -1,0 +1,41 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Modèle de calcul}
+
+  \begin{block}{Hypothèses sur les processus}
+    \begin{itemize}
+    \item Un ensemble de \structure{$n$ processus} (ou threads) $p_1, ..., p_n$
+      \begin{itemize}
+      \item nombre $n$ fixe au cours d'une exécution, et connu
+      \item chaque processus $p_i$ connaît son identifiant $i$
+      \end{itemize}
+    \item Processus \structure{asynchrones} sujets aux \structure{pannes franches}
+      \begin{itemize}
+      \item un \structure{ordonnanceur} décide quel processus fait le prochain pas
+      \item pas de garantie qu'un processus finisse par faire un pas 
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Modèle de communication}
+    \begin{itemize}
+    \item Communication par \structure{registres partagés}
+      \begin{itemize}
+      \item lire/écrire
+      \item instructions spéciales (compareAndSet, getAndSet, getAndAdd, ...)
+      \item toutes les instructions sont \structure{atomiques}
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+
+\end{frame}
+
+\endgroup
+\endinput

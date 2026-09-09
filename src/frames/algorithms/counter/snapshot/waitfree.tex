@@ -1,0 +1,183 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Solution wait-free}
+
+  \begin{block}{Les écritures \alert{doivent aider} les lectures concurrentes}
+    \begin{itemize}
+    \item Chaque écriture fait une lecture et la publie 
+    \item \only<-2>{Chaque lecture fait deux \lstinline{collect}.}\only<3>{Chaque lecture fait des \lstinline{collect} jusqu'à ce que :}
+      \begin{itemize}
+      \item \only<-2>{Si la valeur est identique, la retourner}\only<3>{deux \lstinline{collect} retournent la même valeur} 
+      \item \only<-2>{Sinon, retourner la lecture de l'écriture concurrente}\only<3>{un thread ait écrit deux fois en concurrence}
+      \end{itemize}
+    \item<2> \alert{Problème : pas linéarisable !}
+    \end{itemize}
+  \end{block}
+
+  \begin{center}
+    \scalebox{.75}{
+      \begin{tikzpicture}
+        \draw<1>[exampleColor, fill=exampleColor!20, rounded corners] (2.8 , 0.9) rectangle (9.8,2.1) ;
+        \draw<1>[structure, fill=structure!20, rounded corners] (0.5 ,-0.5) rectangle (12.3,0.5) ;
+        \draw<1>[structure, fill=structure!20, rounded corners] (2.9 ,1.0) rectangle (8.0,2.0) ;
+        \draw<1>[structure, fill=structure!30, rounded corners] (0.6 ,-0.4) rectangle (3.0,0.4) ;
+        \draw<1>[structure, fill=structure!30, rounded corners] (3.0 ,1.1) rectangle (5.4,1.9) ;
+        \draw<1>[structure, fill=structure!30, rounded corners] (5.5 ,1.1) rectangle (7.9,1.9) ;
+        \draw<1>[structure, fill=structure!30, rounded corners] (9.8 ,-0.4) rectangle (12.2,0.4) ;
+
+        \draw<2>[exampleColor, fill=exampleColor!20, rounded corners] (0.8 , 0.9) rectangle (10.75,2.1) ;
+        \draw<2>[exampleColor, fill=exampleColor!20, rounded corners] (0.2 , -0.6) rectangle (7.2,0.6) ;
+        \draw<2>[structure, fill=structure!20, rounded corners] (0.9 ,1.0) rectangle (6.0,2.0) ;
+        \draw<2>[structure, fill=structure!20, rounded corners] (0.3 ,-0.5) rectangle (5.4,0.5) ;
+        \draw<2>[structure, fill=structure!20, rounded corners] (7.3 ,-0.5) rectangle (12.4,0.5) ;
+        \draw<2>[structure, fill=structure!30, rounded corners] (1.0 ,1.1) rectangle (3.4,1.9) ;
+        \draw<2>[structure, fill=structure!30, rounded corners] (3.5 ,1.1) rectangle (5.9,1.9) ;
+        \draw<2>[structure, fill=structure!30, rounded corners] (0.4 ,-0.4) rectangle (2.8,0.4) ;
+        \draw<2>[structure, fill=structure!30, rounded corners] (2.9 ,-0.4) rectangle (5.3,0.4) ;
+        \draw<2>[structure, fill=structure!30, rounded corners] (7.4 ,-0.4) rectangle (9.8,0.4) ;
+        \draw<2>[structure, fill=structure!30, rounded corners] (9.9 ,-0.4) rectangle (12.3,0.4) ;
+
+        \draw<3>[exampleColor, fill=exampleColor!20, rounded corners] (0.2 ,0.9) rectangle (5.4 ,2.1);
+        \draw<3>[exampleColor, fill=exampleColor!20, rounded corners] (5.5 ,0.9) rectangle (10.7,2.1);
+        \draw<3>[structure,    fill=structure!20,    rounded corners] (0.3 ,1  ) rectangle (3.6 ,2)  ;
+        \draw<3>[structure,    fill=structure!20,    rounded corners] (5.6 ,1  ) rectangle (8.9 ,2)  ;
+        \draw<3>[structure,    fill=structure!20,    rounded corners] (0.65,-.5) rectangle (12.2,.5) ;
+        \draw<3>[structure,    fill=structure!30,    rounded corners] (0.4 ,1.1) rectangle (1.9 ,1.9);
+        \draw<3>[structure,    fill=structure!30,    rounded corners] (2.0 ,1.1) rectangle (3.5 ,1.9);
+        \draw<3>[structure,    fill=structure!30,    rounded corners] (5.7 ,1.1) rectangle (7.2 ,1.9);
+        \draw<3>[structure,    fill=structure!30,    rounded corners] (7.3 ,1.1) rectangle (8.8 ,1.9);
+        \draw<3>[structure,    fill=structure!30,    rounded corners] (0.75,-.4) rectangle (3.15,.4) ;
+        \draw<3>[structure,    fill=structure!30,    rounded corners] (6.05,-.4) rectangle (8.45,.4) ;
+        \draw<3>[structure,    fill=structure!30,    rounded corners] (10.6,-.4) rectangle (12.1,.4) ;
+
+
+        \draw[structure, -latex] (0,2.5) node[left]{$counter$} +(.2,.15) node{\footnotesize$0$} +(0,0) -- (13.2,2.5);
+        \draw[-latex] (0,1.5) node[left]{$T_0$} -- (13.2,1.5);
+        \draw[-latex] (0,0) node[left]{$T_1$} -- (13.2,0);
+        \draw[alertColor, -latex] (0,-1   ) node[left]{\scriptsize $values[0]$} +(.15,.12) node{\scriptsize $\langle 0,0\rangle$} +(0,0) -- (13.2,-1   );
+        \draw[alertColor, -latex] (0,-1.25) node[left]{\scriptsize $values[1]$} +(.15,.12) node{\scriptsize $\langle 0,0\rangle$} +(0,0) -- (13.2,-1.25);
+        
+        \draw<1>[exampleColor, thick, densely dotted] (8.9,2.1) node{$\bullet$} -- (8.9,2.5) node{$\bullet$}
+        ++(0,.15) node[left]{\footnotesize$add(2)$} node[right]{\footnotesize$0$}; 
+        \draw<1>[structure, thick, densely dotted] (5.45 ,0.5) node{$\bullet$} -- (5.45 ,2) node{$\bullet$} -- (5.45 ,2.5) node{$\bullet$} 
+        ++(0,.15) node[left]{\footnotesize$get()$} node[right]{\footnotesize$2$}; 
+        
+        \draw<1>[alertColor, thick, densely dotted] (1.2 ,0  ) -- (1.2 ,-1   ) node{$\bullet$} +(.15,.12) ; 
+        \draw<1>[alertColor, thick, densely dotted] (2.4 ,0  ) -- (2.4 ,-1.25) node{$\bullet$} +(.15,.12) ; 
+        \draw<1>[alertColor, thick, densely dotted] (3.6 ,1.5) -- (3.6 ,-1   ) node{$\bullet$} +(.15,.12) ; 
+        \draw<1>[alertColor, thick, densely dotted] (4.8 ,1.5) -- (4.8 ,-1.25) node{$\bullet$} +(.15,.12) ; 
+        \draw<1>[alertColor, thick, densely dotted] (6.1 ,1.5) -- (6.1 ,-1   ) node{$\bullet$} +(.15,.12) ; 
+        \draw<1>[alertColor, thick, densely dotted] (7.3 ,1.5) -- (7.3 ,-1.25) node{$\bullet$} +(.15,.12) ; 
+        \draw<1>[alertColor, thick, densely dotted] (8.9 ,1.5) -- (8.9 ,-1   ) node{$\bullet$} +(.3,.12) node{\scriptsize $\langle 0,2\rangle$}; 
+        \draw<1>[alertColor, thick, densely dotted] (10.4,0  ) -- (10.4,-1   ) node{$\bullet$} +(.15,.12) ; 
+        \draw<1>[alertColor, thick, densely dotted] (11.6,0  ) -- (11.6,-1.25) node{$\bullet$} +(.15,.12) ; 
+        
+        \draw<1>[alertColor, fill=alertColor!20, rounded corners] (1.2 ,0  )  +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$get()$};
+        \draw<1>[alertColor, fill=alertColor!20, rounded corners] (2.4 ,0  )  +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$get()$};
+        \draw<1>[alertColor, fill=alertColor!20, rounded corners] (3.6 ,1.5)  +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$get()$};
+        \draw<1>[alertColor, fill=alertColor!20, rounded corners] (4.8 ,1.5)  +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$get()$};
+        \draw<1>[alertColor, fill=alertColor!20, rounded corners] (6.1 ,1.5)  +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$get()$};
+        \draw<1>[alertColor, fill=alertColor!20, rounded corners] (7.3 ,1.5)  +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$get()$};
+        \draw<1>[alertColor, fill=alertColor!20, rounded corners] (8.9 ,1.5)  +(-0.8,-0.3) rectangle +(0.8,0.3) +(0,0) node{$set(\langle 0,2\rangle)$};
+        \draw<1>[alertColor, fill=alertColor!20, rounded corners] (10.4,0  )  +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$get()$};
+        \draw<1>[alertColor, fill=alertColor!20, rounded corners] (11.6,0  )  +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$get()$};
+        
+        \draw<2>[exampleColor, thick, densely dotted] (6.3,0.6) node{$\bullet$} -- (6.3,2.5) node{$\bullet$}
+        ++(0,.15) node[left]{\footnotesize$add(2)$} node[right]{\footnotesize$2$}; 
+        \draw<2>[exampleColor, thick, densely dotted] (9.85,2.1) node{$\bullet$} -- (9.85,2.5) node{$\bullet$}
+        ++(0,.15) node[left]{\footnotesize$add(3)$} node[right]{\footnotesize$5$}; 
+        \draw<2>[structure, thick, densely dotted, rounded corners] (7.5 ,0.5) node{$\bullet$} -- (7.5,0.75) -- (3.45,0.75) -- (3.45 ,2) node{$\bullet$} -- (3.45 ,2.5) node{$\bullet$}
+        ++(0,.15) node[left]{\footnotesize$get()$} node[right]{\footnotesize$0$}; 
+        
+        
+        \draw<2>[alertColor, thick, densely dotted] (1.6 ,1.5) -- (1.6 ,-1   ) node{$\bullet$} +(.15,.12) ; 
+        \draw<2>[alertColor, thick, densely dotted] (2.85,1.5) -- (2.85,-1.25) node{$\bullet$} +(.15,.12) ; 
+        \draw<2>[alertColor, thick, densely dotted] (4.1 ,1.5) -- (4.1 ,-1   ) node{$\bullet$} +(.15,.12) ; 
+        \draw<2>[alertColor, thick, densely dotted] (5.35,1.5) -- (5.35,-1.25) node{$\bullet$} +(.15,.12) ; 
+        \draw<2>[alertColor, thick, densely dotted] (9.85,1.5) -- (9.85,-1   ) node{$\bullet$} +(.3,.12) node{\scriptsize $\langle 0,3\rangle$}; 
+        \draw<2>[alertColor, thick, densely dotted] (1.0 ,0  ) -- (1.0 ,-1   ) node{$\bullet$} +(.15,.12) ; 
+        \draw<2>[alertColor, thick, densely dotted] (2.2 ,0  ) -- (2.2 ,-1.25) node{$\bullet$} +(.3,.12)  ; 
+        \draw<2>[alertColor, thick, densely dotted] (3.5 ,0  ) -- (3.5 ,-1   ) node{$\bullet$} +(.15,.12) ; 
+        \draw<2>[alertColor, thick, densely dotted] (4.7 ,0  ) -- (4.7 ,-1.25) node{$\bullet$} +(.15,.12) ; 
+        \draw<2>[alertColor, thick, densely dotted] (6.3 ,0  ) -- (6.3 ,-1.25) node{$\bullet$} +(.3,.12) node{\scriptsize $\langle 0,2\rangle$}; 
+        \draw<2>[alertColor, thick, densely dotted] (8.0 ,0  ) -- (8.0 ,-1   ) node{$\bullet$} +(.15,.12) ; 
+        \draw<2>[alertColor, thick, densely dotted] (9.2 ,0  ) -- (9.2 ,-1.25) node{$\bullet$} +(.3,.12)  ; 
+        \draw<2>[alertColor, thick, densely dotted] (10.5,0  ) -- (10.5,-1   ) node{$\bullet$} +(.15,.12) ; 
+        \draw<2>[alertColor, thick, densely dotted] (11.7,0  ) -- (11.7,-1.25) node{$\bullet$} +(.15,.12) ; 
+
+        \draw<2>[alertColor, fill=alertColor!20, rounded corners] (1.6 ,1.5)  +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$get()$};
+        \draw<2>[alertColor, fill=alertColor!20, rounded corners] (2.8 ,1.5)  +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$get()$};
+        \draw<2>[alertColor, fill=alertColor!20, rounded corners] (4.1 ,1.5)  +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$get()$};
+        \draw<2>[alertColor, fill=alertColor!20, rounded corners] (5.3 ,1.5)  +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$get()$};
+        \draw<2>[alertColor, fill=alertColor!20, rounded corners] (9.85,1.5)  +(-0.8,-0.3) rectangle +(0.8,0.3) +(0,0) node{$set(\langle 0, 3\rangle)$};
+        \draw<2>[alertColor, fill=alertColor!20, rounded corners] (1.0 ,0  )  +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$get()$};
+        \draw<2>[alertColor, fill=alertColor!20, rounded corners] (2.2 ,0  )  +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$get()$};
+        \draw<2>[alertColor, fill=alertColor!20, rounded corners] (3.5 ,0  )  +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$get()$};
+        \draw<2>[alertColor, fill=alertColor!20, rounded corners] (4.7 ,0  )  +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$get()$};
+        \draw<2>[alertColor, fill=alertColor!20, rounded corners] (6.3 ,0  )  +(-0.8,-0.3) rectangle +(0.8,0.3) +(0,0) node{$set(\langle 0, 2\rangle)$};
+        \draw<2>[alertColor, fill=alertColor!20, rounded corners] (8.0 ,0  )  +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$get()$};
+        \draw<2>[alertColor, fill=alertColor!20, rounded corners] (9.2 ,0  )  +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$get()$};
+        \draw<2>[alertColor, fill=alertColor!20, rounded corners] (10.5,0  )  +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$get()$};
+        \draw<2>[alertColor, fill=alertColor!20, rounded corners] (11.7,0  )  +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$get()$};
+
+
+        
+        \draw<3>[exampleColor, thick, densely dotted] (4.5,2.1) node{$\bullet$} -- (4.5,2.5) node{$\bullet$}
+        ++(0,.15) node[left]{\footnotesize$add(2)$} node[right]{\footnotesize$2$}; 
+        \draw<3>[exampleColor, thick, densely dotted] (9.8,2.1) node{$\bullet$} -- (9.8,2.5) node{$\bullet$}
+        ++(0,.15) node[left]{\footnotesize$add(3)$} node[right]{\footnotesize$5$}; 
+        \draw<3>[structure, thick, densely dotted, rounded corners] (7.25 ,0.5) node{$\bullet$} -- (7.25,2) node{$\bullet$} -- (7.25 ,2.5) node{$\bullet$}
+        ++(0,.15) node[left]{\footnotesize$get()$} node[right]{\footnotesize$2$}; 
+        
+        \draw<3>[alertColor, thick, densely dotted] (0.8 ,1.5) -- (0.8 ,-1   ) node{$\bullet$} +(.15,.12) ; 
+        \draw<3>[alertColor, thick, densely dotted] (1.5 ,1.5) -- (1.5 ,-1.25) node{$\bullet$} +(.15,.12) ; 
+        \draw<3>[alertColor, thick, densely dotted] (2.4 ,1.5) -- (2.4 ,-1   ) node{$\bullet$} +(.15,.12) ; 
+        \draw<3>[alertColor, thick, densely dotted] (3.1 ,1.5) -- (3.1 ,-1.25) node{$\bullet$} +(.15,.12) ; 
+        \draw<3>[alertColor, thick, densely dotted] (4.5 ,1.5) -- (4.5 ,-1   ) node{$\bullet$} +(.3,.12) node{\scriptsize $\langle 0,2\rangle$}; 
+        \draw<3>[alertColor, thick, densely dotted] (6.1 ,1.5) -- (6.1 ,-1   ) node{$\bullet$} +(.15,.12) ; 
+        \draw<3>[alertColor, thick, densely dotted] (6.8 ,1.5) -- (6.8 ,-1.25) node{$\bullet$} +(.3,.12)  ; 
+        \draw<3>[alertColor, thick, densely dotted] (7.7 ,1.5) -- (7.7 ,-1   ) node{$\bullet$} +(.15,.12) ; 
+        \draw<3>[alertColor, thick, densely dotted] (8.4 ,1.5) -- (8.4 ,-1.25) node{$\bullet$} +(.15,.12) ; 
+        \draw<3>[alertColor, thick, densely dotted] (9.8 ,1.5) -- (9.8 ,-1   ) node{$\bullet$} +(.3,.12) node{\scriptsize $\langle 2,5\rangle$}; 
+        \draw<3>[alertColor, thick, densely dotted] (1.15,0  ) -- (1.15,-1   ) node{$\bullet$} +(.15,.12) ; 
+        \draw<3>[alertColor, thick, densely dotted] (2.75,0  ) -- (2.75,-1.25) node{$\bullet$} +(.3,.12)  ; 
+        \draw<3>[alertColor, thick, densely dotted] (6.45,0  ) -- (6.45,-1   ) node{$\bullet$} +(.15,.12) ; 
+        \draw<3>[alertColor, thick, densely dotted] (8.05,0  ) -- (8.05,-1.25) node{$\bullet$} +(.15,.12) ; 
+        \draw<3>[alertColor, thick, densely dotted] (11.0,0  ) -- (11.0,-1   ) node{$\bullet$} +(.15,.12) ; 
+        \draw<3>[alertColor, thick, densely dotted] (11.7,0  ) -- (11.7,-1.25) node{$\bullet$} +(.15,.12) ; 
+        
+        \draw<3>[alertColor, fill=alertColor!20, rounded corners] (0.8 ,1.5)  +(-0.3,-0.3) rectangle +(0.3,0.3) +(0,0) node{$get$};
+        \draw<3>[alertColor, fill=alertColor!20, rounded corners] (1.5 ,1.5)  +(-0.3,-0.3) rectangle +(0.3,0.3) +(0,0) node{$get$};
+        \draw<3>[alertColor, fill=alertColor!20, rounded corners] (2.4 ,1.5)  +(-0.3,-0.3) rectangle +(0.3,0.3) +(0,0) node{$get$};
+        \draw<3>[alertColor, fill=alertColor!20, rounded corners] (3.1 ,1.5)  +(-0.3,-0.3) rectangle +(0.3,0.3) +(0,0) node{$get$};
+        \draw<3>[alertColor, fill=alertColor!20, rounded corners] (4.5 ,1.5)  +(-0.8,-0.3) rectangle +(0.8,0.3) +(0,0) node{$set(\langle 0, 2\rangle)$};
+        \draw<3>[alertColor, fill=alertColor!20, rounded corners] (6.1 ,1.5)  +(-0.3,-0.3) rectangle +(0.3,0.3) +(0,0) node{$get$};
+        \draw<3>[alertColor, fill=alertColor!20, rounded corners] (6.8 ,1.5)  +(-0.3,-0.3) rectangle +(0.3,0.3) +(0,0) node{$get$};
+        \draw<3>[alertColor, fill=alertColor!20, rounded corners] (7.7 ,1.5)  +(-0.3,-0.3) rectangle +(0.3,0.3) +(0,0) node{$get$};
+        \draw<3>[alertColor, fill=alertColor!20, rounded corners] (8.4 ,1.5)  +(-0.3,-0.3) rectangle +(0.3,0.3) +(0,0) node{$get$};
+        \draw<3>[alertColor, fill=alertColor!20, rounded corners] (9.8 ,1.5)  +(-0.8,-0.3) rectangle +(0.8,0.3) +(0,0) node{$set(\langle 2, 5\rangle)$};
+        \draw<3>[alertColor, fill=alertColor!20, rounded corners] (1.15,0  )  +(-0.3,-0.3) rectangle +(0.3,0.3) +(0,0) node{$get$};
+        \draw<3>[alertColor, fill=alertColor!20, rounded corners] (2.75,0  )  +(-0.3,-0.3) rectangle +(0.3,0.3) +(0,0) node{$get$};
+        \draw<3>[alertColor, fill=alertColor!20, rounded corners] (6.45,0  )  +(-0.3,-0.3) rectangle +(0.3,0.3) +(0,0) node{$get$};
+        \draw<3>[alertColor, fill=alertColor!20, rounded corners] (8.05,0  )  +(-0.3,-0.3) rectangle +(0.3,0.3) +(0,0) node{$get$};
+        \draw<3>[alertColor, fill=alertColor!20, rounded corners] (11.0,0  )  +(-0.3,-0.3) rectangle +(0.3,0.3) +(0,0) node{$get$};
+        \draw<3>[alertColor, fill=alertColor!20, rounded corners] (11.7,0  )  +(-0.3,-0.3) rectangle +(0.3,0.3) +(0,0) node{$get$};
+
+      \end{tikzpicture}
+    }
+  \end{center}
+
+  \footnoterefjava{WaitFreeCounter.java}
+  \footnoteref{Keren Censor-Hillel, Erez Petrank, Shahar Timnat. {\it Help!} PODC (2015)}
+  
+\end{frame}
+
+\endgroup
+\endinput

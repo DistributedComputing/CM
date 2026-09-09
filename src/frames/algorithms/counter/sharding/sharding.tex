@@ -1,0 +1,45 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Sharding Counter}
+
+  \begin{lstlisting}[gobble=4]
+    public class ShardingCounter implements Counter {
+
+      private final AtomicIntegerArray values;
+      public ShardingCounter(int nbThreads) {
+        values = new AtomicIntegerArray(nbThreads);
+      }
+      
+      public (*\Example{void increment(int threadId)}*) {
+        int old = (*\Alert{values.get}*) (threadId);
+        (*\Alert{values.set}*) (threadId, old+1);
+      }
+
+      public (*\Structure{int get()}*) {
+        int sum = 0;
+        for(int i = 0; i<values.length(); i++) {
+          sum += (*\Alert{values.get(i);}*)
+        }
+        return sum;
+      }
+    }
+  \end{lstlisting}
+
+  \begin{itemize}
+  \item Wait-freedom ?  
+  \item Linéarisabilité ?  
+  \end{itemize}
+
+  \footnoterefjava{PiSharding.java}
+
+\end{frame}
+
+\endgroup
+\endinput

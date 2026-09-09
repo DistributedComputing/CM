@@ -1,0 +1,46 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Caractérisation}
+
+  \begin{block}{Point de linéarisation}
+    Un objet partagé est linéarisable si, et seulement si : \\
+    le résultat observable des opérations sur l'objet partagé d'une exécution est le même que si
+    \alert{chaque opération avait lieu en un point atomique
+      situé entre son début et sa fin.}
+  \end{block}
+
+  \begin{exampleblock}{Exemple}
+    \begin{center}
+      \begin{tikzpicture}[y=7mm]
+        \draw[process, example] (0,4) node[left]{$counter$} to (8,4);
+        \draw[process]          (0,3) node[left]{$T_1$}     to (8,3);
+        \draw[process]          (0,2) node[left]{$T_2$}     to (8,2);
+
+        \draw[example, lin point] (3,2) -- (3,4) node{$\bullet$};
+        \draw[example, lin point] (6,3) -- (6,4) node{$\bullet$};
+
+        \node[example, operation] at (3,2)   {$increment()$ };
+        \node[example, operation] at (6,3) {$get()$};
+      \end{tikzpicture}
+    \end{center}
+  \end{exampleblock}
+
+  \begin{alertblock}{Propriétés}
+    \begin{itemize}
+    \item La linéarisabilité est composable
+    \item La linéarisabilité implique la cohérence séquentielle
+    \item Si chaque objet est linéarisable, l'exécution est SC
+    \end{itemize}
+  \end{alertblock}
+
+\end{frame}
+
+\endgroup
+\endinput

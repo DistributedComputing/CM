@@ -1,0 +1,63 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Exemple}
+
+  \on[top]{
+    \begin{tikzpicture}
+      \draw[process, structure] (0,3) node[left]{$T_1$}                        to (8,3);
+      \draw[process, example]   (0,2) node[left]{$T_2$}                        to (8,2);
+      \draw[process, alert]     (0,1) node[left]{$counter$} node[replica]{$0$} to (8,1);
+
+      \node[structure, operation, minimum width=2.9cm] (i2) at (3,3) {$increment()$ };
+      \node[example,   operation, minimum width=2.9cm] (i1) at (2,2) {$increment()$ };
+      \node[structure, operation, minimum width=2.9cm] (g2) at (6,3) {$get()$ retourne \oneof[\hspace{.05mm}?]{\on<2->{2}}};
+      \node[example,   operation, minimum width=2.9cm] (g1) at (5,2) {$get()$ retourne \oneof[\hspace{.05mm}?]{\on<2-5>{2}\on<6>{1}}};
+      
+      \draw<2,3,6>[lin point, example]   (i1.south) -- (i1.south|-0,1);
+      \draw<2,3,5,4>  [lin point, structure] (i2.south) -- (i2.south|-0,1);
+      \draw<2,3,4,5>  [lin point, example]   (g1.south) -- (g1.south|-0,1);
+      \draw<2,4,6>[lin point, structure] (g2.south) -- (g2.south|-0,1);
+
+      \draw<4,5>[lin point, example]   (i1.south east) -- (i1.south east|-0,1);
+      \draw<6>[lin point, structure] (i2.south east) -- (i2.south east|-0,1);
+      \draw<3,5>[lin point, structure] (g2.south west) -- (g2.south west|-0,1);
+      \draw<6>[lin point, example]   (g1.south west) -- (g1.south west|-0,1);
+    \end{tikzpicture}
+  }
+
+  \onAlertBlock[anchor=north, y=10mm]{Linéarisations acceptables}{
+    \begin{itemize}
+    \item<2-> ${\color{exampleColor}T_2:increment();}~\structure{T_1:increment();}~{\color{exampleColor}T_2:get();}~\structure{T_1:get();}$
+      \begin{itemize}
+      \item Les deux lectures retournent 2
+      \end{itemize}
+    \item<3-> ${\color{exampleColor}T_2:increment();}~\structure{T_1:increment();}~\structure{T_1:get();}~{\color{exampleColor}T_2:get();}$
+      \begin{itemize}
+      \item Les deux lectures retournent 2
+      \end{itemize}
+    \item<4-> $\structure{T_1:increment();}~{\color{exampleColor}T_2:increment();}~{\color{exampleColor}T_2:get();}~\structure{T_1:get();}$
+      \begin{itemize}
+      \item Les deux lectures retournent 2
+      \end{itemize}
+    \item<5-> $\structure{T_1:increment();}~{\color{exampleColor}T_2:increment();}~\structure{T_1:get();}~{\color{exampleColor}T_2:get();}$
+      \begin{itemize}
+      \item Les deux lectures retournent 2
+      \end{itemize}
+    \item<6-> ${\color{exampleColor}T_2:increment();}~{\color{exampleColor}T_2:get();}~\structure{T_1:increment();}~\structure{T_1:get();}$
+      \begin{itemize}
+      \item $T_1$ lit $2$ et $T_2$ lit $1$
+      \end{itemize}
+    \end{itemize}
+  }
+
+\end{frame}
+
+\endgroup
+\endinput

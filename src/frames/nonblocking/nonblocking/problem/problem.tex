@@ -1,0 +1,49 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Problématique du cours}
+
+  \begin{center}
+    \alert{Comment implémenter des structures de données \\partagées non-bloquante ?}
+  \end{center}
+  
+  \begin{block}{Spécification d'un objet partagé}
+    \begin{description}[Vivacité :]
+    \item[Sûreté :] (Safety) Rien de mal ne se produit : $\forall t. P(t)$
+      \begin{enumerate}
+      \item Une spécification séquentielle
+        \begin{itemize}
+        \item registre, pile, file, compteur, ...
+        \item ensemble d'états et d'opérations (transitions)
+        \end{itemize}
+      \item Un critère de cohérence
+        \begin{itemize}
+        \item \alert{linéarisabilité}
+        \end{itemize}
+      \end{enumerate}
+    \item[Vivacité :] (Liveness) Quelque chose de bien finira par se produire : $\exists t. P(t)$
+      \begin{enumerate}[3.]
+      \item Une condition de progression
+        \begin{itemize}
+        \item deadlock-free, starvation-free, \alert{lock-free}, \alert{wait-free}, ...
+        \end{itemize}
+      \end{enumerate}
+    \end{description}
+  \end{block}
+  
+  \begin{exampleblock}{Exemple}
+    \begin{itemize}
+    \item \lstinline{ConcurrentLinkedQueue} est une \structure{file} \alert{linéarisable} {\color{exampleColor}lock-free}
+    \end{itemize}
+  \end{exampleblock}
+  
+\end{frame}
+
+\endgroup
+\endinput

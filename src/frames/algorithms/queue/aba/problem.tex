@@ -1,0 +1,86 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Le problème ABA}
+
+  \vspace{-20mm}
+  \begin{lstlisting}[language=c++]
+    void push(T* value) {
+      Node* node = new Node(value, head.load());
+      while (!head.compare_exchange_weak(node->next, node));
+    }
+
+    T* pop() {
+      for(;;) {
+        Node* old = head.load();
+        if(!old) return nullptr;
+        if(head.compare_exchange_weak(old, old->next)) {
+          T* value = old->value;
+          delete old;
+          return value;
+        }
+      }
+    }
+  \end{lstlisting}
+  
+  \on<2->[y=-17mm]{
+    \begin{tikzpicture}[x=16mm, y=7mm]\tiny
+      \draw[process] (0.2, 2) node[left]{$p_1$} to (7, 2);
+      \draw[process] (0.2, 1) node[left]{$p_2$} to (7, 1);
+ 
+      \node[alert, operation]                  (a) at (1,2)   {$head.load$};
+      \node[alert, operation]                  (b) at (2,2)   {$old$->$next$};
+      \uncover<3->{\node[structure, operation] (c) at (3,1)   {$pop()\uparrow c$};}
+      \uncover<4->{\node[structure, operation] (f) at (4,1)   {$pop()\uparrow b$};}
+      \uncover<5->{\node[structure, operation] (f) at (5,1)   {$push(d)$};}
+      \uncover<6->{\node[alert, operation]     (h) at (6,2)   {$head.CAS$};}
+ 
+      \draw[structure] (4, 2.15) node{$pop()\uncover<6->{\uparrow d}$};
+      \begin{scope}[background]
+        \node[structure, operation, fit=(a)(h), inner ysep=1pt] {};
+      \end{scope}
+    \end{tikzpicture}
+  }
+  
+  \on[y=-32mm]{
+    \begin{tikzpicture}[tape]
+      \cell[example]           {}                                  \smsave{2} 
+      \cell[alert on=<{-2,5}>] {\only<-2>{$c$}\only<5>{$d$}}       \smsave{3} 
+      \cell[alert on=<{-2,5}>] {}                                  \smsave{4} 
+      \cell[structure on=<-3>] {\only<-3>{$b$}}                               \smsave{5} 
+      \cell[structure on=<-3>] {}                                  \smsave{6} 
+      \cell[example]           {$a$}                               \smsave{7} 
+      \cell[example]           {$\bot$}                            \smsave{8} 
+ 
+      \node[below, outer sep=2pt] at (2.north) {\lstinline{head}};
+      \node[below, outer sep=2pt] at (3.north) {\lstinline{value}};
+      \node[below, outer sep=2pt] at (4.north) {\lstinline{next}};
+      \node[below, outer sep=2pt] at (5.north) {\lstinline{value}};
+      \node[below, outer sep=2pt] at (6.north) {\lstinline{next}};
+      \node[below, outer sep=2pt] at (7.north) {\lstinline{value}};
+      \node[below, outer sep=2pt] at (8.north) {\lstinline{next}};
+      
+      \path<-2,5> [message] (2.center) edge (3);
+      \path<3,6>  [message] (2.center) edge (5);
+      \path<4>    [message] (2.center) edge (7);
+      \path<-2>   [message] (4.center) edge (5);
+      \path<-3>   [message] (6.center) edge (7);
+      \path<5>    [message] (4.center) edge (7);
+      
+      \uncover<2->{
+        \draw[alertColor, -latex, thick, shorten <=1mm] (3.north) +(0,2.5mm) node[above] {\lstinline{old}} -- +(0,0);
+        \draw[alertColor, -latex, thick, shorten <=1mm] (5.north) +(0,2.5mm) node[above] {\lstinline{next}} -- +(0,0);
+      }
+    \end{tikzpicture}
+  }
+  
+\end{frame}
+
+\endgroup
+\endinput

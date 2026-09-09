@@ -1,0 +1,49 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{L'instruction fetch\_and\_add}
+
+  \begin{block}{Spécification}
+    \begin{lstlisting}[gobble=6]
+      int old = get();
+      set(old + delta);
+      return old;
+    \end{lstlisting}
+  \end{block}
+  
+  \begin{exampleblock}{Exemple : verrou starvation-free}
+    \begin{lstlisting}[gobble=6]
+      class StarvationFreeLock {
+        private AtomicInteger ticket = new AtomicInteger(0);
+        private int next = 0;
+        
+        public void lock() {
+          int t = ticket.getAndAdd(1);
+          while(t<next);
+        }
+        
+        public void unlock() {
+          next = next+1;
+        }
+      }
+    \end{lstlisting}
+  \end{exampleblock}
+
+  \on[top=5mm, right=.5\textwidth]{
+    \begin{description}[Java :]
+    \item [Java :] \lstinline{int getAndAdd(int delta)}
+    \item [C++ :] \lstinline{int fetch_add(int delta)}
+    \end{description}
+  }
+
+\end{frame}
+
+\endgroup
+\endinput
+

@@ -1,0 +1,55 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{La pile wait-free de Afek, Gafni et Morrison}
+
+  \vspace{-15mm}
+  \begin{lstlisting}
+    public class WaitFreeStack<T> {
+      private final (*\Example<1>{AtomicInteger range}*) = new AtomicInteger(0);
+      private final (*\Structure<1>{AtomicReferenceArray<T> items;}*) // Tableau infini (voir TD)
+
+      public void push(T value) {
+        int i = (*\Alert<2-3>{range.getAndIncrement();}*) // Attention : deux instructions
+        (*\Alert<2-3>{items.set(i, value);}*)
+      }
+
+      public T pop() {
+        (*\Structure<4-5>{for(int i = range.get()-1; i>=0; i--)}*) {
+          T value = (*\Alert<4-5>{items.getAndSet(i, null);}*)
+          if(value != null) return value;
+        }
+        return null;
+      }
+    }
+  \end{lstlisting}
+
+  \onExampleBlock[y=-20mm]{Exemple : \only<2>{$Push(3)$}\only<3>{$Push(4)$}\only<4>{$Pop() \uparrow 4$}\only<5->{$Pop()\uparrow 3 || Pop()\uparrow 2$}}{}
+
+  \on[bottom]{
+    \begin{tikzpicture}[word]
+      \cell{$1$}
+      \cell[structure ob=<5>]{$2$}                                             \smheadfromb[structure]<5>{3}
+      \cell[alert ob=<5>]{\alt<-1>{$\bot$}{$3$}}     \smhead[example]<1>   \smheadfromb[alert]<5>{2}
+      \cell[alert ob=<4>]{\alt<-2,5->{$\bot$}{$4$}}  \smheadb[example]<2>  \smheadfromb[alert]<4>{1}
+      \cell{$\bot$}                                  \smheadb[example]<3->
+      \cell{$\bot$}
+      \cell{$\bot$}
+      \cell{$\bot$}
+      \cell{$\bot$}
+      \cell{$\bot$}
+    \end{tikzpicture}
+  }
+  
+  \footnoteref{Y. Afek, E. Gafni, A. Morrison. \textit{Common2 Extended to Stacks and Unbounded Concurrency.} PODC (2006)}
+
+\end{frame}
+
+\endgroup
+\endinput

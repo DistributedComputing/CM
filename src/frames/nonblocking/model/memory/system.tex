@@ -1,0 +1,51 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Système réparti}
+  \vfill
+  \begin{block}{Définition -- Système réparti}
+    Un système réparti est un ensemble d'entités séquentielles
+    qui doivent communiquer et coopérer pour régler un
+    problème commun.
+    \begin{description}
+    \item[Vocabulaire] distributed (anglais) = réparti (français)
+    \end{description}
+  \end{block}
+
+  \vfill
+  \begin{exampleblock}{Exemples}
+    \begin{itemize}
+    \item Entités séquentielles
+      \begin{itemize}
+      \item Automate définissant une séquence de \alert{pas}
+      \item \structure{Threads}, \structure{processus}, ordinateur, capteur, êtres vivants...
+      \end{itemize}
+    \item Communication
+      \begin{itemize}
+      \item \structure{Mémoire partagée}, réseau, publications, gestes, phéromones...
+      \end{itemize}
+    \end{itemize}
+  \end{exampleblock}
+  \vfill  
+
+  \pause
+  \begin{alertblock}{Hypothèse simplificatrice}
+    \begin{itemize}
+    \item Un ensemble de \alert{$n$ processus} (ou threads) $p_1, ..., p_n$
+      \begin{itemize}
+      \item nombre $n$ fixe au cours d'une exécution, et connu
+      \item chaque processus $p_i$ connaît son identifiant $i$
+      \end{itemize}
+    \end{itemize}
+  \end{alertblock}
+  \vfill  
+\end{frame}
+
+\endgroup
+\endinput

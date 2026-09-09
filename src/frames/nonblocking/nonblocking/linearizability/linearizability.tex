@@ -1,0 +1,41 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Linéarisabilité}
+
+  \begin{block}{Définition}
+    Un objet partagé est linéarisable si : \\
+    le résultat observable des opérations sur l'objet partagé d'une exécution est le même que celui d'un entrelacement de l'ordre ``happened before''
+    \alert{tel que, si une opération $e$ se termine avant qu'une autre opération $e'$ ne commence, alors $e$ doit précéder $e'$ dans l'entrelacement}
+  \end{block}
+
+  \begin{exampleblock}{Exemple}
+    
+    \begin{center}
+      \begin{tikzpicture}[y=7mm]
+        \draw[process] (0,1) node[left]{$T_1$} to (8,1);
+        \draw[process] (0,0) node[left]{$T_2$} to (8,0);
+        \node[example, operation] at (3,0) {$increment()$ };
+        \node[example, operation] at (6,1) {$get()$};
+      \end{tikzpicture}
+    \end{center}
+
+    Un seul ordre de linéarisation possible : 
+    \begin{itemize}
+    \item $increment() ;~ get()$
+      \begin{itemize}
+      \item La lecture doit retourner 1
+      \end{itemize}
+    \end{itemize}
+  \end{exampleblock}
+
+\end{frame}
+
+\endgroup
+\endinput

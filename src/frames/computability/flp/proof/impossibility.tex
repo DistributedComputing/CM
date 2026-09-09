@@ -1,0 +1,43 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Impossibilté du consensus}
+
+  \begin{block}{Définitions}
+    Une configuration $C$ est :
+    \begin{description}
+    \item[$v$-monovalente] si seule $v$ peut être décidée après ce point
+    \item[monovalente] s'il existe $v$ tel que $C$ est $v$-monovalente 
+    \item[bivalente] si $C$ n'est pas monovalente
+    \item[critique] si $C$ est bivalente et tous ses fils sont monovalents
+    \end{description}
+  \end{block}
+
+  \pause  
+
+  \begin{alertblock}{Théorème}
+    Il n'existe pas d'algorithme de consensus\\
+    qui n'utilise que des lectures et écritures sur des variables partagées.
+  \end{alertblock}
+
+  \begin{exampleblock}{Démonstration}
+    \begin{description}
+    \item[Introduction] Supposons (par l'absurde) qu'il existe un tel algorithme $A$ ;
+    \item[Lemme 1] $A$ possède une configuration critique ;
+    \item[Lemme 2] $A$ ne possède pas de configuration critique ;
+    \item[Conclusion] absurde : $A$ n'existe pas !
+    \end{description}
+  \end{exampleblock}
+
+  \footnoteref{M. Fischer, N. Lynch, M. Paterson. \textit{Impossibility of Distributed Consensus with One Faulty Process.} JACM (1985)}
+  
+\end{frame}
+
+\endgroup
+\endinput

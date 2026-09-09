@@ -1,0 +1,39 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Compteur wait-free}
+
+  \begin{block}{Définition -- Wait-freedom}
+    Toutes les opérations se terminent.
+    \begin{itemize}
+    \item Progrès local non-bloquant
+    \item C'est la notion de terminaison habituelle en calcul séquentiel
+    \end{itemize}
+  \end{block}
+
+  \begin{exampleblock}{Exemple}
+    \begin{lstlisting}[gobble=6]
+      class WaitFreeCounter {
+        private AtomicInteger value = new AtomicInteger(0);
+        
+        public void increment() {
+          value.incrementAndGet();
+        }
+        
+        public int get() {
+          return value.get();
+        }
+      }
+    \end{lstlisting}
+  \end{exampleblock}
+
+\end{frame}
+
+\endgroup
+\endinput

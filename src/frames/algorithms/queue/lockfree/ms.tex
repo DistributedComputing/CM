@@ -1,0 +1,54 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{La file lock-free}
+
+  \begin{description}[Condition de progression :]
+  \item[Spécification séquentielle :] Une file
+  \end{description}
+
+  \begin{lstlisting}[gobble=4]
+    interface Queue<T> {
+      // class Node { T value; Node next = null; Node(T val) {value = val;}}
+      // Node first = new Node(null);
+      // Node last = head;
+      void enqueue(T value); // {
+      //   last.next = new Node(value);
+      //   last = last.next;
+      // }
+      T dequeue(); // {
+      //   if(first == last) return null;
+      //   first = first.next;
+      //   return first.value;
+      // }
+    }
+  \end{lstlisting}
+
+  \begin{description}[Condition de progression :]
+  \item[Critère de cohérence :] Linéarisabilité
+  \item[Condition de progression :] Lock-free
+  \end{description}
+  
+  \footnoteref{Maged M. Michael, Michael L. Scott. \textit{Simple, fast, and practical non-blocking and blocking concurrent queue algorithms.} PODC (1996)}
+  \footnoterefjava{java.util.concurrent.ConcurrentLinkedQueue}
+  \footnoterefjava{MichaelScottQueue.java}
+  \footnoterefcpp{\href{github.com/schani/michael-alloc/blob/master/lock-free-queue.c}{https://github.com/schani/michael-alloc/blob/master/lock-free-queue.c}}
+  
+\end{frame}
+
+\endgroup
+\endinput
+
+%  \onImage[x=25mm, y=5mm]{%
+%    height=40mm,
+%    title={Michael L. Scott},
+%    licenselogo={\ccPublicDomain},
+%    license*={Domaine public (2007 -- \href{https://en.wikipedia.org/wiki/File:MLS_front_step54.jpg}{Wikimedia})},
+%    img={scott.jpg}
+%  }  

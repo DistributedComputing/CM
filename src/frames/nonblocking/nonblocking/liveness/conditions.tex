@@ -1,0 +1,47 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Conditions de progression}
+
+  \begin{description}[\alert{Progrès non-bloquant :}]
+  \item[\color{exampleColor}Progrès global :] les rapides peuvent toujours passer devant les lents
+  \item[\color{exampleColor}Progrès local :] équité sur la terminaison 
+  \item[\alert{Progrès bloquant :}] les threads lents peuvent gêner les rapides
+  \item[\alert{Progrès non-bloquant :}] tolérance aux pannes
+  \end{description}
+
+  \pause
+  
+  \begin{center}
+    \begin{tabular}{|r|c|c|}
+      \hline
+      & \example{Progrès global} & \example{Progrès local}\\
+      \hline
+      \alert{Progrès bloquant}  & Deadlock-free & Starvation-free\\
+      \hline
+      \alert{Progrès non-bloquant} & Lock-free     & Wait-free\\
+      \hline
+    \end{tabular}
+  \end{center}
+
+  \begin{block}{Définitions}
+    Toutes les opérations des threads corrects se terminent \structure{sous l'hypothèse} :
+    \begin{description}[Starvation-freedom :]
+    \item[Deadlock-freedom :] \alert{il n'y a pas de crash} et \example{le nombre d'appels est fini}
+    \item[Starvation-freedom :] \alert{il n'y a pas de crash}
+    \item[Lock-freedom :] \example{le nombre d'appels est fini}
+    \item[Wait-freedom :] vrai
+    \end{description}
+  \end{block}
+
+  \footnoteref{Maurice Herlihy, Nir Shavit. \emph{On the nature of progress.} PODS (2011)}
+\end{frame}
+
+\endgroup
+\endinput

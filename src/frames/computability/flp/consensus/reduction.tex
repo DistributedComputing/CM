@@ -1,0 +1,42 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Réduction du consensus à la séquence}
+
+  \begin{exampleblock}{Feuille de route}
+    \begin{itemize}
+    \item[Thm1 :] Si on pouvait implémenter une séquence, \\ \hspace{5mm} alors on pourrait résoudre le consensus {\color{exampleColor}entre deux threads}
+    \end{itemize}
+  \end{exampleblock}
+
+  \begin{lstlisting}
+    public class Consensus<T> {
+      
+      private final AtomicReferenceArray<T> proposed
+      = new AtomicReferenceArray<T>(2) ;
+      private final Sequence sequence = new Sequence();
+      
+      public T propose(T value, int threadId) {
+        
+        proposed.set(threadId, value);
+        if(sequence.incrementAndGet() == 1)
+        return value;
+        else
+        return proposed.get(1-threadId);
+
+      }
+    }
+  \end{lstlisting}
+
+  \footnoterefjava{\lstinline{Consensus.java}}
+  
+\end{frame}
+
+\endgroup
+\endinput

@@ -1,0 +1,43 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Compteur starvation-free}
+
+  \begin{block}{Définition -- Starvation-freedom}
+    \alert{S'il n'y a pas de crash}, alors toutes les opérations se terminent.
+    \begin{itemize}
+    \item Progrès local bloquant
+    \end{itemize}
+  \end{block}
+
+  \begin{exampleblock}{Exemple}
+    \begin{lstlisting}[gobble=6]
+      class StarvationFreeCounter {
+        int value 0;
+        private AtomicInteger ticket = new AtomicInteger(0);
+        private int next = 0;
+        
+        public void increment() {
+          int t = ticket.getAndAdd(1);
+          while(t<next);
+          value = value+1;
+          next = next+1;
+        }
+        
+        public int get() {
+          return value;
+        }
+      }
+    \end{lstlisting}
+  \end{exampleblock}
+  
+\end{frame}
+
+\endgroup
+\endinput

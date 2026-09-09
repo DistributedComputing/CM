@@ -1,0 +1,41 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Notion de panne franche (crash)}
+
+  \begin{alertblock}{Problèmes avec les verrous}
+    \begin{itemize}
+    \item Si un thread est bloqué, combien de temps va-t-il l'être ?
+    \item Quid d'un thread bloqué par un thread non ordonnancé ?
+    \item Vitesse d'exécution globale alignée sur le thread le plus lent
+    \end{itemize}
+  \end{alertblock}
+
+  \begin{block}{Définition -- panne franche}
+    Un thead \structure{en panne} n'execute plus jamais de pas de calcul
+    \begin{itemize}
+    \item En mémoire partagée, approximation d'un thread infiniment lent
+    \item Parfois, la tolérance aux pannes est le but de la distribution
+    \end{itemize}
+    Un thread est dit \structure{correct} s'il ne tombe pas en panne
+  \end{block}
+
+  
+  \begin{block}{Bloquant/Non-bloquant}
+    \begin{itemize}
+    \item Un algorithme est \structure{non-bloquant} s'il peut tolérer les pannes franches
+    \item Tous les algorithmes utilisant des verrous sont bloquants
+    \end{itemize}
+  \end{block}
+
+\end{frame}
+
+\endgroup
+\endinput
+

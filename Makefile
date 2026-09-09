@@ -10,12 +10,21 @@ DOCSDIR     := docs
 COURSESDIR  := src/courses
 ARCHIVESDIR := src/archives
 
+PLOTDIR       := src/plot
+PLOT_BUILDDIR := $(BUILDDIR)/plot
+
+GNUPLOT ?= gnuplot
+
+PLOTS     := $(basename $(notdir $(wildcard $(PLOTDIR)/*.gnuplot)))
+PLOT_DATA := $(wildcard $(PLOTDIR)/*.dat)
+PLOT_TEX  := $(PLOTS:%=$(PLOT_BUILDDIR)/%.tex)
+
 # Discover current and archived courses.
 COURSE_DIRS  := $(wildcard $(COURSESDIR)/*/)
 ARCHIVE_DIRS := $(wildcard $(ARCHIVESDIR)/*/)
 
-COURSES          := $(sort $(notdir $(patsubst %/,%,$(COURSE_DIRS))))
-ARCHIVES         := $(sort $(notdir $(patsubst %/,%,$(ARCHIVE_DIRS))))
+COURSES           := $(sort $(notdir $(patsubst %/,%,$(COURSE_DIRS))))
+ARCHIVES          := $(sort $(notdir $(patsubst %/,%,$(ARCHIVE_DIRS))))
 AVAILABLE_COURSES := $(sort $(COURSES) $(ARCHIVES))
 
 # Persistent local selection, overridden with: make COURSE=xxx <target>
@@ -27,10 +36,10 @@ SRCDIR := $(firstword \
   $(wildcard $(COURSESDIR)/$(COURSE)) \
   $(wildcard $(ARCHIVESDIR)/$(COURSE)))
 
-COURSE_BUILDDIR := $(BUILDDIR)/$(COURSE)
+COURSE_BUILDDIR  := $(BUILDDIR)/$(COURSE)
 HANDOUT_BUILDDIR := $(COURSE_BUILDDIR)/handout
-COURSE_DOCSDIR := $(DOCSDIR)/$(COURSE)
-HANDOUT_DOCSDIR := $(COURSE_DOCSDIR)/handout
+COURSE_DOCSDIR   := $(DOCSDIR)/$(COURSE)
+HANDOUT_DOCSDIR  := $(COURSE_DOCSDIR)/handout
 
 PDFLATEX ?= pdflatex
 _PASSES  := 2
@@ -46,7 +55,7 @@ LATEX_LIBS_DIR       := latex-libs
 LATEX_LIBS_SSH_URL   := git@github.com:MatthieuPerrin/Latex-libs.git
 LATEX_LIBS_HTTPS_URL := https://github.com/MatthieuPerrin/Latex-libs.git
 
-export TEXINPUTS := $(CURDIR)/$(SRCDIR)//$(PATHSEP)$(CURDIR)/src/frames//$(PATHSEP)$(CURDIR)/src/$(PATHSEP)$(CURDIR)/$(LATEX_LIBS_DIR)//$(PATHSEP)$(TEXINPUTS)
+export TEXINPUTS := $(CURDIR)/$(SRCDIR)//$(PATHSEP)$(CURDIR)/src/frames//$(PATHSEP)$(CURDIR)/src/$(PATHSEP)$(CURDIR)/$(PLOT_BUILDDIR)//$(PATHSEP)$(CURDIR)/$(LATEX_LIBS_DIR)//$(PATHSEP)$(TEXINPUTS)
 
 # -------------------------------
 # Documents to generate
@@ -64,7 +73,7 @@ HANDOUT_PDFS := $(DOCUMENTS:%=$(HANDOUT_DOCSDIR)/%.pdf)
 # Public targets
 # -------------------------------
 
-.PHONY: all slide handout all-courses
+.PHONY: all slide handout plot all-courses
 .PHONY: configure list update clean cleanall help
 .PHONY: $(DOCUMENTS) $(SLIDE_ONCE) $(HANDOUT_ONCE)
 
@@ -73,6 +82,8 @@ all: slide handout
 slide: _check-course $(SLIDE_PDFS)
 
 handout: _check-course $(HANDOUT_PDFS)
+
+plot: $(PLOT_TEX)
 
 # Archives are deliberately excluded from this target.
 all-courses:
@@ -98,11 +109,22 @@ $(HANDOUT_ONCE): _PASSES := 1
 $(HANDOUT_ONCE): %-handout: $(HANDOUT_DOCSDIR)/%.pdf
 
 # -------------------------------
+# Plot generation
+# -------------------------------
+
+$(PLOT_BUILDDIR)/%.tex: $(PLOTDIR)/%.gnuplot $(PLOT_DATA) | _plot-directory
+	$(GNUPLOT) \
+	  -e "set loadpath '$(PLOTDIR)'; \
+	      set terminal lua tikz color size 10cm,6cm; \
+	      set output '$@'" \
+	  "$<"
+
+# -------------------------------
 # Compilation rules
 # -------------------------------
 
 # Slides
-$(COURSE_DOCSDIR)/%.pdf: $(SRCDIR)/%.tex _force | _check-course _directories _deps
+$(COURSE_DOCSDIR)/%.pdf: $(SRCDIR)/%.tex $(PLOT_TEX) _force | _check-course _directories _deps
 	$(PDFLATEX) $(PDFLATEX_FLAGS) \
 	  -output-directory="$(COURSE_BUILDDIR)" \
 	  -jobname="$*" \
@@ -116,7 +138,7 @@ $(COURSE_DOCSDIR)/%.pdf: $(SRCDIR)/%.tex _force | _check-course _directories _de
 	@mv -f "$(COURSE_BUILDDIR)/$*.pdf" "$@"
 
 # Handout
-$(HANDOUT_DOCSDIR)/%.pdf: $(SRCDIR)/%.tex _force | _check-course _directories _deps
+$(HANDOUT_DOCSDIR)/%.pdf: $(SRCDIR)/%.tex $(PLOT_TEX) _force | _check-course _directories _deps
 	@printf '\\PassOptionsToClass{handout}{beamer}\\input{%s}\n' \
 	  "$(SRCDIR)/$*.tex" \
 	  > "$(HANDOUT_BUILDDIR)/$*.tex"
@@ -136,7 +158,7 @@ $(HANDOUT_DOCSDIR)/%.pdf: $(SRCDIR)/%.tex _force | _check-course _directories _d
 # Internal targets
 # -------------------------------
 
-.PHONY: _check-course _directories _deps _force
+.PHONY: _check-course _directories _plot-directory _deps _force
 
 _check-course:
 	@if [ -z "$(COURSE)" ] || [ ! -d "$(SRCDIR)" ]; then \
@@ -155,6 +177,9 @@ _directories:
 	  "$(HANDOUT_BUILDDIR)" \
 	  "$(COURSE_DOCSDIR)" \
 	  "$(HANDOUT_DOCSDIR)"
+
+_plot-directory:
+	@mkdir -p "$(PLOT_BUILDDIR)"
 
 _deps:
 	@if [ ! -d "$(LATEX_LIBS_DIR)/.git" ]; then \
@@ -263,6 +288,7 @@ help:
 	@echo "  make | make all               – Build every slide deck and handout for the current course."
 	@echo "  make slide                    – Build every slide deck for the current course with two LaTeX passes."
 	@echo "  make handout                  – Build every handout for the current course with two LaTeX passes."
+	@echo "  make plot                     – Generate the plots used by the slides."
 	@echo "  make all-courses              – Build every slide deck and handout for every current course."
 	@echo "  make cours                    – Build the slides and handout for cours with two LaTeX passes."
 	@echo "  make cours-slide              – Build $(COURSE_DOCSDIR)/cours.pdf with one LaTeX pass."
@@ -271,5 +297,5 @@ help:
 	@echo "  make configure COURSE=<name>  – Persistently select a current or archived course."
 	@echo "  make list                     – List current and archived courses and their document drivers."
 	@echo "  make update                   – Update the main repository and latex-libs."
-	@echo "  make clean                    – Remove LaTeX intermediate files for every course."
+	@echo "  make clean                    – Remove LaTeX intermediate files and generated plots."
 	@echo "  make cleanall                 – Also remove every generated course directory from docs/."

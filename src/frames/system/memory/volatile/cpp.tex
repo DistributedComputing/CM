@@ -1,0 +1,50 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Modèle de mémoire en C++}
+
+  \vfill
+
+  \begin{block}{Le mot-clé \lstinline{volatile} en C++}
+    \begin{itemize}
+    \item Limite certaines optimisations locales du compilateur
+    \item \alert{Ne gère pas la synchronisation entre threads}
+    \end{itemize}
+  \end{block}
+
+  \vfill
+
+  \begin{block}{Barrières de mémoire en C++}
+    \begin{itemize}
+    \item \lstinline{void std::atomic_thread_fence( std::memory_order order )}
+    \item Choix des arcs ajoutés à l'ordre $\sw$ : read/write, write/read...
+    \end{itemize}
+    \vspace{1mm}
+    \begin{shadequote}{Phil Karlton}
+      There are only two hard things in Computer Science: \\cache invalidation and naming things.
+    \end{shadequote}
+  \end{block}
+
+  \vspace{-3mm}
+  
+  \begin{alertblock}{C++ Core Guidelines}
+    \begin{itemize}
+    \item \href{https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Rconc-volatile}{\alert{CP.8 :} Don’t try to use \lstinline{volatile} for synchronization}
+    \item Utiliser \lstinline{template <class T> struct std::atomic}
+    \end{itemize}
+  \end{alertblock}
+
+  \vspace{-1mm}
+
+  \footnoteref{Tutoriel de Ori Lahav sur les modèles de mémoire en C++}
+  
+\end{frame}
+
+\endgroup
+\endinput

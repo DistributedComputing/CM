@@ -1,0 +1,47 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{La pile de Treiber en C++}
+
+  \begin{lstlisting}[gobble=4, language=c++]
+    template <typename T>
+    class Stack {
+
+      private:
+      struct Node { const T* value; Node* next; };
+      atomic<Node*> head;
+
+      public:
+      void push(T* value) {
+        Node* node = (*\Alert{new Node(value, head.load());}*)
+        while (!head.compare_exchange_weak(node->next, node));
+      }
+
+      T* pop() {
+        for(;;) {
+          Node* old = head.load();
+          if(!old) return nullptr;
+          if(head.compare_exchange_weak(old, old->next)) {
+            T* value = old->value;
+            (*\Alert{delete old;}*)
+            return value;
+          }
+        }
+      }
+    };
+  \end{lstlisting}
+
+  \on[bottom]{
+    \alert{Cette implémentation est-elle correcte ?}
+  }
+  
+\end{frame}
+
+\endgroup
+\endinput

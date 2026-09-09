@@ -5,7 +5,7 @@
 \mode<beamer>{\PassOptionsToPackage{sectionpage}{beamerthemeNantes}}
 \usetheme{Nantes}
 
-\usepackage{src/sty/config}
+\usepackage{src/courses/scsd/config}
 
 \title[Services de communication et systèmes distribués]{Services de communication \\et systèmes distribués}
 
@@ -47,44 +47,44 @@
 \section{Généralités}
 
 \subsection{Positionnement dans le master}
-\input{introduction/generalities/master/master}
+\input{replication/generalities/master/master}
  
 \subsection{Bibliographie}
-\input{introduction/generalities/bibliography/bibliography}
+\input{replication/generalities/bibliography/bibliography}
  
 \section{Réplication et machine à états}
  
 \subsection{Modèle clients/serveur}
-\input{introduction/replication/statemachine/clientserver}
-\input{introduction/replication/statemachine/statemachine}
+\input{replication/replication/statemachine/clientserver}
+\input{replication/replication/statemachine/statemachine}
  
 \subsection{Nécessité de la réplication}
-\input{introduction/replication/replication/limits}
-\input{introduction/replication/replication/replication}
-\input{introduction/replication/replication/smr}
-\input{synchronization/quorum/linearizability/linearizability}
-\input{introduction/replication/replication/problem}
+\input{replication/replication/replication/limits}
+\input{replication/replication/replication/replication}
+\input{replication/replication/replication/smr}
+\input{replication/replication/replication/linearizability}
+\input{replication/replication/replication/problem}
  
 \section{Systèmes asynchrones à passage de messages}
  
 \subsection{Modèle de calcul}
-\input{introduction/system/model/processes}
-\input{introduction/system/model/messages}
-\input{introduction/system/model/camp}
-\input{introduction/system/model/example}
-\input{introduction/system/impossibility/detector}
+\input{replication/system/model/processes}
+\input{replication/system/model/messages}
+\input{replication/system/model/camp}
+\input{replication/system/model/example}
+\input{replication/system/impossibility/detector}
  
 \subsection{Exécutions réparties}
-\input{introduction/system/executions/executions}
-\input{introduction/system/executions/executions_example}
-\input{introduction/system/executions/example}
+\input{replication/system/executions/executions}
+\input{replication/system/executions/executions_example}
+\input{replication/system/executions/example}
  
 \subsection{Causalité et temps logique}
-\input{introduction/system/happensbefore/lamport}
-\input{introduction/system/happensbefore/happensbefore}
-\input{introduction/system/happensbefore/clock}
-\input{introduction/system/happensbefore/lamport_clock}
-\input{introduction/system/happensbefore/lamport_stamp}
+\input{replication/system/happensbefore/lamport}
+\input{replication/system/happensbefore/happensbefore}
+\input{replication/system/happensbefore/clock}
+\input{replication/system/happensbefore/lamport_clock}
+\input{replication/system/happensbefore/lamport_stamp}
  
 \section{Diffusion de messages}
  

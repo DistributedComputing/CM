@@ -1,0 +1,48 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{L'objet snapshot}
+
+  \begin{description}[Condition de progression :]
+  \item[Spécification séquentielle :] Un tableau d'un registre par processus
+  \end{description}
+  \begin{itemize}
+  \item $write(i,v)$ ne peut être appelé que par $p_i$.
+  \item On suppose toutes les valeurs écrites différentes
+  \end{itemize}
+  
+  \begin{lstlisting}
+    interface Snapshot<T> {
+      
+    // T values[n] = [0, ..., 0];
+      
+       T[] snapshot();
+    // {
+    //    return values;
+    // }
+    
+       void write(int i, T value);
+    // {
+    //    values[i] = value;
+    // }
+
+    }
+  \end{lstlisting}
+
+  \begin{description}[Condition de progression :]
+  \item[Critère de cohérence :] Linéarisabilité
+  \item[Condition de progression :] Wait-freedom
+  \end{description}
+
+  \footnoteref{Y. Afek, H. Attiya, D. Dolev, E. Gafni, M. Merritt, N. Shavit. \textit{Atomic snapshots of shared memory.} JACM (1993)}
+
+\end{frame}
+
+\endgroup
+\endinput

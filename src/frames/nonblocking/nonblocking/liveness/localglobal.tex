@@ -1,0 +1,44 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Progrès global versus progrès local}
+
+  \begin{description}[Progrès global :]
+  \item[Progrès local :] \alert{Tous les threads} progressent dans leur exécution.
+    \begin{itemize}
+    \item propriété violée lors d'une famine.
+    \end{itemize}
+  \item[Progrès global :] \alert{Au moins un} thread progresse dans son exécution.
+    \begin{itemize}
+    \item propriété violée lors d'un interblocage circulaire.
+    \end{itemize}
+  \end{description}
+  
+  \begin{block}{Définition plus précise du progrès global}
+    Un objet $O$ vérifie le progrès global si, pour toute exécution
+    contenant un nombre fini d'opérations sur $O$,
+    toutes les opérations se terminent.
+  \end{block}
+
+  \begin{exampleblock}{Exemple d'algorithme ne respectant pas le progrès local}
+    \begin{lstlisting}[gobble=6]
+      int getAndIncrement() {
+        for (;;) {
+          int current = value.get();
+          if (value.compareAndSet(current, current + 1))
+          return current;
+        }
+      }
+    \end{lstlisting}
+  \end{exampleblock}
+
+\end{frame}
+
+\endgroup
+\endinput

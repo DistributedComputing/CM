@@ -1,0 +1,42 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{ Le faux partage {\it (False sharing)}}
+
+  \begin{block}{Variable local {\it versus} Sharding counter}
+    \begin{itemize}
+    \item Variables locales : 15ms
+    \item Sharding counter : 100ms
+    \item Sharding counter avec padding : 25ms
+    \end{itemize}
+  \end{block}
+  
+  \begin{block}{Rembourrage {\it (Padding)}}
+    \begin{itemize}
+    \item Les cases du tableau partagent les mêmes lignes de cache
+    \item Ajouter de l'espacement entre les cases
+    \end{itemize}
+    \begin{lstlisting}
+      private final static int PADDING = 16;
+      private final AtomicIntegerArray localCounters
+      = new AtomicIntegerArray(PADDING*nbThreads);
+
+      public void increment(int threadId) {
+        int index = PADDING*threadID;
+        localCounters.set(index, localCounters.get(index)+1);
+      }
+    \end{lstlisting}
+  \end{block}
+
+  \footnoterefjava{Programme \lstinline{Sharding.java}}
+
+\end{frame}
+
+\endgroup
+\endinput

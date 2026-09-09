@@ -1,0 +1,43 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{1 -- Réduction du consensus à \lstinline{compareAndSet}}
+
+  \begin{exampleblock}{Lemme}
+    \begin{itemize}
+    \item Il est possible de résoudre le consensus en utilisant \lstinline{compareAndSet}
+    \end{itemize}
+  \end{exampleblock}
+
+  \begin{lstlisting}
+    public class Consensus<T> {
+      
+      private final AtomicReference<T> decided
+      = new AtomicReference<>(null);
+      
+      public T propose(T value) {
+        if(value==null) throw new NullPointerException();  
+        (*\Example{decided.compareAndSet(null, value);}*)
+        (*\Example{return decided.get();}*)
+      }
+    }
+    \end{lstlisting}
+
+  \begin{block}{Démonstration}
+    \begin{description}
+    \item[Validité :] seules les valeurs proposées sont écrites;
+    \item[Accord :] un seul \lstinline{compareAndSet} réussit
+    \item[Terminaison :] pas de boucle
+    \end{description}
+  \end{block}
+
+\end{frame}
+
+\endgroup
+\endinput

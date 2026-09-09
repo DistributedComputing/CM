@@ -1,0 +1,54 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Organisation des données}
+
+  \begin{lstlisting}[gobble=4]
+    public class Queue<T> {
+
+      private class Node {
+        (*\Alert{final}*) T value;
+        (*\Alert{final}*) (*\Example{AtomicReference<Node>}*) next;
+        Node(T val) {
+          value = val;
+          next = new AtomicReference(null);
+        }
+      }
+      
+      private (*\Alert{final}*) (*\Example{AtomicReference<Node>}*) first;
+      private (*\Alert{final}*) (*\Example{AtomicReference<Node>}*) last;
+      
+      public Queue() {
+        Node start = new Node(null);
+        first = new AtomicReference<Node>(start);
+        last = new AtomicReference<Node>(start);
+      }
+
+      ...
+    }
+  \end{lstlisting}
+
+  \onBlock[right=45mm, y=20mm]{Conseils}{
+    \begin{enumerate}\setcounter{enumi}{2}
+    \item Toute variable partagée doit
+      \begin{itemize}
+      \item être \lstinline{final}
+      \item n'être accédée qu'en SC 
+      \item être \lstinline{volatile}
+        \begin{itemize}
+        \item préférer \lstinline{Atomic*}
+        \end{itemize}
+      \end{itemize}
+    \end{enumerate}
+  }
+  
+\end{frame}
+
+\endgroup
+\endinput

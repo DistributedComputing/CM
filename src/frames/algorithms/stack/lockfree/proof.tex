@@ -1,0 +1,64 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Démonstration}
+
+  \vspace{-22mm}
+  \begin{lstlisting}[numbers=left, gobble=4]
+    public void push(T value) {
+      do {
+        Node old = head.get();
+      } while(!head.compareAndSet(old, new Node(value, old)));
+    }
+
+    public T pop() {
+      for(;;) {
+        Node old = head.get();
+        if(old==null) return null;
+        if(head.compareAndSet(old, old.next())
+        return old.value();
+      }
+    }
+  \end{lstlisting}
+
+  \obBlock<1>[anchor=north, y=-5mm]{Preuve de vivacité}{
+    \begin{itemize}
+    \item L'algorithme n'est pas wait-free :
+      \begin{itemize}
+      \item $p_1$ et $p_2$ appellent \lstinline{push} continuellement ;
+      \item $p_2$ peut perdre tous ses  \lstinline{compareAndSet} ligne 4.
+      \end{itemize}
+    \item L'algorithme est lock-free
+      \begin{itemize}
+      \item Si $p_i$ ne termine pas lors d'un tour de boucle (ligne 4 ou 11),
+      \item Alors \lstinline{head} a changé depuis le \lstinline{get} (ligne 3 ou 9);
+      \item Donc un $p_j$ a écrit dans \lstinline{head} (ligne 4 ou 11) et terminé une opération.
+      \end{itemize}
+    \end{itemize}
+  }
+
+  \obBlock<2>[anchor=north, y=-5mm]{Preuve de linéarisabilité}{
+    \begin{itemize}
+    \item Point de linéarisation de \lstinline{push} :
+      \begin{itemize}
+      \item dernier appel à \lstinline{compareAndSet} ligne 4
+      \end{itemize}
+    \item Point de linéarisation de \lstinline{pop} :
+      \begin{itemize}
+      \item dernier appel à \lstinline{get} ligne 9 \structure{si la pile est vide} 
+      \item dernier appel à \lstinline{compareAndSet} ligne 11 \structure{sinon}
+      \end{itemize}
+    \item Entre les points de linéarisation, même état qu'en séquentiel
+    \end{itemize}
+  }
+
+\end{frame}
+
+\endgroup
+\endinput

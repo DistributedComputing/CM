@@ -1,0 +1,35 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Consensus number de Common2}
+  \begin{block}{Lemme}
+    Tout objet non-trivial de Common2 a un consensus number au moins égal à 2.
+  \end{block}
+  \begin{block}{Démonstration : déjà vue pour \lstinline{getAndSet}}
+    \begin{lstlisting}[escapeinside={(*}{*)}]
+      // Take v and i such that (*$f_i(v) \neq v$*)
+      class Consensus<T> {
+        T proposed[2];
+        Common2Object lost = new Common2Object(v);
+        
+        T propose(T value) {
+          proposed[id] = value;
+          if(lost.getAndF(i) != v) {
+            return proposed[1-id];
+          } else {
+            return value;
+          }
+        }
+      }
+    \end{lstlisting}
+  \end{block}
+\end{frame}
+
+\endgroup
+\endinput

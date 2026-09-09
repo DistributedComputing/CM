@@ -1,0 +1,40 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Utilisation de \texttt{ThreadLocalRandom}}
+
+  \begin{lstlisting}[gobble=4]
+    private static (*\Alert{int result = 0}*);
+
+    public void pi(int nbThreads, int nbIterations) {
+      threads = new Thread[n];
+      for(int i = 0; i<nbThreads; i++) {
+        (*\Structure{threads[i] = new Thread(() -> \{ }*)
+        var random = ThreadLocalRandom.current();
+        for(int j = 0; j<nbIterations; j++) {
+          double x = random.nextDouble();
+	  double y = random.nextDouble();
+	  if(x*x + y*y < 1) (*\Alert{result++;}*)
+        }
+        (*\Structure{\});}*)
+      }
+      
+      for(var t : threads) t.start();
+      for(var t : threads) t.join();
+      
+      System.out.println((*\Alert{result}*));
+    }
+  \end{lstlisting}
+
+  \footnoterefgithub{blocking}{Pi3\_ThreadLocalRandom}
+  
+\end{frame}
+
+\endgroup
+\endinput

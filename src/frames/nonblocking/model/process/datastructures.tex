@@ -1,0 +1,48 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Structures de données non-bloquantes en Java}
+
+  \structure{Compteur} : \lstinline{java.util.concurrent.atomic.LongAdder}
+  \begin{itemize}
+  \item\vspace{-.5mm} \lstinline{void add(long x)} : incrémente
+  \item\vspace{-.5mm} \lstinline{long sum()} : lit
+  \item\vspace{-.5mm} \alert{Attention : pas linéarisable}
+  \end{itemize}
+
+
+  \vspace{1mm}
+  \structure{File} : \lstinline{java.util.concurrent.ConcurrentLinkedQueue<E>} :
+  \begin{itemize}
+  \item\vspace{-.5mm} \lstinline{void add(E e)} : ajoute en queue
+  \item\vspace{-.5mm} \lstinline{E peek()} : lit la tête
+  \item\vspace{-.5mm} \lstinline{E poll()} : lit et supprime la tête
+  \end{itemize}
+
+  \vspace{1mm}
+  \structure{Liste doublement chaînée} : \lstinline{java.util.concurrent.ConcurrentLinkedDeque<E>}
+  \begin{itemize}
+  \item\vspace{-.5mm} \lstinline{void addFirst(E e)}, \lstinline{E getFirst()}, \lstinline{E pollFirst()} : accède la tête
+  \item\vspace{-.5mm} \lstinline{void addLast(E e)}, \lstinline{E getLast()}, \lstinline{E pollLast()} : accède la queue
+  \end{itemize}
+
+  \vspace{1mm}
+  \structure{Table de hashage} : \lstinline{java.util.concurrent.ConcurrentHashMap<K,V>}
+  \begin{itemize}
+  \item\vspace{-.5mm} \lstinline{put(K key, V value)} : ajoute
+  \item\vspace{-.5mm} \lstinline{get(K key)} : lit
+  \item\vspace{-.5mm} \lstinline{remove(K key)} : supprime une clé
+  \item\vspace{-.5mm} \lstinline{putIfAbsent(K key, V value)} : ajoute ou retourne la valeur
+  \end{itemize}
+
+\end{frame}
+
+\endgroup
+\endinput
+

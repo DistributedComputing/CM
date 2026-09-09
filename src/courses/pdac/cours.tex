@@ -1,0 +1,174 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+
+\documentclass[9pt]{beamer}
+\mode<beamer>{\PassOptionsToPackage{sectionpage}{beamerthemeNantes}}
+\usetheme{Nantes}
+
+\usepackage{src/courses/pdac/config}
+
+\title[Programmation Distribuée]{Programmation Distribuée\\\Large{Algorithmique des\\ Structures de Données Concurrentes}}
+
+\author[Matthieu Perrin]{
+  \structure{Matthieu \textsc{Perrin}}\\[2mm]
+  Nantes Université\\
+  Laboratoire des Sciences du Numérique de Nantes \\
+  UMR CNRS 6004\\
+  Bureau 410, bâtiment 34 \\
+  \url{matthieu.perrin@univ-nantes.fr}\\
+}
+
+\date{
+  Master en Informatique, première année\\
+  Parcours ALMA\\
+  2026-2027
+}
+
+\hypersetup{
+  pdftitle  = {\insertshorttitle},
+  pdfauthor = {\insertshortauthor},
+  pdfsubject  = {Cours de M1 sur l'algorithmique concurrente et les structures de données non bloquantes},
+  pdfkeywords = {concurrence, instructions spéciales, Java, linéarisabilité, progrès non-bloquant}
+}
+
+\begin{document}
+
+\begin{frame}[plain,noframenumbering]
+  \titlepage
+  \on[text, bottom=-5mm]{\scriptsize
+    \begin{description}
+    \item[\href{https://github.com/AlgorithmiqueConcurrente/.github/blob/main/LICENSE.md}{Licence :}] \href{https://creativecommons.org/licenses/by-sa/4.0/}{CC BY-SA 4.0} (\ccbysa{}) — Matthieu Perrin \textit{(sauf mention contraire)}
+    \item[Code source :]\vspace{-.5mm}  \url{https://github.com/AlgorithmiqueConcurrente}
+    \end{description}
+  }
+\end{frame}
+
+
+\part{Introduction}
+
+
+\section{Modèle de calcul}
+
+\subsection{Vue générale}
+\input{nonblocking/model/overview/master}
+\input{nonblocking/model/overview/bibliography}
+
+\subsection{Modèle de communication}
+\input{nonblocking/model/memory/system}
+\input{nonblocking/model/memory/communication}
+\input{nonblocking/model/memory/testandset}
+\input{nonblocking/model/memory/fetchandadd}
+\input{nonblocking/model/memory/compareandswap}
+
+\subsection{Modèle de processus}
+\input{nonblocking/model/process/asynchrony}
+\input{nonblocking/model/process/crash}
+\input{nonblocking/model/process/datastructures}
+\input{nonblocking/model/process/experiment}
+\input{nonblocking/model/process/model}
+\input{nonblocking/model/process/execution}
+
+\section{Synchronisation non-bloquante}
+
+\subsection{Problématique}
+\input{nonblocking/nonblocking/problem/problem}
+
+\subsection{Linéarisabilité}
+\input{nonblocking/nonblocking/linearizability/sequential}
+\input{nonblocking/nonblocking/linearizability/composability}
+\input{nonblocking/nonblocking/linearizability/herlihywing}
+\input{nonblocking/nonblocking/linearizability/linearizability}
+\input{nonblocking/nonblocking/linearizability/characterization}
+\input{nonblocking/nonblocking/linearizability/example}
+
+\subsection{Vivacité non-bloquante}
+\input{nonblocking/nonblocking/liveness/localglobal}
+\input{nonblocking/nonblocking/liveness/nonblocking}
+\input{nonblocking/nonblocking/liveness/conditions}
+\input{nonblocking/nonblocking/liveness/waitfree}
+\input{nonblocking/nonblocking/liveness/lockfree}
+\input{nonblocking/nonblocking/liveness/starvationfree}
+\input{nonblocking/nonblocking/liveness/deadlockfree}
+
+
+\part{Algorithmes non-bloquants}
+
+
+\section{Algorithmes de pile}
+
+\subsection{La pile lock-free}
+\input{algorithms/stack/lockfree/spec}
+\input{algorithms/stack/lockfree/treiber}
+\input{algorithms/stack/lockfree/proof}
+
+\subsection{La pile wait-free}
+\input{algorithms/stack/waitfree/algo}
+\input{algorithms/stack/waitfree/proof}
+\input{algorithms/stack/waitfree/linearizability}
+\input{algorithms/stack/waitfree/exercise}
+
+\subsection{Le problème ABA}
+\input{algorithms/queue/lockfree/cpp}
+\input{algorithms/queue/aba/problem}
+\input{algorithms/queue/aba/solution}
+
+\section{Algorithmes de file}
+
+\subsection{La file de Michael et Scott}
+\input{algorithms/queue/lockfree/ms}
+\input{algorithms/queue/lockfree/linkedlist}
+\input{algorithms/queue/lockfree/data}
+\input{algorithms/queue/lockfree/fieldupdator}
+\input{algorithms/queue/lockfree/enqueue}
+\input{algorithms/queue/lockfree/dequeue}
+
+\section{Algorithmes de compteur}
+
+\subsection{Un compteur wait-free}
+\input{algorithms/counter/sharding/spec}
+\input{algorithms/counter/sharding/sharding}
+\input{algorithms/counter/sharding/proof}
+\input{algorithms/counter/sharding/falsesharing}
+\input{algorithms/counter/sharding/longadder}
+
+\subsection{L'objet snapshot wait-free}
+\input{algorithms/counter/snapshot/snapshot}
+\input{algorithms/counter/snapshot/doublecollect}
+\input{algorithms/counter/snapshot/proof}
+\input{algorithms/counter/snapshot/waitfree}
+
+
+\part{Calculabilité non-bloquante}
+
+
+\section{Impossibilité du consensus}
+
+\subsection{Le problème du consensus}
+\input{computability/flp/consensus/problem}
+\input{computability/flp/consensus/examples}
+\input{computability/flp/consensus/renaming}
+\input{computability/flp/consensus/techniques}
+\input{computability/flp/consensus/consensus}
+\input{computability/flp/consensus/reduction}
+
+\subsection{Démonstration de l'impossibilité}
+\input{computability/flp/proof/graph}
+\input{computability/flp/proof/valency}
+\input{computability/flp/proof/impossibility}
+\input{computability/flp/proof/lemmacritical}
+\input{computability/flp/proof/lemmanoncritical}
+\input{computability/flp/proof/summary}
+
+\section{La hiérarchie de Herlihy}
+
+\subsection{Le numéro de consensus}
+\input{computability/hierarchy/consensusnumber/problem}
+\input{computability/hierarchy/consensusnumber/reduction}
+\input{computability/hierarchy/consensusnumber/limit}
+\input{computability/hierarchy/consensusnumber/definition}
+\input{computability/hierarchy/consensusnumber/javadoc}
+\input{computability/hierarchy/consensusnumber/reasoning}
+
+\end{document}
+
+\endinput

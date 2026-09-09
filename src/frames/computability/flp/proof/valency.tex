@@ -1,0 +1,217 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Valence d'une configuration}
+  \vspace{-5mm}
+  \begin{center}
+    \begin{tikzpicture}
+      \draw[-latex] (9.25,7.3) -- (9.25,7.05);
+      \draw[-latex, rounded corners, structure]  (9  ,6.15) -- (9  ,5.2) -- (8.5,5.2);
+      \draw[-latex, rounded corners, alertColor] (9.5,6.15) -- (9.5,5.2) -- (10,5.2);
+
+      \draw[-latex, rounded corners, structure]  (7  ,4.85) -- (7  ,3.9) -- (6.5,3.9);
+      \draw[-latex, rounded corners, alertColor] (7.5,4.85) -- (7.5,3.9) -- (8,3.9);
+      \draw[-latex, rounded corners, structure]  (11  ,4.85) -- (11  ,3.9) -- (10.5,3.9);
+      \draw[-latex, rounded corners, alertColor] (11.5,4.85) -- (11.5,3.9) -- (12,3.9);
+
+      \draw[-latex, rounded corners, alertColor] (5.5,3.55) -- (5.5,2.6) -- (6,2.6);
+      \draw<-3>[-latex, rounded corners, structure]  (9  ,3.55) -- (9  ,2.6) -- (8.5,2.6);
+      \draw<-3>[-latex, rounded corners, alertColor] (9.5,3.55) -- (9.5,2.6) -- (10,2.6);
+      \draw<4>[-latex, rounded corners, structure, thick]  (9  ,3.55) -- (9  ,2.6) -- (8.5,2.6);
+      \draw<4>[-latex, rounded corners, alertColor, thick] (9.5,3.55) -- (9.5,2.6) -- (10,2.6);
+      \draw[-latex, rounded corners, structure]  (13,3.55) -- (13,2.6) -- (12.5,2.6);
+
+      \draw[-latex, alertColor] (7.25 ,2.25) -- (7.25 ,1.85);
+      \draw[-latex, structure]  (11.25,2.25) -- (11.25,1.85);
+      \draw[-latex, alertColor] (7.25 ,0.95) -- (7.25 ,0.553);
+      \draw[-latex, structure]  (11.25,0.95) -- (11.25,0.553);
+
+      \draw<-2>[fill=black!10, ultra thin, rounded corners] (9,6.5)
+      +(-1,-.35) rectangle +(1.5,.55)
+      +(0,.4)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$set(\bullet)$}
+      +(0,.2)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$set(\bullet)$}
+      +(0,0)     node[left]{\tiny$proposed$} node {\tiny=} node[right]{\tiny$[?, ?]$}
+      +(0,-.2)   node[left]{\tiny$sequence$} node {\tiny=} node[right]{\tiny$0$};
+      \draw<3->[fill=exampleColor!20, ultra thin, rounded corners] (9,6.5)
+      +(-1,-.35) rectangle +(1.5,.55)
+      +(0,.4)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$set(\bullet)$}
+      +(0,.2)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$set(\bullet)$}
+      +(0,0)     node[left]{\tiny$proposed$} node {\tiny=} node[right]{\tiny$[?, ?]$}
+      +(0,-.2)   node[left]{\tiny$sequence$} node {\tiny=} node[right]{\tiny$0$};
+
+      \draw<-2>[fill=black!10, ultra thin, rounded corners] (7,5.2)
+      +(-1,-.35) rectangle +(1.5,.55)
+      +(0,.4)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$incrementAndGet$}
+      +(0,.2)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$set(\bullet)$}
+      +(0,0)     node[left]{\tiny$proposed$} node {\tiny=} node[right]{\tiny$[\structure{\bullet}, ?]$}
+      +(0,-.2)   node[left]{\tiny$sequence$} node {\tiny=} node[right]{\tiny$0$};
+      \draw<3->[fill=exampleColor!20, ultra thin, rounded corners] (7,5.2)
+      +(-1,-.35) rectangle +(1.5,.55)
+      +(0,.4)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$incrementAndGet$}
+      +(0,.2)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$set(\bullet)$}
+      +(0,0)     node[left]{\tiny$proposed$} node {\tiny=} node[right]{\tiny$[\structure{\bullet}, ?]$}
+      +(0,-.2)   node[left]{\tiny$sequence$} node {\tiny=} node[right]{\tiny$0$};
+
+      \draw<-2>[fill=black!10, ultra thin, rounded corners] (11,5.2)
+      +(-1,-.35) rectangle +(1.5,.55)
+      +(0,.4)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$set(\bullet)$}
+      +(0,.2)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$incrementAndGet$}
+      +(0,0)     node[left]{\tiny$proposed$} node {\tiny=} node[right]{\tiny$[?, \alert{\bullet}]$}
+      +(0,-.2)   node[left]{\tiny$sequence$} node {\tiny=} node[right]{\tiny$0$};
+      \draw<3->[fill=exampleColor!20, ultra thin, rounded corners] (11,5.2)
+      +(-1,-.35) rectangle +(1.5,.55)
+      +(0,.4)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$set(\bullet)$}
+      +(0,.2)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$incrementAndGet$}
+      +(0,0)     node[left]{\tiny$proposed$} node {\tiny=} node[right]{\tiny$[?, \alert{\bullet}]$}
+      +(0,-.2)   node[left]{\tiny$sequence$} node {\tiny=} node[right]{\tiny$0$};
+
+      \draw<-1>[fill=black!10, ultra thin, rounded corners] (5,3.9)
+      +(-1,-.35) rectangle +(1.5,.55)
+      +(0,.4)    node[left]  {\tiny$T_0$} node  {\tiny:} node[right]  {\tiny$decide(\structure{\bullet})$}
+      +(0,.2)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$set(\bullet)$}
+      +(0,0)     node[left]{\tiny$proposed$} node {\tiny=} node[right]{\tiny$[\structure{\bullet}, ?]$}
+      +(0,-.2)   node[left]{\tiny$sequence$} node {\tiny=} node[right]{\tiny$1$};
+      \draw<2->[fill=structure!20, ultra thin, rounded corners] (5,3.9)
+      +(-1,-.35) rectangle +(1.5,.55)
+      +(0,.4)    node[left]  {\tiny$T_0$} node  {\tiny:} node[right]  {\tiny$decide(\structure{\bullet})$}
+      +(0,.2)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$set(\bullet)$}
+      +(0,0)     node[left]{\tiny$proposed$} node {\tiny=} node[right]{\tiny$[\structure{\bullet}, ?]$}
+      +(0,-.2)   node[left]{\tiny$sequence$} node {\tiny=} node[right]{\tiny$1$};
+
+      \draw<-2>[fill=black!10, ultra thin, rounded corners] (9,3.9)
+      +(-1,-.35) rectangle +(1.5,.55)
+      +(0,.4)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$incrementAndGet$}
+      +(0,.2)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$incrementAndGet$}
+      +(0,0)     node[left]{\tiny$proposed$} node {\tiny=} node[right]{\tiny$[\structure{\bullet}, \alert{\bullet}]$}
+      +(0,-.2)   node[left]{\tiny$sequence$} node {\tiny=} node[right]{\tiny$0$};
+      \draw<3>[fill=exampleColor!20, ultra thin, rounded corners] (9,3.9)
+      +(-1,-.35) rectangle +(1.5,.55)
+      +(0,.4)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$incrementAndGet$}
+      +(0,.2)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$incrementAndGet$}
+      +(0,0)     node[left]{\tiny$proposed$} node {\tiny=} node[right]{\tiny$[\structure{\bullet}, \alert{\bullet}]$}
+      +(0,-.2)   node[left]{\tiny$sequence$} node {\tiny=} node[right]{\tiny$0$};
+      \draw<4->[fill=exampleColor!20, thick, rounded corners] (9,3.9)
+      +(-1,-.35) rectangle +(1.5,.55)
+      +(0,.4)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$incrementAndGet$}
+      +(0,.2)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$incrementAndGet$}
+      +(0,0)     node[left]{\tiny$proposed$} node {\tiny=} node[right]{\tiny$[\structure{\bullet}, \alert{\bullet}]$}
+      +(0,-.2)   node[left]{\tiny$sequence$} node {\tiny=} node[right]{\tiny$0$};
+
+      \draw<-1>[fill=black!10, ultra thin, rounded corners] (13,3.9)
+      +(-1,-.35) rectangle +(1.5,.55)
+      +(0,.4)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$set(\bullet)$}
+      +(0,.2)    node[left] {\tiny$T_1$} node {\tiny:} node[right] {\tiny$decide(\alert{\bullet})$}
+      +(0,0)     node[left]{\tiny$proposed$} node {\tiny=} node[right]{\tiny$[\structure{\bullet}, ?]$}
+      +(0,-.2)   node[left]{\tiny$sequence$} node {\tiny=} node[right]{\tiny$1$};
+      \draw<2->[fill=alertColor!20, ultra thin, rounded corners] (13,3.9)
+      +(-1,-.35) rectangle +(1.5,.55)
+      +(0,.4)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$set(\bullet)$}
+      +(0,.2)    node[left] {\tiny$T_1$} node {\tiny:} node[right] {\tiny$decide(\alert{\bullet})$}
+      +(0,0)     node[left]{\tiny$proposed$} node {\tiny=} node[right]{\tiny$[\structure{\bullet}, ?]$}
+      +(0,-.2)   node[left]{\tiny$sequence$} node {\tiny=} node[right]{\tiny$1$};
+
+      \draw<-1>[fill=black!10, ultra thin, rounded corners] (7,2.6)
+      +(-1,-.35) rectangle +(1.5,.55)
+      +(0,.4)    node[left]  {\tiny$T_0$} node  {\tiny:} node[right]  {\tiny$decide(\structure{\bullet})$}
+      +(0,.2)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$incrementAndGet$}
+      +(0,0)     node[left]{\tiny$proposed$} node {\tiny=} node[right]{\tiny$[\structure{\bullet}, \alert{\bullet}]$}
+      +(0,-.2)   node[left]{\tiny$sequence$} node {\tiny=} node[right]{\tiny$1$};
+      \draw<2->[fill=structure!20, ultra thin, rounded corners] (7,2.6)
+      +(-1,-.35) rectangle +(1.5,.55)
+      +(0,.4)    node[left]  {\tiny$T_0$} node  {\tiny:} node[right]  {\tiny$decide(\structure{\bullet})$}
+      +(0,.2)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$incrementAndGet$}
+      +(0,0)     node[left]{\tiny$proposed$} node {\tiny=} node[right]{\tiny$[\structure{\bullet}, \alert{\bullet}]$}
+      +(0,-.2)   node[left]{\tiny$sequence$} node {\tiny=} node[right]{\tiny$1$};
+
+      \draw<-1>[fill=black!10, ultra thin, rounded corners] (11,2.6)
+      +(-1,-.35) rectangle +(1.5,.55)
+      +(0,.4)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$incrementAndGet$}
+      +(0,.2)    node[left] {\tiny$T_1$} node {\tiny:} node[right] {\tiny$decide(\alert{\bullet})$}
+      +(0,0)     node[left]{\tiny$proposed$} node {\tiny=} node[right]{\tiny$[\structure{\bullet}, \alert{\bullet}]$}
+      +(0,-.2)   node[left]{\tiny$sequence$} node {\tiny=} node[right]{\tiny$1$};
+      \draw<2->[fill=alertColor!20, ultra thin, rounded corners] (11,2.6)
+      +(-1,-.35) rectangle +(1.5,.55)
+      +(0,.4)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$incrementAndGet$}
+      +(0,.2)    node[left] {\tiny$T_1$} node {\tiny:} node[right] {\tiny$decide(\alert{\bullet})$}
+      +(0,0)     node[left]{\tiny$proposed$} node {\tiny=} node[right]{\tiny$[\structure{\bullet}, \alert{\bullet}]$}
+      +(0,-.2)   node[left]{\tiny$sequence$} node {\tiny=} node[right]{\tiny$1$};
+
+      \draw<-1>[fill=black!10, ultra thin, rounded corners] (7,1.3)
+      +(-1,-.35) rectangle +(1.5,.55)
+      +(0,.4)    node[left]  {\tiny$T_0$} node  {\tiny:} node[right]  {\tiny$decide(\structure{\bullet})$}
+      +(0,.2)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$get$}
+      +(0,0)     node[left]{\tiny$proposed$} node {\tiny=} node[right]{\tiny$[\structure{\bullet}, \alert{\bullet}]$}
+      +(0,-.2)   node[left]{\tiny$sequence$} node {\tiny=} node[right]{\tiny$2$};
+      \draw<2->[fill=structure!20, ultra thin, rounded corners] (7,1.3)
+      +(-1,-.35) rectangle +(1.5,.55)
+      +(0,.4)    node[left]  {\tiny$T_0$} node  {\tiny:} node[right]  {\tiny$decide(\structure{\bullet})$}
+      +(0,.2)    node[left, alertColor] {\tiny$T_1$} node[alertColor] {\tiny:} node[right, alertColor] {\tiny$get$}
+      +(0,0)     node[left]{\tiny$proposed$} node {\tiny=} node[right]{\tiny$[\structure{\bullet}, \alert{\bullet}]$}
+      +(0,-.2)   node[left]{\tiny$sequence$} node {\tiny=} node[right]{\tiny$2$};
+      
+      \draw<-1>[fill=black!10, ultra thin, rounded corners] (11,1.3)
+      +(-1,-.35) rectangle +(1.5,.55)
+      +(0,.4)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$get$}
+      +(0,.2)    node[left] {\tiny$T_1$} node {\tiny:} node[right] {\tiny$decide(\alert{\bullet})$}
+      +(0,0)     node[left]{\tiny$proposed$} node {\tiny=} node[right]{\tiny$[\structure{\bullet}, \alert{\bullet}]$}
+      +(0,-.2)   node[left]{\tiny$sequence$} node {\tiny=} node[right]{\tiny$2$};
+      \draw<2->[fill=alertColor!20, ultra thin, rounded corners] (11,1.3)
+      +(-1,-.35) rectangle +(1.5,.55)
+      +(0,.4)    node[left, structure]  {\tiny$T_0$} node[structure]  {\tiny:} node[right, structure]  {\tiny$get$}
+      +(0,.2)    node[left] {\tiny$T_1$} node {\tiny:} node[right] {\tiny$decide(\alert{\bullet})$}
+      +(0,0)     node[left]{\tiny$proposed$} node {\tiny=} node[right]{\tiny$[\structure{\bullet}, \alert{\bullet}]$}
+      +(0,-.2)   node[left]{\tiny$sequence$} node {\tiny=} node[right]{\tiny$2$};
+
+      \draw<-1>[fill=black!10, ultra thin, rounded corners] (7,0)
+      +(-1.03,-.38) rectangle +(1.53,.58)
+      +(-1,-.35) rectangle +(1.5,.55)
+      +(0,.4)    node[left] {\tiny$T_0$} node {\tiny:} node[right] {\tiny$decide(\structure{\bullet})$}
+      +(0,.2)    node[left] {\tiny$T_1$} node {\tiny:} node[right] {\tiny$decide(\structure{\bullet})$}
+      +(0,0)     node[left]{\tiny$proposed$} node {\tiny=} node[right]{\tiny$[\structure{\bullet}, \alert{\bullet}]$}
+      +(0,-.2)   node[left]{\tiny$sequence$} node {\tiny=} node[right]{\tiny$2$};
+      \draw<2->[fill=structure!20, ultra thin, rounded corners] (7,0)
+      +(-1.03,-.38) rectangle +(1.53,.58)
+      +(-1,-.35) rectangle +(1.5,.55)
+      +(0,.4)    node[left] {\tiny$T_0$} node {\tiny:} node[right] {\tiny$decide(\structure{\bullet})$}
+      +(0,.2)    node[left] {\tiny$T_1$} node {\tiny:} node[right] {\tiny$decide(\structure{\bullet})$}
+      +(0,0)     node[left]{\tiny$proposed$} node {\tiny=} node[right]{\tiny$[\structure{\bullet}, \alert{\bullet}]$}
+      +(0,-.2)   node[left]{\tiny$sequence$} node {\tiny=} node[right]{\tiny$2$};
+
+      \draw<-1>[fill=black!10, ultra thin, rounded corners] (11,0)
+      +(-1.03,-.38) rectangle +(1.53,.58)
+      +(-1,-.35) rectangle +(1.5,.55)
+      +(0,.4)    node[left] {\tiny$T_0$} node {\tiny:} node[right] {\tiny$decide(\alert{\bullet})$}
+      +(0,.2)    node[left] {\tiny$T_1$} node {\tiny:} node[right] {\tiny$decide(\alert{\bullet})$}
+      +(0,0)     node[left]{\tiny$proposed$} node {\tiny=} node[right]{\tiny$[\structure{\bullet}, \alert{\bullet}]$}
+      +(0,-.2)   node[left]{\tiny$sequence$} node {\tiny=} node[right]{\tiny$2$};
+      \draw<2->[fill=alertColor!20, ultra thin, rounded corners] (11,0)
+      +(-1.03,-.38) rectangle +(1.53,.58)
+      +(-1,-.35) rectangle +(1.5,.55)
+      +(0,.4)    node[left] {\tiny$T_0$} node {\tiny:} node[right] {\tiny$decide(\alert{\bullet})$}
+      +(0,.2)    node[left] {\tiny$T_1$} node {\tiny:} node[right] {\tiny$decide(\alert{\bullet})$}
+      +(0,0)     node[left]{\tiny$proposed$} node {\tiny=} node[right]{\tiny$[\structure{\bullet}, \alert{\bullet}]$}
+      +(0,-.2)   node[left]{\tiny$sequence$} node {\tiny=} node[right]{\tiny$2$};
+
+      \draw (5.5,6.7) node{\begin{minipage}{3cm}\begin{exampleblock}{}
+            \begin{itemize}
+            \item<2-> $\structure{\bullet}$-monovalente
+            \item<2-> $\alert{\bullet}$-monovalente
+      \end{itemize}\end{exampleblock}\end{minipage}};
+      \draw (13,6.7) node{\begin{minipage}{2.7cm}\begin{exampleblock}{}
+            \begin{itemize}
+            \item<3-> bivalente
+            \item<4-> critique
+      \end{itemize}\end{exampleblock}\end{minipage}};
+
+    \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\endgroup
+\endinput

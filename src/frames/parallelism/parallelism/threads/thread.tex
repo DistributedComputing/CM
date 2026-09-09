@@ -1,0 +1,43 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Thread et contexte d'exécution}
+
+  \begin{block}{Java : classe \lstinline{java.lang.Thread}}
+    \begin{lstlisting}[gobble=6]
+      var task = new Printer("hello world");
+      // Runnable task = () -> System.out.println("hello world");
+      var thread = new Thread(task);
+      thread.start();
+      // Thread t = Thread.startVirtualThread(task); 
+    \end{lstlisting}
+  \end{block}
+
+  \begin{block}{C++ : classe \lstinline{std::thread}}
+    \begin{lstlisting}[gobble=6]
+      thread t(printer, "hello world");
+      // Started by constructor
+    \end{lstlisting}
+  \end{block}
+
+  \begin{exampleblock}{Exemple}
+    \begin{lstlisting}[gobble=6]
+      var messages = new String[]{"Hello", "Multithreaded", "World"};
+      for(var message : messages) {
+        new Thread(()->System.out.print(message)).start();
+      }
+    \end{lstlisting}
+  \end{exampleblock}
+
+  \footnoterefgithub{introduction}{HelloWorld}
+
+\end{frame}
+
+\endgroup
+\endinput

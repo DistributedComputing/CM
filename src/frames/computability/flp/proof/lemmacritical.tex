@@ -1,0 +1,37 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Lemme 1 : $A$ possède une configuration critique}
+
+  \begin{exampleblock}{Démonstration}
+    \begin{itemize}
+    \item Supposons (absurde), que $A$ ne possède pas de configuration critique.
+    \item Construction par récurrence :\\
+      une exécution {\color{exampleColor}infinie} qui reste dans des {\color{exampleColor}configurations bivalentes}
+      \begin{description}
+      \item[Initialisation] La configuration initiale est bivalente
+        \begin{itemize}
+        \item Si $T_0$ crashe au début, $T_1$ décide $\alert{\bullet}$
+        \item Si $T_1$ crashe au début, $T_0$ décide $\structure{\bullet}$
+        \end{itemize}
+      \item[Hérédité] Supposons qu'on a construit l'exécution $C_1, ..., C_k$
+        \begin{itemize}
+        \item $C_k$ est bivalente
+        \item $C_k$ n'est pas critique
+        \item $C_k$ possède un fils bivalent $C_{k+1}$ 
+        \end{itemize}
+      \end{description}
+    \item $A$ est wait-free mais possède une exécution infinie : {\color{exampleColor}absurde !}
+    \end{itemize}
+  \end{exampleblock}
+
+\end{frame}
+
+\endgroup
+\endinput

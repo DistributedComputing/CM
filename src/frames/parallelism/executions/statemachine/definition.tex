@@ -1,0 +1,40 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Machine à états d'un programme}
+
+  Si l'exécution est \structure{séquentiellement cohérente}, on peut utiliser une \alert{sémantique d'entrelacement} :
+  l'ensemble des exécutions est décrit par une \alert{machine à états non-déterministe}.
+
+  \begin{block}{États du système}
+    À chaque instant, la \alert{configuration globale} est définie par :
+    \begin{itemize}
+    \item Un ensemble de threads en cours d'exécution
+    \item L'état local de chaque thread
+      \begin{description}
+      \item[Pile d'appels :] valeur de ses variables locales
+      \item[Avancement :] prochaine instruction à exécuter
+      \item[Éligibilité :] peut-il exécuter sa prochaine instruction ? 
+      \end{description}
+    \item L'état de la mémoire
+      \begin{itemize}
+      \item ensemble de variables partagées
+      \item valeur de chacune d'entre elles
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Transitions}
+    Un \alert{ordonnanceur} décide quel thread exécutera sa prochaine instruction.
+  \end{block}
+
+\end{frame}
+
+\endgroup
+\endinput

@@ -1,0 +1,41 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Compteur lock-free}
+
+  \begin{block}{Définition -- Lock-freedom}
+    \example{Si le nombre d'appels est fini}, alors toutes les opérations se terminent.
+    \begin{itemize}
+    \item Progrès global non-bloquant
+    \end{itemize}
+  \end{block}
+
+  \begin{exampleblock}{Exemple}
+    \begin{lstlisting}[gobble=6]
+      class LockFreeCounter {
+        private AtomicInteger value = new AtomicInteger(0);
+
+        public void increment() {
+          int old;
+          do {
+            old = value.get();
+          } while (!value.compareAndSet(old, old+1));
+        }
+
+        public int get() {
+          return value.get();
+        }
+      }
+    \end{lstlisting}
+  \end{exampleblock}
+
+\end{frame}
+
+\endgroup
+\endinput

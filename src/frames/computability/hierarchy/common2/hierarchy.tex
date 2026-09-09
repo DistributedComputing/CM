@@ -1,0 +1,35 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Hiérarchie des consensus}
+  \begin{block}{Implémentation du consensus}
+    \begin{itemize}
+    \item Possible pour $1$ thread
+      \begin{description}
+      \item[Preuve :] trivial
+      \end{description}
+    \item Possible pour $n$ threads $\implies$ possible pour $n-1$ threads
+      \begin{description}
+      \item[Preuve :] par définition de wait-free
+      \end{description}
+    \item Impossible pour $n$ threads $\implies$ impossible pour $n+1$ threads
+      \begin{description}
+      \item[Preuve :] par contraposée
+      \end{description}
+    \item Possible entre $n$ threads $\not\implies$ possible pour $n+1$ threads
+      \begin{description}
+      \item[\alert{Preuve :}] pas trivial, on a des contre-exemples
+      \end{description}
+    \end{itemize}
+  \end{block}
+  \medskip
+\end{frame}
+
+\endgroup
+\endinput

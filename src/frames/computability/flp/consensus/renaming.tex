@@ -1,0 +1,76 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Le problème du \it renaming parfait}
+
+  \begin{lstlisting}[gobble=4]
+    public interface Sequence {
+      public int incrementAndGet();
+    }
+  \end{lstlisting}
+
+  \pause
+
+  \begin{block}{Solution naïve}
+    \begin{lstlisting}[gobble=6]
+      public class ShardingSequence implements Sequence {
+        private Counter counter = new ShardingCounter();
+        public int incrementAndGet() {
+          (*\Alert{counter.increment();}*)
+          (*\Alert{return counter.get();}*)
+        }
+      }
+    \end{lstlisting}
+
+    \vspace{-8mm}
+    \begin{center}
+      \scalebox{.75}{
+        \begin{tikzpicture}
+          \draw[structure, fill=structure!20, rounded corners] (3.0, 0.6) rectangle (7.5,1.4) ;
+          \draw[structure, fill=structure!20, rounded corners] (0.9,-0.4) rectangle (6.3,0.4) ;
+
+          \draw[structure, -latex] (-1,1.75) node[left]{\footnotesize $sequence$} +(.2,.15) node{\footnotesize$0$} +(0,0) -- (8.5,1.75);
+          \draw[-latex] (-1,1) node[left]{$T_0$} -- (8.5,1);
+          \draw[-latex] (-1,0) node[left]{$T_1$} -- (8.5,0);
+          \draw[alertColor, -latex] (-1,-0.75) node[left]{\footnotesize $counter$} +(.15,.12) node{\footnotesize $0$} +(0,0) -- (8.5,-0.75);
+          
+          \draw[structure, thick, densely dotted] (6,1.4) node{$\bullet$} -- (6,1.75) node{$\bullet$}
+          ++(0,.15) node[left]{\footnotesize$incrementAndGet()$} node[right]{\footnotesize$2$}; 
+          \draw[structure, thick, densely dotted] (2 ,0.4) node{$\bullet$}  -- (2 ,1.75)  node{$\bullet$}
+          ++(0,.15) node[left]{\footnotesize$incrementAndGet()$} node[right]{\footnotesize$2$ \alert{$???$}}; 
+          
+          \draw[alertColor, thick, densely dotted] (2   ,0) -- (2   ,-.75) node{$\bullet$} +(.15,.12) node{\scriptsize $1$}; 
+          \draw[alertColor, thick, densely dotted] (5.7 ,0) -- (5.7 ,-.75) node{$\bullet$} +(.15,.12) node{\scriptsize $2$}; 
+          \draw[alertColor, thick, densely dotted] (4.1 ,1) -- (4.1 ,-.75) node{$\bullet$} +(.15,.12) node{\scriptsize $2$}; 
+          \draw[alertColor, thick, densely dotted] (6.9 ,1) -- (6.9 ,-.75) node{$\bullet$} +(.3,.12) node{\scriptsize $2$}; 
+          
+          \draw[alertColor, fill=alertColor!20, rounded corners] (2   ,0) +(-1.0,-0.3) rectangle +(1.0,0.3) +(0,0) node{$increment()$};
+          \draw[alertColor, fill=alertColor!20, rounded corners] (5.7 ,0) +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$get()$};
+          \draw[alertColor, fill=alertColor!20, rounded corners] (4.1 ,1) +(-1.0,-0.3) rectangle +(1.0,0.3) +(0,0) node{$increment()$};
+          \draw[alertColor, fill=alertColor!20, rounded corners] (6.9 ,1) +(-0.5,-0.3) rectangle +(0.5,0.3) +(0,0) node{$get()$};
+        \end{tikzpicture}
+      }
+    \end{center}
+    
+  \end{block}
+
+  \pause
+
+  \vspace{-3mm}
+  \begin{alertblock}{Théorème}
+    \begin{center}
+      Il n'existe pas d'implémentation lock-free linéarisable de la séquence\\
+      qui n'utilise que des lectures et écritures sur des variables partagées.
+    \end{center}
+  \end{alertblock}
+  
+\end{frame}
+
+\endgroup
+\endinput

@@ -1,0 +1,47 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{L'instruction test\_and\_set}
+
+  \begin{block}{Spécification}
+    \begin{lstlisting}[gobble=6]
+      T old = get();
+      set(val);
+      return old;
+    \end{lstlisting}
+  \end{block}
+
+  \begin{exampleblock}{Exemple : le spin lock}
+    \begin{lstlisting}[gobble=6]
+      class SpinLock {
+        private AtomicBoolean taken = new AtomicBoolean(false);
+        
+        public void lock() {
+          while(taken.getAndSet(true));
+        }
+        
+        public void unlock() {
+          taken.set(false);
+        }
+      }
+    \end{lstlisting}
+  \end{exampleblock}
+
+  \on[top=5mm, right=.5\textwidth]{
+    \begin{description}[Java :]
+    \item [Java :] \lstinline{T getAndSet(T val)}
+    \item [C++ :] \lstinline{T exchange(T val)}
+    \end{description}
+  }
+  
+\end{frame}
+
+\endgroup
+\endinput
+

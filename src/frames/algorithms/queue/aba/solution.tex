@@ -1,0 +1,53 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Solutions au problème ABA}
+
+  \vspace{-3mm}
+  \begin{lstlisting}
+    struct Node {
+      const T* value;
+      (*\Alert{std::shared\_ptr<Node>}*) next;
+    };
+
+    (*\Alert{std::atomic<std::shared\_ptr<Node>>}*) head{nullptr};
+ 
+    void push(T* value) {
+      auto newNode = (*\Alert{std::make\_shared<Node>(value, head.load());}*)
+      while (!head.compare_exchange_weak(newNode->next, newNode));
+    }
+  \end{lstlisting}  
+  
+  \begin{itemize}
+
+  \item Utiliser un garbage collector
+
+  \item Utiliser un compteur de références
+    \begin{itemize}
+    \item \structure{C++ :} \lstinline{atomic<shared_ptr<Node>>}
+    \end{itemize}
+
+  \item Ajouter un compteur entier à la référence
+    \begin{itemize}
+    \item \structure{Java :} \lstinline{java.util.concurrent.atomic.AtomicStampedReference<V>}
+    \item compare\_and\_swap sur 128 bits 
+    \end{itemize}
+
+  \item Changer d'instruction spéciale (load\_link / store\_conditional)
+
+  \item Hazard pointers : se souvenir des valeurs lues par chaque thread
+
+  \end{itemize}
+
+  \footnoteref{Timur Doumler. \textit{A Lock-Free Atomic Shared Pointer in Modern Cpp} (CppCon 2022)}
+  
+\end{frame}
+
+\endgroup
+\endinput

@@ -1,0 +1,40 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Comparaison des algorithmes de file}
+  
+  \begin{lstlisting}
+    void experience(Queue<Integer> queue) {
+      for (int i = 0; i < nbThreads; i++) {
+        new Thread(() -> {
+	  for (int j = 0; j < nbIterations; j++) {
+	    queue.add(j);
+	    attenteActive(waitTimeNanosec);
+	    queue.poll();
+	  }
+        }).start();
+      }
+    }
+  \end{lstlisting}
+
+  \begin{block}{Résultats (\lstinline{nbThreads} = 8, \lstinline{nbIterations} = $10^7$, \lstinline{waitTimeNanosec} = 100) }
+    \begin{itemize}
+    \item Time for \structure{LinkedList}: 13368ms \hspace\fill (pas de coordination)
+    \item Time for \structure{LinkedBlockingQueue}: 25711ms \hspace\fill (bloquant)
+    \item Time for \structure{ConcurrentLinkedQueue}: 14371ms \hspace\fill (non-bloquant)
+    \end{itemize}
+  \end{block}
+
+  \footnoterefgithub{cm1}{Queues}
+  
+\end{frame}
+
+\endgroup
+\endinput
+

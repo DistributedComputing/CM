@@ -1,0 +1,40 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Stratégie du double collect}
+
+  \begin{lstlisting}
+    // precondition : delta >= 0
+    public void add(int threadId, int delta) {
+      int old = values.get(threadId);
+      values.set(threadId, old+delta);
+    }
+
+    public int get() {
+      int sum1=collect(), sum2=collect();
+      while(sum1!=sum2) { sum1=sum2; sum2=collect(); }
+      return sum1;
+    }
+
+    private int collect() {
+      int sum = 0;
+      for(int i=0; i<values.length(); i++)
+      sum+=values.get(i);
+      return sum;
+    }
+  \end{lstlisting}
+  
+  \begin{exampleblock}{Question}
+    Si \lstinline{sum1 == sum2}, que peut-on en déduire ?
+  \end{exampleblock}
+  
+\end{frame}
+
+\endgroup
+\endinput

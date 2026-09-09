@@ -1,0 +1,45 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}{Modèle de communication}
+
+  \begin{block}{Modèle à mémoire partagée}
+    \begin{itemize}
+    \item Communication par des \structure{instructions} sur des \alert{registres partagés} 
+      \begin{itemize}
+      \item \lstinline{get}, \lstinline{set},
+      \item \lstinline{compareAndSet}, \lstinline{getAndSet}, \lstinline{getAndAdd}...
+      \end{itemize}
+    \item On suppose une mémoire \structure{infinie} organisée en \alert{tas}
+      \begin{itemize}
+      \item allocation dynamique par un mot-clé \lstinline{new},
+      \item présence d'un \structure{garbage collector}
+      \end{itemize}
+    \item L'ensemble des registres est noté \alert{$\textsc{Reg}$}
+    \item L'ensemble des valeurs qu'ils peuvent prendre est noté \alert{$\textsc{Val}$}
+    \end{itemize}
+  \end{block}
+
+  \pause
+  
+  \begin{alertblock}{Hypothèse simplificatrice}
+    \begin{itemize}
+    \item Toutes les instructions sont \alert{atomiques}
+      \begin{itemize}
+      \item un appel à une instruction atomique est un pas d'un processus
+      \item en pratique, utiliser \lstinline{volatile} ou \lstinline{atomic*}
+      \end{itemize}
+    \end{itemize}
+  \end{alertblock}
+
+\end{frame}
+
+\endgroup
+\endinput
+

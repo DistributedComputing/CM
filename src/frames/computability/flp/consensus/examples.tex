@@ -1,0 +1,30 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Exemples de problèmes répartis}
+
+  \begin{exampleblock}{Dans la partie précédente}
+    \begin{itemize}
+    \item Avec \lstinline{getAndIncrement}, on peut implémenter une pile wait-free.
+    \item Avec \lstinline{compareAndSet}, on peut implémenter une file lock-free.
+    \item Sans instruction spéciale, on peut implémenter un compteur wait-free.
+    \end{itemize}
+  \end{exampleblock}
+  
+  \begin{block}{Dans le reste de ce cours}
+    \begin{itemize}
+    \item Sans instruction spéciale, \emph{on ne peut pas} implémenter \lstinline{getAndAdd}.
+    \item Avec \lstinline{getAndAdd}, \emph{on ne peut pas} implémenter \lstinline{compareAndSet}.
+    \end{itemize}
+  \end{block}
+
+\end{frame}
+
+\endgroup
+\endinput

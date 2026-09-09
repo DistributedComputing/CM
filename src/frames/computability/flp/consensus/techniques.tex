@@ -1,0 +1,38 @@
+% SPDX-License-Identifier: CC-BY-SA-4.0
+% Author: Matthieu Perrin
+% Part: 
+% Section: 
+% Sub-section: 
+% Frame: 
+
+\begingroup
+
+\begin{frame}[fragile]{Démontrer qu'un problème est indécidable}
+
+  \begin{block}{Preuve par réduction}
+    Supposons qu'on a déjà démontré que $P_0$ est impossible. 
+
+    Peut-on résoudre le problème $P$ ?
+    \begin{enumerate}
+    \item Supposons (par l'absurde) que l'on peut résoudre $P$
+    \item On prouve qu'alors on peut utiliser la solution pour résoudre $P_0$
+    \item Or on sait qu'on ne peut pas résoudre $P_0$ (voir ci-dessus)
+    \item Donc l'hypothèse est fausse (on ne peut pas résoudre $P$)
+    \end{enumerate}
+  \end{block}
+
+  \pause
+
+  \begin{block}{Preuve directe}
+    Il faut toujours montrer qu'un premier problème $P_0$ est indécidable
+    \begin{description}[labelwidth=\widthof{\bfseries Calcul}]
+    \item[Géométrie plane :] la quadrature du cercle
+    \item[Calcul séquentiel :] l'arrêt de la machine de Turing
+    \item[Calcul réparti :] \alert{le consensus}
+    \end{description}
+  \end{block}
+
+\end{frame}
+
+\endgroup
+\endinput
