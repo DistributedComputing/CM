@@ -1,6 +1,6 @@
 # DistributedComputing/CM 
 
-This repository contains modular and reusable teaching materials used to build the slides for the Distributed Systems course at Nantes Université.  
+This repository contains modular and reusable teaching materials used to build the slides for the Concurrent Programming and Distributed Systems courses at Nantes Université.  
 See the [course organization](https://github.com/DistributedComputing/) for the course description and additional resources.
 
 ## Repository structure
