@@ -34,18 +34,18 @@
   \on[bottom]{
     \begin{tikzpicture}[x=20mm, y=8mm, anchor=mid]
       \footnotesize
-      \node[operation, fill=black!10] (01) at (0,1) {\lstinline{t1.start()}};
-      \node[operation, fill=black!10] (02) at (1,1) {\lstinline{t2.start()}};
-      \node[operation, fill=black!10] (03) at (2,1) {\lstinline{t1.join()}};
-      \node[operation, fill=black!10] (04) at (3,1) {\lstinline{t2.join()}};
-      \node[operation, fill=black!10] (05) at (4,1) {\lstinline{t1.result}};
-      \node[operation, fill=black!10] (06) at (5,1) {\lstinline{t2.result}};
-      \node[operation, fill=black!10] (11) at (0,2) {\lstinline{t1.result++}};
-      \node[operation, fill=black!10] (12) at (1,2) {\lstinline{t1.result++}};
-      \node[operation, fill=black!10] (13) at (2,2) {\lstinline{t1.result++}};
-      \node[operation, fill=black!10] (21) at (1,0) {\lstinline{t2.result++}};
-      \node[operation, fill=black!10] (22) at (2,0) {\lstinline{t2.result++}};
-      \node[operation, fill=black!10] (23) at (3,0) {\lstinline{t2.result++}};
+      \state[rectangle, fill=black!10] (01) at (0,1) {\lstinline{t1.start()}};
+      \state[rectangle, fill=black!10] (02) at (1,1) {\lstinline{t2.start()}};
+      \state[rectangle, fill=black!10] (03) at (2,1) {\lstinline{t1.join()}};
+      \state[rectangle, fill=black!10] (04) at (3,1) {\lstinline{t2.join()}};
+      \state[rectangle, fill=black!10] (05) at (4,1) {\lstinline{t1.result}};
+      \state[rectangle, fill=black!10] (06) at (5,1) {\lstinline{t2.result}};
+      \state[rectangle, fill=black!10] (11) at (0,2) {\lstinline{t1.result++}};
+      \state[rectangle, fill=black!10] (12) at (1,2) {\lstinline{t1.result++}};
+      \state[rectangle, fill=black!10] (13) at (2,2) {\lstinline{t1.result++}};
+      \state[rectangle, fill=black!10] (21) at (1,0) {\lstinline{t2.result++}};
+      \state[rectangle, fill=black!10] (22) at (2,0) {\lstinline{t2.result++}};
+      \state[rectangle, fill=black!10] (23) at (3,0) {\lstinline{t2.result++}};
 
       \path[-latex, structure] (11) edge node[above]{po} (12);
       \path[-latex, structure] (12) edge node[above]{po} (13);

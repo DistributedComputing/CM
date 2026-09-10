@@ -29,11 +29,11 @@
     \centering
     \begin{tikzpicture}[x=20mm, y=10mm, anchor=mid]
       \footnotesize
-      \node[operation, fill=black!10] (11) at (1,1) {\lstinline{i=1}};
-      \node[operation, fill=black!10] (12) at (2,1) {\lstinline{sum=1}};
-      \node[operation, fill=black!10] (13) at (3,1) {\lstinline{i=2}};
-      \node[operation, fill=black!10] (21) at (4,0) {\lstinline{sum} $\rightarrow 1$};
-      \node[operation, fill=black!10] (22) at (5,0) {\lstinline{i} $\rightarrow 2$};
+      \state[rectangle, fill=black!10] (11) at (1,1) {\lstinline{i=1}};
+      \state[rectangle, fill=black!10] (12) at (2,1) {\lstinline{sum=1}};
+      \state[rectangle, fill=black!10] (13) at (3,1) {\lstinline{i=2}};
+      \state[rectangle, fill=black!10] (21) at (4,0) {\lstinline{sum} $\rightarrow 1$};
+      \state[rectangle, fill=black!10] (22) at (5,0) {\lstinline{i} $\rightarrow 2$};
 
       \path[-latex, structure] (11) edge node[above]{po} (12);
       \path[-latex, structure] (12) edge node[above]{po} (13);
