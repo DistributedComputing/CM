@@ -1,9 +1,5 @@
 % SPDX-License-Identifier: CC-BY-SA-4.0
 % Author: Matthieu Perrin
-% Part: 
-% Section: 
-% Sub-section: 
-% Frame: 
 
 \begingroup
 
@@ -21,8 +17,8 @@
     \item Lève un drapeau booléen pour avertir le thread.
     \item La tâche peut (doit) vérifier régulièrement les demandes d'interruption
       \begin{itemize}
-      \item \lstinline|public static boolean interrupted()| \hfill rebaisse le drapeau
-      \item \lstinline|public boolean isInterrupted()|      \hfill ne rebaisse pas le drapeau
+      \item \lstinline|public static boolean interrupted()| \hspace{\fill} rebaisse le drapeau
+      \item \lstinline|public boolean isInterrupted()|      \hspace{\fill} ne rebaisse pas le drapeau
       \end{itemize}
     \item Si le thread est bloqué ou en attente,  \lstinline|InterruptedException| est lancée.
     \end{itemize}

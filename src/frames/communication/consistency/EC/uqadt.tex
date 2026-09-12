@@ -1,8 +1,5 @@
 % SPDX-License-Identifier: CC-BY-SA-4.0
 % Author: Matthieu Perrin
-% Part: Communication
-% Section: Cohérence faible
-% Frame: Eventual Consistency
 
 \begingroup
 
@@ -17,14 +14,14 @@
   toutes ses commandes $c\in C$ sont dans l'une des deux catégories : 
   \begin{description}
   \item[Requête :] \alert{$c \in \mathit{Query}$} ne modifie pas l'état
-    \hfill $\alert{\forall q\in Q, \tau(q, c) = q}$\\
+    \hspace{\fill} $\alert{\forall q\in Q, \tau(q, c) = q}$\\
   \item[Mise à jour :] \alert{$c \in \mathit{Update}$} retourne $\bot$
-    \hfill $\alert{\exists \bot\in R, \forall q\in Q, \rho(q, c) = \bot}$\\
+    \hspace{\fill} $\alert{\exists \bot\in R, \forall q\in Q, \rho(q, c) = \bot}$\\
   \end{description}
 
   \vspace{2mm}
   On étend la notation aux exécutions $E$ d'une implémentation répliquée de $M$ :
-  \alert{$\mathit{Query}(E) = \{ c\rightarrow r \in E \mid c \in \mathit{Query} \}$ \hfill $\mathit{Update}(E) = \{ c\rightarrow r \in E \mid c \in \mathit{Update} \}$}
+  \alert{$\mathit{Query}(E) = \{ c\rightarrow r \in E \mid c \in \mathit{Query} \}$ \hspace{\fill} $\mathit{Update}(E) = \{ c\rightarrow r \in E \mid c \in \mathit{Update} \}$}
 
   \pause
   \vspace{2mm}

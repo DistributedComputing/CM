@@ -1,9 +1,5 @@
 % SPDX-License-Identifier: CC-BY-SA-4.0
 % Author: Matthieu Perrin
-% Part: 
-% Section: 
-% Sub-section: 
-% Frame: 
 
 \begingroup
 
@@ -17,17 +13,17 @@
     Une \structure{machine à états} est un sextuplet \alert{$\langle C, R, Q, q_0, \tau, \rho \rangle$} tel que :
     \begin{description}[xxx]
     \item[\alert{$C$}] : ensemble de \structure{commandes} 
-      \hfill {\footnotesize \example{$C =\{\Acheter(x), \Vendre(x), \Consulter() \mid x \in X\}$}}
+      \hspace{\fill} {\footnotesize \example{$C =\{\Acheter(x), \Vendre(x), \Consulter() \mid x \in X\}$}}
     \item[\alert{$R$}] : ensemble de \structure{réponses} possibles
-      \hfill {\footnotesize \example{$R = \mathcal{P}(X) \cup \{\cmark, \xmark\}$}}
+      \hspace{\fill} {\footnotesize \example{$R = \mathcal{P}(X) \cup \{\cmark, \xmark\}$}}
     \item[\alert{$Q$}] : ensemble d'\structure{états} (fini ou infini)
-      \hfill {\footnotesize \example{$Q = \mathcal{P}(X)$}}
+      \hspace{\fill} {\footnotesize \example{$Q = \mathcal{P}(X)$}}
     \item[\alert{$q_0$}] $\in Q$ : l'\structure{état initial}
-      \hfill {\footnotesize \example{$q_0 = \emptyset$}}
+      \hspace{\fill} {\footnotesize \example{$q_0 = \emptyset$}}
     \item[\alert{$\tau$}] $: Q \times C \rightarrow Q$ : la \structure{fonction de transition}
-      \hfill {\footnotesize\example{$\tau(q, \Acheter(x)) = q \setminus \{x\}$, ...}}
+      \hspace{\fill} {\footnotesize\example{$\tau(q, \Acheter(x)) = q \setminus \{x\}$, ...}}
     \item[\alert{$\rho$}] $: Q \times C \rightarrow R$ : la \structure{fonction de réponse}
-      \hfill {\footnotesize\example{$\rho(q, \Consulter()) = q$, ...}}
+      \hspace{\fill} {\footnotesize\example{$\rho(q, \Consulter()) = q$, ...}}
     \end{description}
   \end{block}
 
@@ -52,5 +48,3 @@
 
 \endgroup
 \endinput
-
-

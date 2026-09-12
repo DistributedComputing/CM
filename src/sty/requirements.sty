@@ -2,14 +2,10 @@
 % Author: Matthieu Perrin
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{requirements}[2024/06/24 Shared Configurations of the DistributedComputing Courses]
-
-\PassOptionsToPackage{vlined}{algorithm2e}
-
+\ProvidesPackage{requirements}[2026/09/11 Shared Configurations of the DistributedComputing Courses]
 
 \def\input@path{{src/frames}}
 \graphicspath{{src/}{src/img/}}
-
 
 \RequirePackage[french]{babel}
 
@@ -22,43 +18,19 @@
 \RequirePackage{gnuplot-lua-tikz}
 \usetikzlibrary{plotmarks}
 
+%\RequirePackage{cprotect}
 
-\RequirePackage{ccicons}
 \RequirePackage[clock]{ifsym}
 \RequirePackage[normalem]{ulem}
 \RequirePackage{fontawesome, pifont, MnSymbol}
-\RequirePackage{cprotect}
-\RequirePackage{citations}
-\RequirePackage{tabularx}
-\RequirePackage{multirow}
-\RequirePackage{graphicx}
-\RequirePackage{amsmath, amssymb, amsfonts}
-\RequirePackage{mathtools}
-\RequirePackage{mathrsfs}
-\RequirePackage{stmaryrd}
+\RequirePackage{amsmath, amssymb, amsfonts, mathtools, mathrsfs}
 
-\RequirePackage[export]{adjustbox}
-\RequirePackage{textpos}
-
-\RequirePackage{array}
-\RequirePackage{textpos}
-\RequirePackage{hyperref}
-\hypersetup{
-  colorlinks   = false, %Colours links instead of ugly boxes
-  urlcolor     = blue, %Colour for external hyperlinks
-  linkcolor    = blue, %Colour of internal links
-  citecolor   = red %Colour of citations
-}
-
-
-
-
-
-
-\RequirePackage{overlay}
 \RequirePackage{frameconfig} 
-\RequirePackage{chat}
+\RequirePackage{overlay}
+
+\RequirePackage{citations}
 \RequirePackage{distributed}
+\RequirePackage{chat}
 \RequirePackage{trees}
 
 \RequirePackage{statemachines}
@@ -67,32 +39,14 @@
 \colorlet{sm@fill@example}{example}
 \colorlet{sm@fill@structure}{structure}
 
-
-%\RequirePackage{dominos}
-%\tikzset{
-%  domino top/.style={fill=structure!20},
-%  domino bottom/.style={fill=example!20},
-%}
-
-
+\PassOptionsToPackage{vlined}{algorithm2e}
 \RequirePackage{algos}
 \AlgoEnglish
-
-
-\RequirePackage{tikz}
-\usetikzlibrary{decorations.markings,decorations.pathmorphing,decorations.pathreplacing}
-\usetikzlibrary{shapes,fadings,patterns,patterns.meta}
-\usetikzlibrary{automata,shadows,arrows,arrows.meta}
-\usetikzlibrary{positioning,calc}
 
 \pgfdeclarelayer{foreground}
 \pgfsetlayers{background, chat@bubble, process@background, main, process@foreground, foreground}
 
 \tikzset{
-  nosep/.style={
-    inner sep=0pt,
-    outer sep = 0pt,
-  },
   brace/.style={
     decorate,
     decoration={
@@ -115,20 +69,12 @@
   }%
 }
 
-\providecommand{\vFill}{\vskip0pt plus 1filll}
-\providecommand{\hFill}{\hspace{\fill}}
-
-\providecommand\cmark{\example{\text{\ding{51}}}}
-\providecommand\xmark{\alert{\text{\ding{55}}}}
-\providecommand\eqdef{\stackrel{\text{def}}{=}}
-\providecommand{\inout}{\hspace{-.5mm}\triangleright\hspace{-.5mm}}
-\providecommand{\rtorder}{\xmapsto{RT}}
-\providecommand{\porder}{\xmapsto{PO}}
 \providecommand{\hb}{\xrightarrow{\mathsf{hb}}}
-\providecommand{\so}{\xrightarrow{\mathsf{so}}}
 \providecommand{\sw}{\xrightarrow{\mathsf{sw}}}
 \providecommand{\po}{\xrightarrow{\mathsf{po}}}
 
+\providecommand{\cmark}{\example{\text{\ding{51}}}}
+\providecommand{\xmark}{\alert{\text{\ding{55}}}}
 
 \mode<all>
 \endinput

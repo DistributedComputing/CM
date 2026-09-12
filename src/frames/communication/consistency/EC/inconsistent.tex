@@ -1,9 +1,5 @@
 % SPDX-License-Identifier: CC-BY-SA-4.0
 % Author: Matthieu Perrin
-% Part: 
-% Section: 
-% Sub-section: 
-% Frame: 
 
 \begingroup
 
@@ -106,42 +102,3 @@
 
 \endgroup
 \endinput
-
-
-  \ob<2>[y=-30mm]{
-    \begin{tikzpicture}[y=8mm]
-      \draw[process] (0,2) node[left]{$p_1$} node[replica below]{$\varepsilon$} to (10,2);
-      \draw[process] (0,1) node[left]{$p_2$} node[replica]      {$\varepsilon$} to (10,1);
-      \draw[process] (0,0) node[left]{$p_3$} node[replica]      {$\varepsilon$} to (10,0);
-
-      \node[alert, operation] (i1) at (3,1) {\hspace{8mm}$\Append(a)$};
-      \draw[alert, message]   ([xshift=0mm]i1.west) to             (3,2);
-      \draw[alert, message]   ([xshift=2mm]i1.west) to[bend left]  ([xshift=6mm]i1.west);
-      \draw[alert, message]   ([xshift=8mm]i1.west) to[bend below] (7.5,0);
-
-      \node[structure, operation] (r1) at (7,2) {$\Read() \rightarrow \alert{a}$};
-      \node[structure, operation] (r3) at (6,0) {$\Read() \rightarrow \varepsilon$};
-    \end{tikzpicture}
-  }
-
-  \ob<4>[y=-30mm]{
-    \begin{tikzpicture}[y=8mm]
-      \draw[process] (0,2) node[left]{$p_1$} node[replica below]{$\varepsilon$} to (10,2);
-      \draw[process] (0,1) node[left]{$p_2$} node[replica]      {$\varepsilon$} to (10,1);
-      \draw[process] (0,0) node[left]{$p_3$} node[replica]      {$\varepsilon$} to (10,0);
-
-      \node[alert, operation] (i1) at (2,1) {\hspace{8mm}$\Append(a)$};
-      \draw[alert, message]   ([xshift=0mm]i1.west) to[bend above] (6.7,2);
-      \draw[alert, message]   ([xshift=2mm]i1.west) to[bend left]  ([xshift=6mm]i1.west);
-      \draw[alert, message]   ([xshift=8mm]i1.west) to             (2,0);
-
-      \node[example, operation] (i2) at (5,1) {\hspace{8mm}$\Append(b)$};
-      \draw[example, message]   ([xshift=0mm]i2.west) to             (3.9,2);   
-      \draw[example, message]   ([xshift=2mm]i2.west) to[bend left]  ([xshift=6mm]i2.west); 
-      \draw[example, message]   ([xshift=8mm]i2.west) to             (5,0);   
-      
-      \node[structure, operation] (r1) at (7  ,0) {$\Read() \rightarrow \alert{a} \cdot \example{b}$};
-      \node[structure, operation] (r2) at (5.2,2) {$\Read() \rightarrow \example{b}$};
-      \node[structure, operation] (r3) at (8.2,2) {$\Read() \rightarrow \example{b} \cdot \alert{a}$};
-    \end{tikzpicture}
-  }

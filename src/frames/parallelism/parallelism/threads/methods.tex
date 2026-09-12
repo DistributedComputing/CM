@@ -1,9 +1,5 @@
 % SPDX-License-Identifier: CC-BY-SA-4.0
 % Author: Matthieu Perrin
-% Part: 
-% Section: 
-% Sub-section: 
-% Frame: 
 
 \begingroup
 
@@ -11,7 +7,7 @@
 
   \begin{block}{Obtenir le thread qui contrôle la tâche en cours}
     \begin{description}
-    \item[Java :] \lstinline|Thread.currentThread()| \hfill
+    \item[Java :] \lstinline|Thread.currentThread()| \hspace{\fill}
     \item[C++ :] \lstinline|std::this_thread::get_id()|
     \end{description}
   \end{block}
@@ -21,7 +17,7 @@
 
   \begin{block}{Endormir le thread courant pour \lstinline{ms} millisecondes}
     \begin{description}
-    \item[Java :] \lstinline|Thread.sleep(ms)| \hfill
+    \item[Java :] \lstinline|Thread.sleep(ms)| \hspace{\fill}
     \item[C++ :] \lstinline|std::this_thread::sleep_for(std::chrono::milliseconds(ms));|
     \end{description}
   \end{block}

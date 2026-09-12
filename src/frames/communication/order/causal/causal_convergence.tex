@@ -1,8 +1,5 @@
 % SPDX-License-Identifier: CC-BY-SA-4.0
 % Author: Matthieu Perrin
-% Part: Communication
-% Section: Cohérence faible
-% Frame: Eventual Consistency
 
 \begingroup
 
@@ -17,10 +14,10 @@
 
   \on<2->[y=18mm, x=35mm]{
     \begin{tikzpicture}[anchor=center]
-      \node[nosep, text width=40mm, text height=25mm] (execution)  at (0,0) {};
-      \node[nosep, text width=25mm, text height=25mm] (concurrent) at (0,0) {};
-      \node[nosep, text width=40mm, text height=08mm] (local)      at (0,0) {};
-      \node[nosep, text width=08mm, text height=08mm] (present)    at (0,0) {};
+      \node[inner sep=0pt, outer sep=0pt, text width=40mm, text height=25mm] (execution)  at (0,0) {};
+      \node[inner sep=0pt, outer sep=0pt, text width=25mm, text height=25mm] (concurrent) at (0,0) {};
+      \node[inner sep=0pt, outer sep=0pt, text width=40mm, text height=08mm] (local)      at (0,0) {};
+      \node[inner sep=0pt, outer sep=0pt, text width=08mm, text height=08mm] (present)    at (0,0) {};
       
       \fill[structure!15] (concurrent.north west) rectangle (concurrent.south east);
       \fill[alert!15]     (execution.north west) -- (concurrent.north west) -- (present.north west) -- (present.south west) -- (concurrent.south west) -- (execution.south west);

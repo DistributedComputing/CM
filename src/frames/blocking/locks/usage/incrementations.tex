@@ -1,9 +1,5 @@
 % SPDX-License-Identifier: CC-BY-SA-4.0
 % Author: Matthieu Perrin
-% Part: 
-% Section: 
-% Sub-section: 
-% Frame: 
 
 \begingroup
 
@@ -24,53 +20,6 @@
 \end{tabular}}
 
 \begin{frame}{Incrémentations concurrentes}
-
-%  \onBlock<2->[width=.65\textwidth]{Algorithme bloquant}{
-% 
-%    \vspace{-2mm}
-%    \begin{itemize}
-%    \item Point de linéarisation : n'importe où en SC
-%    \end{itemize}
-%    \centering
-% 
-%    \begin{tikzpicture}[y=8mm]\scriptsize
-%      \draw[process, structure]    (0,2    ) node[left] (cpt)  {\texttt{cpt}}   +(.2 ,.15) node{$0$} +(0,0) -- (6.5,2   );
-%      \draw[process, exampleColor] (0,1    ) node[left] (t1)   {\texttt{t1}}                                -- (6.5,1   );
-%      \draw[process, alertColor]   (0,0    ) node[left] (t2)   {\texttt{t2}}                                -- (6.5,0   );
-%      \draw[process, structure]    (0,-1   ) node[left] (val)  {\texttt{value}} +(.15,.12) node{$0$} +(0,0) -- (6.5,-1  );
-%      \draw[process, structure]    (0,-1.5 ) node[left] (lock) {\texttt{lock}}                              -- (6.5,-1.5);
-%      
-%      \node[structure, operation, text width=26mm] (o11) at (2.4,1)    {$lock()$};
-%      \node[structure, operation, right          ] (o21) at (o11.east) {$get()$};
-%      \node[structure, operation, right          ] (o31) at (o21.east) {$set(2)$};
-%      \node[structure, operation, right          ] (o41) at (o31.east) {$unlock()$};
-%      \node[structure, operation                 ] (o10) at (.6,0)     {$lock()$};
-%      \node[structure, operation, right          ] (o20) at (o10.east) {$get()$};
-%      \node[structure, operation, right          ] (o30) at (o20.east) {$set(1)$};
-%      \node[structure, operation, right          ] (o40) at (o30.east) {$unlock()$};
-% 
-%      \coordinate (lp11) at ($(o11.south) + (1.2,0)$);
-% 
-%      \begin{scope}[background]
-%        \node[example, operation, fit=(o11)(o41), inner sep=.5mm] (o1) {};
-%        \node[alert,   operation, fit=(o10)(o40), inner sep=.5mm] (o0) {};
-%        \draw[alertColor,   ultra thick] (o10  |- lock) -- (o40 |- lock) ; 
-%        \draw[exampleColor, ultra thick] (lp11 |- lock) -- (o41 |- lock) ; 
-%      \end{scope}
-%      
-%      \draw[structure,    lin point] (lp11)      -- (lp11 |- lock) ; 
-%      \draw[structure,    lin point] (o41.south) -- (o41 |- lock) ; 
-%      \draw[structure,    lin point] (o10.south) -- (o10 |- lock) ; 
-%      \draw[structure,    lin point] (o40.south) -- (o40 |- lock) ; 
-%      \draw[structure,    lin point] (o20.south) -- (o20 |- val) node[above right]{$0$}; 
-%      \draw[structure,    lin point] (o30.south) -- (o30 |- val) node[above right]{$1$}; 
-%      \draw[structure,    lin point] (o21.south) -- (o21 |- val) node[above right]{$1$}; 
-%      \draw[structure,    lin point] (o31.south) -- (o31 |- val) node[above right]{$2$}; 
-%      \draw[exampleColor, lin point] (o1.north) -- (o1 |- cpt) node[above left]{$increment()$} node[above right]{$2$}; 
-%      \draw[alertColor,   lin point] (o0.north) -- (o0 |- cpt) node[above left]{$increment()$} node[above right]{$1$}; 
-%      
-%    \end{tikzpicture}
-%  }
   
   \on[y=-3mm]{
     \begin{tikzpicture}[automaton, x=24mm, y=16mm]
