@@ -5,21 +5,22 @@
 
 \begin{frame}{Situation de famine}
 
-  \vspace{-2mm}
-  \begin{block}{Starvation}
-    Situation où un ou  plusieurs threads n'ont \alert{jamais accès}
-    à la ressource.
-  \end{block}
+  \on[y=-10mm]{
+    \begin{tikzpicture}
+      \node (A) {\includegraphics[width=\paperwidth]{starvation}};
+      \fill[white, path fading=south] (A.north west) rectangle (A.east);
+    \end{tikzpicture}
+  }
 
-  \vspace{-2mm}
-  \begin{center}
-    \includegraphics[width=.7\textwidth]{starvation}
-  \end{center}      
-
-  \vspace{-2mm}
-  \begin{alertblock}{En TD}
-    Observez les problèmes de famine dans le problème des toilettes unisexes.
-  \end{alertblock}
+  \on[y=25mm]{
+    \begin{tikzpicture}
+      \node[every chat bubble, draw=structure, top color=structure!10, bottom color=structure!30, inner sep=2mm, text width=.95\textwidth]{
+        {\Large\emph{\structure{Starvation}}}\\[2mm]
+        Situation où un ou  plusieurs threads n'ont \structure{jamais accès}
+        à la ressource.
+      };
+    \end{tikzpicture}
+  }
 
 \end{frame}
 

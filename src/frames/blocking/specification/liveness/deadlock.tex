@@ -5,15 +5,23 @@
 
 \begin{frame}{Interblocage circulaire}
 
-  \begin{block}{Deadlock}
-    Situation  d'\alert{interblocage circulaire}  où  des threads  attendent
-    entre eux la libération de ressources avant de continuer leur exécution.
-  \end{block}
+  \on[y=-15mm]{
+    \begin{tikzpicture}
+      \node (A) {\includegraphics[width=\paperwidth]{deadlock}};
+      \fill[white, path fading=south] (A.north west) rectangle (A.east);
+    \end{tikzpicture}
+  }
 
-  \begin{center}
-    \includegraphics[width=.75\textwidth]{deadlock}
-  \end{center}
-
+  \on[y=25mm]{
+    \begin{tikzpicture}
+      \node[every chat bubble, draw=structure, top color=structure!10, bottom color=structure!30, inner sep=2mm, text width=.9\textwidth]{
+        {\Large\emph{\structure{Deadlock}}}\\[2mm]
+        Situation  d'\structure{interblocage circulaire}  où  des threads  attendent
+        entre eux la libération de ressources avant de continuer leur exécution.
+      };
+    \end{tikzpicture}
+  }
+  
 \end{frame}
 
 \endgroup
