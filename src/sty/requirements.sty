@@ -4,6 +4,7 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{requirements}[2026/09/11 Shared Configurations of the DistributedComputing Courses]
 
+
 \def\input@path{{src/frames}}
 \graphicspath{{src/}{src/img/}}
 
@@ -18,8 +19,6 @@
 \RequirePackage{gnuplot-lua-tikz}
 \usetikzlibrary{plotmarks}
 
-%\RequirePackage{cprotect}
-
 \RequirePackage[clock]{ifsym}
 \RequirePackage[normalem]{ulem}
 \RequirePackage{fontawesome, pifont, MnSymbol}
@@ -29,7 +28,6 @@
 \RequirePackage{overlay}
 
 \RequirePackage{citations}
-\RequirePackage{distributed}
 \RequirePackage{chat}
 \RequirePackage{trees}
 
@@ -40,6 +38,7 @@
 \colorlet{sm@fill@structure}{structure}
 
 \PassOptionsToPackage{vlined}{algorithm2e}
+\RequirePackage{distributed}
 \RequirePackage{algos}
 \AlgoEnglish
 
@@ -75,6 +74,7 @@
 
 \providecommand{\cmark}{\example{\text{\ding{51}}}}
 \providecommand{\xmark}{\alert{\text{\ding{55}}}}
+
 
 \mode<all>
 \endinput
